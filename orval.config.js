@@ -13,14 +13,6 @@ module.exports = {
           path: './src/api/fetcher/fetcher.ts',
           name: 'Fetcher',
         },
-        operationName: (operation, route, verb) => {
-          // 转换操作 ID 为驼峰命名
-          const operationId = operation.operationId;
-          if (operationId) {
-            return operationId.replace(/-./g, (match) => match.charAt(1).toUpperCase());
-          }
-          return operation.operationId;
-        },
       },
     },
   },
