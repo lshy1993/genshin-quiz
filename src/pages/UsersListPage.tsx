@@ -1,7 +1,7 @@
-import { Box, Typography, Card, CardContent, Grid, Button, Chip } from '@mui/material';
+import { Box, Button, Card, CardContent, Chip, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useGetUsers } from '../api/genshinQuizAPI';
 import type { User } from '../api/dto';
+import { useGetUsers } from '../api/genshinQuizAPI';
 
 export default function UsersListPage() {
   const { data: users, error } = useGetUsers();
@@ -22,11 +22,7 @@ export default function UsersListPage() {
         <Typography variant="h4" component="h1">
           用户管理
         </Typography>
-        <Button
-          component={Link}
-          to="/users/create"
-          variant="contained"
-        >
+        <Button component={Link} to="/users/create" variant="contained">
           创建新用户
         </Button>
       </Box>
@@ -43,16 +39,16 @@ export default function UsersListPage() {
                   {user.email}
                 </Typography>
                 <Box sx={{ mb: 2 }}>
-                  <Chip 
-                    label={`积分: ${user.total_score || 0}`} 
-                    color="primary" 
-                    size="small" 
+                  <Chip
+                    label={`积分: ${user.total_score || 0}`}
+                    color="primary"
+                    size="small"
                     sx={{ mr: 1 }}
                   />
-                  <Chip 
-                    label={`完成: ${user.quizzes_completed || 0}次`} 
-                    color="secondary" 
-                    size="small" 
+                  <Chip
+                    label={`完成: ${user.quizzes_completed || 0}次`}
+                    color="secondary"
+                    size="small"
                   />
                 </Box>
                 <Typography variant="caption" display="block" sx={{ mb: 2 }}>

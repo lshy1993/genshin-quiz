@@ -9,15 +9,15 @@ import type { GetQuizzesCategory } from './getQuizzesCategory';
 import type { GetQuizzesDifficulty } from './getQuizzesDifficulty';
 
 export type GetQuizzesParams = {
-/**
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * @minimum 0
- */
-offset?: number;
-category?: GetQuizzesCategory;
-difficulty?: GetQuizzesDifficulty;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /**
+   * @minimum 0
+   */
+  offset?: number;
+  category?: GetQuizzesCategory;
+  difficulty?: GetQuizzesDifficulty;
 };

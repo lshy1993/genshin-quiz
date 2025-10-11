@@ -20,7 +20,6 @@ build/
 Thumbs.db
 
 # Editor directories
-.vscode/
 .idea/
 
 # Cache directories

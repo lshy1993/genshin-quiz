@@ -1,13 +1,21 @@
 {
   "name": "genshinquiz_web",
+  "packageManager": "bun@1.2.23",
   "private": true,
   "version": "1.0.0",
+  "engines": {
+    "bun": ">=1.2.0",
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "bun vite",
     "dev:docker": "bunx orval --config orval.config.js && bun vite",
     "build": "bun vite build",
-    "format": "bunx biome format",
-    "lint": "bunx biome lint",
+    "build:api": "bunx orval --config orval.config.js && bun run lint:fix",
+    "format": "bunx biome format src/",
+    "lint": "bunx biome check src/",
+    "lint:fix": "bunx biome check --unsafe --write src/",
     "orval": "bunx orval --config orval.config.js"
   },
   "dependencies": {

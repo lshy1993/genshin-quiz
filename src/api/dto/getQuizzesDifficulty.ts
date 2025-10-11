@@ -6,8 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetQuizzesDifficulty = typeof GetQuizzesDifficulty[keyof typeof GetQuizzesDifficulty];
-
+export type GetQuizzesDifficulty = (typeof GetQuizzesDifficulty)[keyof typeof GetQuizzesDifficulty];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetQuizzesDifficulty = {

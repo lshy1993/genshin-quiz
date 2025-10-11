@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -10,29 +10,31 @@
     "includes": ["**"]
   },
   "formatter": {
+    "attributePosition": "auto",
     "enabled": true,
     "formatWithErrors": false,
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "lineWidth": 100,
-    "attributePosition": "auto",
-    "includes": ["**", "!**/src/**/*.json"]
+    "lineWidth": 100
   },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": false,
-      "a11y": {},
+      "recommended": true,
+      "a11y": {
+        "recommended": false
+      },
       "complexity": {
-        "noBannedTypes": "off",
-        "noExtraBooleanCast": "off",
-        "noUselessCatch": "error",
-        "noUselessTypeConstraint": "error",
-        "useLiteralKeys": "off",
-        "useOptionalChain": "off",
-        "noAdjacentSpacesInRegex": "error"
+        "noUselessFragments": "warn"
       },
       "correctness": {
         "noChildrenProp": "off",
@@ -65,73 +67,46 @@
         "useValidTypeof": "error"
       },
       "security": {
+        "noDangerouslySetInnerHtml": "warn",
         "noDangerouslySetInnerHtmlWithChildren": "error",
         "noBlankTarget": "error"
       },
       "style": {
-        "noInferrableTypes": "off",
-        "noNamespace": "off",
-        "useAsConstAssertion": "off",
-        "useBlockStatements": "off",
-        "useConsistentArrayType": "off",
-        "useForOf": "off",
-        "useShorthandFunctionType": "error",
-        "useArrayLiterals": "off"
+        "noNonNullAssertion": "warn",
+        "noDescendingSpecificity": "warn",
+        "useImportType": "warn",
+        "useExportType": "warn",
+        "useNodejsImportProtocol": "warn"
       },
       "suspicious": {
-        "noAsyncPromiseExecutor": "error",
-        "noCatchAssign": "error",
-        "noClassAssign": "error",
-        "noCommentText": "error",
-        "noCompareNegZero": "error",
-        "noControlCharactersInRegex": "error",
-        "noDebugger": "error",
-        "noDuplicateCase": "error",
-        "noDuplicateClassMembers": "error",
-        "noDuplicateJsxProps": "error",
-        "noDuplicateObjectKeys": "error",
-        "noDuplicateParameters": "error",
-        "noEmptyBlockStatements": "off",
-        "noExplicitAny": "off",
-        "noExtraNonNullAssertion": "error",
-        "noFallthroughSwitchClause": "error",
-        "noFunctionAssign": "error",
-        "noGlobalAssign": "error",
-        "noImportAssign": "error",
-        "noMisleadingCharacterClass": "error",
-        "noMisleadingInstantiator": "error",
-        "noPrototypeBuiltins": "off",
-        "noRedeclare": "error",
-        "noShadowRestrictedNames": "off",
-        "noUnsafeDeclarationMerging": "error",
-        "noUnsafeNegation": "error",
-        "useAwait": "off",
-        "useGetterReturn": "error",
-        "useNamespaceKeyword": "error",
-        "noWith": "error"
+        "noExplicitAny": "warn",
+        "useDefaultSwitchClauseLast": "warn",
+        "noArrayIndexKey": "warn",
+        "noImplicitAnyLet": "warn",
+        "noAssignInExpressions": "off",
+        "noShadowRestrictedNames": "warn",
+        "noDuplicateProperties": "warn",
+        "noSelfCompare": "warn",
+        "noDuplicateFontNames": "warn",
+        "noShorthandPropertyOverrides": "warn",
+        "noDuplicateElseIf": "warn",
+        "noDebugger": "warn",
+        "noDoubleEquals": "warn",
+        "useIterableCallbackReturn": "off"
       }
-    },
-    "includes": [
-      "**",
-      "!**/node_modules",
-      "!**/build",
-      "!**/dist",
-      "!**/coverage",
-      "!**/src/**/*.css"
-    ]
+    }
   },
   "javascript": {
     "formatter": {
+      "arrowParentheses": "always",
+      "attributePosition": "auto",
+      "bracketSameLine": false,
+      "bracketSpacing": true,
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
-      "trailingCommas": "all",
-      "semicolons": "always",
-      "arrowParentheses": "always",
-      "bracketSpacing": true,
-      "bracketSameLine": false,
       "quoteStyle": "single",
-      "attributePosition": "auto"
-    },
-    "globals": ["React", "XbiStartupSheetNodeModel", "expect", "it", "test"]
+      "semicolons": "always",
+      "trailingCommas": "all"
+    }
   }
 }

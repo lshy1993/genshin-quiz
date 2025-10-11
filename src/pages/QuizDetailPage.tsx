@@ -1,5 +1,15 @@
-import { useParams, Link } from 'react-router-dom';
-import { Box, Typography, Button, Card, CardContent, Chip, List, ListItem, ListItemText } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@mui/material';
+import { Link, useParams } from 'react-router-dom';
 import { useGetQuiz } from '../api/genshinQuizAPI';
 
 export default function QuizDetailPage() {
@@ -40,18 +50,10 @@ export default function QuizDetailPage() {
           <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
             {quiz.description}
           </Typography>
-          
+
           <Box sx={{ mb: 2 }}>
-            <Chip 
-              label={quiz.difficulty} 
-              color="primary" 
-              sx={{ mr: 1 }} 
-            />
-            <Chip 
-              label={quiz.category} 
-              color="secondary" 
-              sx={{ mr: 1 }} 
-            />
+            <Chip label={quiz.difficulty} color="primary" sx={{ mr: 1 }} />
+            <Chip label={quiz.category} color="secondary" sx={{ mr: 1 }} />
           </Box>
 
           <Typography variant="body2" sx={{ mb: 2 }}>
@@ -66,19 +68,10 @@ export default function QuizDetailPage() {
       </Card>
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-        <Button
-          component={Link}
-          to={`/quizzes/${quiz.id}/play`}
-          variant="contained"
-          size="large"
-        >
+        <Button component={Link} to={`/quizzes/${quiz.id}/play`} variant="contained" size="large">
           开始答题
         </Button>
-        <Button
-          component={Link}
-          to={`/quizzes/${quiz.id}/edit`}
-          variant="outlined"
-        >
+        <Button component={Link} to={`/quizzes/${quiz.id}/edit`} variant="outlined">
           编辑测验
         </Button>
       </Box>

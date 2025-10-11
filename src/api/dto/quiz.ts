@@ -5,9 +5,10 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+
+import type { Question } from './question';
 import type { QuizCategory } from './quizCategory';
 import type { QuizDifficulty } from './quizDifficulty';
-import type { Question } from './question';
 
 export interface Quiz {
   id: number;

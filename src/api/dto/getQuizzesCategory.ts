@@ -6,8 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetQuizzesCategory = typeof GetQuizzesCategory[keyof typeof GetQuizzesCategory];
-
+export type GetQuizzesCategory = (typeof GetQuizzesCategory)[keyof typeof GetQuizzesCategory];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetQuizzesCategory = {

@@ -5,9 +5,10 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+
+import type { CreateQuestionRequest } from './createQuestionRequest';
 import type { CreateQuizRequestCategory } from './createQuizRequestCategory';
 import type { CreateQuizRequestDifficulty } from './createQuizRequestDifficulty';
-import type { CreateQuestionRequest } from './createQuestionRequest';
 
 export interface CreateQuizRequest {
   /**

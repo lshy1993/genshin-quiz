@@ -1,7 +1,7 @@
-import { Box, Typography, Card, CardContent, Grid, Button, Chip } from '@mui/material';
+import { Box, Button, Card, CardContent, Chip, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useGetQuizzes } from '../api/genshinQuizAPI';
 import type { Quiz } from '../api/dto';
+import { useGetQuizzes } from '../api/genshinQuizAPI';
 
 export default function QuizzesListPage() {
   const { data: quizzes, error } = useGetQuizzes();
@@ -22,11 +22,7 @@ export default function QuizzesListPage() {
         <Typography variant="h4" component="h1">
           所有测验
         </Typography>
-        <Button
-          component={Link}
-          to="/quizzes/create"
-          variant="contained"
-        >
+        <Button component={Link} to="/quizzes/create" variant="contained">
           创建新测验
         </Button>
       </Box>
@@ -43,17 +39,8 @@ export default function QuizzesListPage() {
                   {quiz.description}
                 </Typography>
                 <Box sx={{ mb: 2 }}>
-                  <Chip 
-                    label={quiz.difficulty} 
-                    color="primary" 
-                    size="small" 
-                    sx={{ mr: 1 }} 
-                  />
-                  <Chip 
-                    label={quiz.category} 
-                    color="secondary" 
-                    size="small" 
-                  />
+                  <Chip label={quiz.difficulty} color="primary" size="small" sx={{ mr: 1 }} />
+                  <Chip label={quiz.category} color="secondary" size="small" />
                 </Box>
                 <Typography variant="caption" display="block" sx={{ mb: 2 }}>
                   题目数量: {quiz.questions.length}
@@ -88,12 +75,7 @@ export default function QuizzesListPage() {
           <Typography variant="h6" color="text.secondary">
             暂无测验数据
           </Typography>
-          <Button
-            component={Link}
-            to="/quizzes/create"
-            variant="contained"
-            sx={{ mt: 2 }}
-          >
+          <Button component={Link} to="/quizzes/create" variant="contained" sx={{ mt: 2 }}>
             创建第一个测验
           </Button>
         </Box>

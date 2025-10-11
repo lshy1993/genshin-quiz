@@ -6,8 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type QuestionQuestionType = typeof QuestionQuestionType[keyof typeof QuestionQuestionType];
-
+export type QuestionQuestionType = (typeof QuestionQuestionType)[keyof typeof QuestionQuestionType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QuestionQuestionType = {

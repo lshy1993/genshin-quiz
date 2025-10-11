@@ -41,8 +41,7 @@ export interface UpdateUserRequest {
   avatar_url?: string;
 }
 
-export type QuizCategory = typeof QuizCategory[keyof typeof QuizCategory];
-
+export type QuizCategory = (typeof QuizCategory)[keyof typeof QuizCategory];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QuizCategory = {
@@ -53,8 +52,7 @@ export const QuizCategory = {
   gameplay: 'gameplay',
 } as const;
 
-export type QuizDifficulty = typeof QuizDifficulty[keyof typeof QuizDifficulty];
-
+export type QuizDifficulty = (typeof QuizDifficulty)[keyof typeof QuizDifficulty];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QuizDifficulty = {
@@ -77,8 +75,8 @@ export interface Quiz {
   updated_at: string;
 }
 
-export type CreateQuizRequestCategory = typeof CreateQuizRequestCategory[keyof typeof CreateQuizRequestCategory];
-
+export type CreateQuizRequestCategory =
+  (typeof CreateQuizRequestCategory)[keyof typeof CreateQuizRequestCategory];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateQuizRequestCategory = {
@@ -89,8 +87,8 @@ export const CreateQuizRequestCategory = {
   gameplay: 'gameplay',
 } as const;
 
-export type CreateQuizRequestDifficulty = typeof CreateQuizRequestDifficulty[keyof typeof CreateQuizRequestDifficulty];
-
+export type CreateQuizRequestDifficulty =
+  (typeof CreateQuizRequestDifficulty)[keyof typeof CreateQuizRequestDifficulty];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateQuizRequestDifficulty = {
@@ -119,8 +117,8 @@ export interface CreateQuizRequest {
   created_by: number;
 }
 
-export type UpdateQuizRequestCategory = typeof UpdateQuizRequestCategory[keyof typeof UpdateQuizRequestCategory];
-
+export type UpdateQuizRequestCategory =
+  (typeof UpdateQuizRequestCategory)[keyof typeof UpdateQuizRequestCategory];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateQuizRequestCategory = {
@@ -131,8 +129,8 @@ export const UpdateQuizRequestCategory = {
   gameplay: 'gameplay',
 } as const;
 
-export type UpdateQuizRequestDifficulty = typeof UpdateQuizRequestDifficulty[keyof typeof UpdateQuizRequestDifficulty];
-
+export type UpdateQuizRequestDifficulty =
+  (typeof UpdateQuizRequestDifficulty)[keyof typeof UpdateQuizRequestDifficulty];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateQuizRequestDifficulty = {
@@ -160,8 +158,7 @@ export interface UpdateQuizRequest {
   time_limit?: number;
 }
 
-export type QuestionQuestionType = typeof QuestionQuestionType[keyof typeof QuestionQuestionType];
-
+export type QuestionQuestionType = (typeof QuestionQuestionType)[keyof typeof QuestionQuestionType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QuestionQuestionType = {
@@ -181,8 +178,8 @@ export interface Question {
   order_index: number;
 }
 
-export type CreateQuestionRequestQuestionType = typeof CreateQuestionRequestQuestionType[keyof typeof CreateQuestionRequestQuestionType];
-
+export type CreateQuestionRequestQuestionType =
+  (typeof CreateQuestionRequestQuestionType)[keyof typeof CreateQuestionRequestQuestionType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateQuestionRequestQuestionType = {
@@ -234,15 +231,15 @@ export type NotFoundResponse = Error;
 export type InternalServerErrorResponse = Error;
 
 export type GetUsersParams = {
-/**
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * @minimum 0
- */
-offset?: number;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /**
+   * @minimum 0
+   */
+  offset?: number;
 };
 
 export type GetUsers200 = {
@@ -253,21 +250,20 @@ export type GetUsers200 = {
 };
 
 export type GetQuizzesParams = {
-/**
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * @minimum 0
- */
-offset?: number;
-category?: GetQuizzesCategory;
-difficulty?: GetQuizzesDifficulty;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /**
+   * @minimum 0
+   */
+  offset?: number;
+  category?: GetQuizzesCategory;
+  difficulty?: GetQuizzesDifficulty;
 };
 
-export type GetQuizzesCategory = typeof GetQuizzesCategory[keyof typeof GetQuizzesCategory];
-
+export type GetQuizzesCategory = (typeof GetQuizzesCategory)[keyof typeof GetQuizzesCategory];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetQuizzesCategory = {
@@ -278,8 +274,7 @@ export const GetQuizzesCategory = {
   gameplay: 'gameplay',
 } as const;
 
-export type GetQuizzesDifficulty = typeof GetQuizzesDifficulty[keyof typeof GetQuizzesDifficulty];
-
+export type GetQuizzesDifficulty = (typeof GetQuizzesDifficulty)[keyof typeof GetQuizzesDifficulty];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetQuizzesDifficulty = {
@@ -294,4 +289,3 @@ export type GetQuizzes200 = {
   limit?: number;
   offset?: number;
 };
-
