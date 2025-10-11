@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Typography } from '@mui/material';
 
 export const LoginedUserBox = () => {
   // 假设有 user 状态
-  const user = useUser(); // 你可以用 context、redux、swr 等管理
+  const user = useUser();
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 2 }}>
       {user ? (
