@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "bun vite",
-    "dev:docker": "bunx orval --config orval.config.js && bun vite",
+    "dev:docker": "bun run build:api && bun vite",
     "build": "bun vite build",
     "build:api": "bunx orval --config orval.config.js && bun run lint:fix",
     "format": "bunx biome format src/",
