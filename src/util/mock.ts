@@ -1,126 +1,103 @@
-import type { Question, Quiz } from '@/api/dto';
-import { QuestionQuestionType, QuizCategory, QuizDifficulty } from '@/api/dto';
+import type { Exam } from '@/api/dto/exam';
+import type { Question } from '@/api/dto/question';
+import { QuestionCategory } from '@/api/dto/questionCategory';
+import { QuestionDifficulty } from '@/api/dto/questionDifficulty';
+import { QuestionOptionType } from '@/api/dto/questionOptionType';
+import { QuestionType } from '@/api/dto/questionType';
 
-export const mockTags = ['知识', '趣味', '挑战', '基础', '进阶'];
-
-// 单个题目的模拟数据
-export const mockQuestionData: (Question & {
-  category: QuizCategory;
-  difficulty: QuizDifficulty;
-  answerCount: number;
-  correctRate: number;
-  availableLanguages: string[]; // 支持的语言
-})[] = [
+export const mockQuestionData: Question[] = [
   {
-    id: 1,
+    id: 'ad1f5c3e-4b2e-4c3a-9f1e-2b6d7e8f9a0b',
     question_text: '原神的开发商是？',
-    question_type: QuestionQuestionType.multiple_choice,
-    options: ['miHoYo', 'Tencent', 'NetEase', 'Blizzard'],
-    correct_answer: 'miHoYo',
+    question_type: QuestionType.single_choice,
+    category: QuestionCategory.lore,
+    difficulty: QuestionDifficulty.easy,
+    options: [
+      { id: 'option-1', type: QuestionOptionType.text, text: 'miHoYo' },
+      { id: 'option-2', type: QuestionOptionType.text, text: 'Tencent' },
+      { id: 'option-3', type: QuestionOptionType.text, text: 'NetEase' },
+      { id: 'option-4', type: QuestionOptionType.text, text: 'Blizzard' },
+    ],
     explanation: 'miHoYo（现在叫HoYoverse）是原神的开发商',
-    points: 10,
-    order_index: 1,
-    category: QuizCategory.lore,
-    difficulty: QuizDifficulty.easy,
-    answerCount: 1250,
-    correctRate: 0.85,
-    availableLanguages: ['zh', 'en', 'ja'],
+    languages: ['zh', 'en'],
+    created_by: 'user-1',
+    created_at: new Date('2023-10-01T12:00:00Z'),
   },
   {
-    id: 2,
+    id: 'b2f5c3e2-4b2e-4c3a-9f1e-2b6d7e8f9a0c',
     question_text: '温迪是蒙德的风神',
-    question_type: QuestionQuestionType.true_false,
-    correct_answer: 'true',
+    question_type: QuestionType.true_false,
+    category: QuestionCategory.character,
+    difficulty: QuestionDifficulty.easy,
+    options: [
+      { id: 'option-1', type: QuestionOptionType.text, text: '正确' },
+      { id: 'option-2', type: QuestionOptionType.text, text: '错误' },
+    ],
     explanation: '温迪确实是蒙德的风神巴巴托斯',
-    points: 5,
-    order_index: 2,
-    category: QuizCategory.characters,
-    difficulty: QuizDifficulty.easy,
-    answerCount: 980,
-    correctRate: 0.92,
-    availableLanguages: ['zh', 'en'],
+    languages: ['zh'],
+    created_by: 'user-2',
+    created_at: new Date('2023-10-02T12:00:00Z'),
   },
   {
-    id: 3,
+    id: 'c3f5c3e2-4b2e-4c3a-9f1e-2b6d7e8f9a0d',
     question_text: '璃月港的守护神是？',
-    question_type: QuestionQuestionType.multiple_choice,
-    options: ['钟离', '岩王帝君', '摩拉克斯', '以上都是'],
-    correct_answer: '以上都是',
+    question_type: QuestionType.multiple_choice,
+    category: QuestionCategory.lore,
+    difficulty: QuestionDifficulty.medium,
+    options: [
+      { id: 'option-1', type: QuestionOptionType.text, text: '钟离' },
+      { id: 'option-2', type: QuestionOptionType.text, text: '岩王帝君' },
+      { id: 'option-3', type: QuestionOptionType.text, text: '摩拉克斯' },
+      { id: 'option-4', type: QuestionOptionType.text, text: '以上都是' },
+    ],
     explanation: '钟离、岩王帝君、摩拉克斯都是同一个人的不同称呼',
-    points: 15,
-    order_index: 3,
-    category: QuizCategory.lore,
-    difficulty: QuizDifficulty.medium,
-    answerCount: 756,
-    correctRate: 0.68,
-    availableLanguages: ['zh'],
-  },
-  {
-    id: 4,
-    question_text: '原神中最高等级是多少？',
-    question_type: QuestionQuestionType.single_choice,
-    correct_answer: '90',
-    explanation: '目前原神中角色和武器的最高等级都是90级',
-    points: 10,
-    order_index: 4,
-    category: QuizCategory.gameplay,
-    difficulty: QuizDifficulty.medium,
-    answerCount: 643,
-    correctRate: 0.73,
-    availableLanguages: ['zh', 'en', 'ja'],
-  },
-  {
-    id: 5,
-    question_text: '下列哪个元素反应能造成最高伤害？',
-    question_type: QuestionQuestionType.multiple_choice,
-    options: ['蒸发', '融化', '超载', '扩散'],
-    correct_answer: '融化',
-    explanation: '在合适的条件下，融化反应能造成2倍伤害，是最高的增伤反应',
-    points: 20,
-    order_index: 5,
-    category: QuizCategory.combat,
-    difficulty: QuizDifficulty.hard,
-    answerCount: 432,
-    correctRate: 0.45,
-    availableLanguages: ['zh', 'en'],
+    languages: ['zh', 'en', 'ja'],
+    created_by: 'user-3',
+    created_at: new Date('2023-10-03T12:00:00Z'),
   },
 ];
 
-export const mockQuizData: Quiz[] = [
+export const mockExamData: Exam[] = [
   {
-    id: 1,
+    id: 'quiz-1',
     title: '原神基础知识测验',
     description: '测试你对原神基础知识的掌握程度。',
-    difficulty: QuizDifficulty.easy,
-    category: QuizCategory.lore,
-    questions: [],
+    categories: [QuestionCategory.lore],
+    difficulty: QuestionDifficulty.easy,
+    questions: [
+      { question_id: 'ad1f5c3e-4b2e-4c3a-9f1e-2b6d7e8f9a0b', order_index: 1, points: 10 },
+      { question_id: 'b2f5c3e2-4b2e-4c3a-9f1e-2b6d7e8f9a0c', order_index: 2, points: 5 },
+    ],
     time_limit: 60,
-    created_by: 1,
-    created_at: new Date(),
-    updated_at: new Date(),
+    created_by: 'user-1',
+    created_at: new Date('2023-10-01T12:00:00Z'),
+    updated_at: new Date('2023-10-01T12:00:00Z'),
   },
   {
-    id: 2,
+    id: 'quiz-2',
     title: '角色技能挑战',
     description: '考验你对角色技能的理解。',
-    difficulty: QuizDifficulty.medium,
-    category: QuizCategory.characters,
-    questions: [],
+    categories: [QuestionCategory.character],
+    difficulty: QuestionDifficulty.medium,
+    questions: [
+      { question_id: 'c3f5c3e2-4b2e-4c3a-9f1e-2b6d7e8f9a0d', order_index: 1, points: 15 },
+    ],
     time_limit: 90,
-    created_by: 1,
-    created_at: new Date(),
-    updated_at: new Date(),
+    created_by: 'user-2',
+    created_at: new Date('2023-10-02T12:00:00Z'),
+    updated_at: new Date('2023-10-02T12:00:00Z'),
   },
-  {
-    id: 3,
-    title: '趣味冷知识',
-    description: '你知道这些有趣的冷知识吗？',
-    difficulty: QuizDifficulty.hard,
-    category: QuizCategory.gameplay,
-    questions: [],
-    time_limit: 120,
-    created_by: 1,
-    created_at: new Date(),
-    updated_at: new Date(),
-  },
+];
+
+export const mockTags = [
+  '原神',
+  '角色',
+  '技能',
+  '剧情',
+  '活动',
+  '武器',
+  '圣遗物',
+  '元素',
+  '挑战',
+  '探索',
 ];

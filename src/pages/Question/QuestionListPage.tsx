@@ -27,7 +27,7 @@ export default function QuestionListPage() {
       (selectedQuestionTypes.length === 0 ||
         selectedQuestionTypes.includes(question.question_type)) &&
       (selectedLanguages.length === 0 ||
-        selectedLanguages.some((lang) => question.availableLanguages.includes(lang))) &&
+        selectedLanguages.some((lang) => question.languages.includes(lang))) &&
       (search ? question.question_text.includes(search) : true) &&
       (difficulty ? question.difficulty === difficulty : true),
   );
@@ -42,8 +42,28 @@ export default function QuestionListPage() {
           (difficultyOrder[b.difficulty as keyof typeof difficultyOrder] || 0);
       }
       if (sortBy === 'category') cmp = a.category.localeCompare(b.category);
-      if (sortBy === 'answerCount') cmp = a.answerCount - b.answerCount;
-      if (sortBy === 'correctRate') cmp = a.correctRate - b.correctRate;
+      if (sortBy === 'answerCount') {
+        // 没有答题数据的题目排在最后
+        const aCount = a?.answer_count ?? 0;
+        const bCount = b?.answer_count ?? 0;
+        if (aCount === 0 && bCount === 0) cmp = 0;
+        else if (aCount === 0) cmp = 1;
+        else if (bCount === 0) cmp = -1;
+        else cmp = aCount - bCount;
+      }
+      if (sortBy === 'correctRate') {
+        const aCount = a?.answer_count ?? 0;
+        const bCount = b?.answer_count ?? 0;
+        // 没有答题数据的题目排在最后
+        if (aCount === 0 && bCount === 0) cmp = 0;
+        else if (aCount === 0) cmp = 1;
+        else if (bCount === 0) cmp = -1;
+        else {
+          const correctRateA = (a?.correct_count || 0) / aCount;
+          const correctRateB = (b?.correct_count || 0) / bCount;
+          cmp = correctRateA - correctRateB;
+        }
+      }
       return sortAsc ? cmp : -cmp;
     });
   }
@@ -94,14 +114,6 @@ export default function QuestionListPage() {
 
       {/* 题目表格 */}
       <QuestionTable questions={filteredQuestions} />
-
-      {filteredQuestions.length === 0 && (
-        <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography variant="h6" color="text.secondary">
-            暂无符合条件的题目
-          </Typography>
-        </Box>
-      )}
     </Box>
   );
 }

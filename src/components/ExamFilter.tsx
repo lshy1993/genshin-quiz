@@ -10,11 +10,12 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import type { Quiz } from '@/api/dto';
+import type { Exam } from '@/api/dto';
+import { QuestionCategory } from '@/api/dto';
 import { mockTags } from '@/util/mock';
 
 interface ExamFilterProps {
-  examList: Quiz[]; // 暂时使用Quiz类型，后面需要定义Exam类型
+  examList: Exam[]; // 使用Exam类型
   search: string;
   setSearch: (value: string) => void;
   difficulty: string;
@@ -45,7 +46,7 @@ export default function ExamFilter({
   setSortAsc,
 }: ExamFilterProps) {
   // 获取所有分类、难度
-  const allCategories = Array.from(new Set(examList.map((e) => e.category).filter(Boolean)));
+  const allCategories = Object.values(QuestionCategory);
   const allDifficulties = Array.from(new Set(examList.map((e) => e.difficulty).filter(Boolean)));
   const allTags = mockTags;
 

@@ -10,12 +10,11 @@ import {
   Typography,
 } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
-import { useGetQuiz } from '../../api/genshinQuizAPI';
+import { useGetExam } from '../../api/genshinQuizAPI';
 
-export default function QuizDetailPage() {
+export default function ExamDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const quizId = Number(id);
-  const { data: quiz, error } = useGetQuiz(quizId);
+  const { data: exam, error } = useGetExam(id as string);
 
   if (error) {
     return (
@@ -28,7 +27,7 @@ export default function QuizDetailPage() {
     );
   }
 
-  if (!quiz) {
+  if (!exam) {
     return (
       <Box sx={{ p: 3 }}>
         <Typography>加载中...</Typography>
@@ -45,33 +44,35 @@ export default function QuizDetailPage() {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom>
-            {quiz.title}
+            {exam.title}
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-            {quiz.description}
+            {exam.description}
           </Typography>
-
-          <Box sx={{ mb: 2 }}>
-            <Chip label={quiz.difficulty} color="primary" sx={{ mr: 1 }} />
-            <Chip label={quiz.category} color="secondary" sx={{ mr: 1 }} />
+          <Box>
+            {exam.categories?.map((category) => (
+              <Chip label={category} color="secondary" sx={{ mr: 1 }} />
+            ))}
           </Box>
-
+          <Box sx={{ mb: 2 }}>
+            <Chip label={exam.difficulty} color="primary" sx={{ mr: 1 }} />
+          </Box>
           <Typography variant="body2" sx={{ mb: 2 }}>
-            题目数量: {quiz.questions.length}
-            {quiz.time_limit && ` | 时间限制: ${quiz.time_limit}秒`}
+            题目数量: {exam.questions.length}
+            {exam.time_limit && ` | 时间限制: ${exam.time_limit}秒`}
           </Typography>
 
           <Typography variant="caption" color="text.secondary">
-            创建时间: {new Date(quiz.created_at).toLocaleString()}
+            创建时间: {new Date(exam.created_at).toLocaleString()}
           </Typography>
         </CardContent>
       </Card>
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-        <Button component={Link} to={`/quizzes/${quiz.id}/play`} variant="contained" size="large">
+        <Button component={Link} to={`/exams/${exam.id}/play`} variant="contained" size="large">
           开始答题
         </Button>
-        <Button component={Link} to={`/quizzes/${quiz.id}/edit`} variant="outlined">
+        <Button component={Link} to={`/exams/${exam.id}/edit`} variant="outlined">
           编辑测验
         </Button>
       </Box>
@@ -82,11 +83,11 @@ export default function QuizDetailPage() {
             题目预览
           </Typography>
           <List>
-            {quiz.questions.map((question, index) => (
-              <ListItem key={question.id} divider>
+            {exam.questions.map((question, index) => (
+              <ListItem key={question.order_index} divider>
                 <ListItemText
-                  primary={`${index + 1}. ${question.question_text}`}
-                  secondary={`类型: ${question.question_type} | 分数: ${question.points || 10}`}
+                  primary={`${index + 1}. ${question.question_id}`}
+                  secondary={`类型: ${question.question_id} | 分数: ${question.points || 10}`}
                 />
               </ListItem>
             ))}

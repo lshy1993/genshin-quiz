@@ -1,15 +1,12 @@
 import { Box, Button, Card, CardContent, Chip, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { Quiz } from '@/api/dto';
+import type { Exam } from '@/api/dto';
 import ExamFilter from '@/components/ExamFilter';
-import { mockQuizData } from '@/util/mock';
-// import { useGetQuizzes } from '@/api/genshinQuizAPI';
+import { mockExamData } from '@/util/mock';
 
 export default function ExamListPage() {
-  // const { data: quizzes, isLoading, error } = useGetQuizzes();
-  // const quizList: Quiz[] = quizzes?.quizzes || [];
-  const quizList: Quiz[] = mockQuizData;
+  const examList: Exam[] = mockExamData;
 
   const [search, setSearch] = useState('');
   const [difficulty, setDifficulty] = useState('');
@@ -19,16 +16,19 @@ export default function ExamListPage() {
   const [sortAsc, setSortAsc] = useState(true);
 
   // 排序和过滤
-  let filteredQuizzes = quizList.filter(
-    (quiz) =>
+  let filteredExams = examList.filter(
+    (exam) =>
       selectedTags.length === 0 &&
-      (selectedCategories.length === 0 || selectedCategories.includes(quiz.category)) &&
-      (search ? quiz.title.includes(search) || quiz.description?.includes(search) : true) &&
-      (difficulty ? quiz.difficulty === difficulty : true),
+      (selectedCategories.length === 0 ||
+        (Array.isArray(exam.categories)
+          ? exam.categories.some((cat) => selectedCategories.includes(cat))
+          : false)) &&
+      (search ? exam.title.includes(search) || exam.description?.includes(search) : true) &&
+      (difficulty ? exam.difficulty === difficulty : true),
   );
 
   if (sortBy !== 'default') {
-    filteredQuizzes = [...filteredQuizzes].sort((a, b) => {
+    filteredExams = [...filteredExams].sort((a, b) => {
       let cmp = 0;
       if (sortBy === 'title') cmp = a.title.localeCompare(b.title);
       if (sortBy === 'difficulty') cmp = (a.difficulty || '').localeCompare(b.difficulty || '');
@@ -57,7 +57,7 @@ export default function ExamListPage() {
 
       {/* 筛选区 */}
       <ExamFilter
-        examList={quizList}
+        examList={examList}
         search={search}
         setSearch={setSearch}
         difficulty={difficulty}
@@ -72,30 +72,34 @@ export default function ExamListPage() {
         setSortAsc={setSortAsc}
       />
 
-      {/* Quiz 列表 */}
+      {/* Exam 列表 */}
       <Grid container spacing={3}>
-        {filteredQuizzes.map((quiz) => (
-          <Grid item xs={12} md={6} lg={4} key={quiz.id}>
+        {filteredExams.map((exam) => (
+          <Grid item xs={12} md={6} lg={4} key={exam.id}>
             <Card>
               <CardContent>
                 <Typography variant="h6" component="h3" gutterBottom>
-                  {quiz.title}
+                  {exam.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  {quiz.description}
+                  {exam.description}
                 </Typography>
+                <Box>
+                  {exam.categories?.map((cat) => (
+                    <Chip key={cat} label={cat} color="secondary" size="small" sx={{ mr: 0.5 }} />
+                  ))}
+                </Box>
                 <Box sx={{ mb: 2 }}>
-                  <Chip label={quiz.difficulty} color="primary" size="small" sx={{ mr: 1 }} />
-                  <Chip label={quiz.category} color="secondary" size="small" />
+                  <Chip label={exam.difficulty} color="primary" size="small" sx={{ mr: 1 }} />
                 </Box>
                 <Typography variant="caption" display="block" sx={{ mb: 2 }}>
-                  题目数量: {quiz.questions.length}
-                  {quiz.time_limit && ` | 时间限制: ${quiz.time_limit}秒`}
+                  题目数量: {exam.questions.length}
+                  {exam.time_limit && ` | 时间限制: ${exam.time_limit}秒`}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Button
                     component={Link}
-                    to={`/exams/${quiz.id}`}
+                    to={`/exams/${exam.id}`}
                     variant="contained"
                     size="small"
                   >
@@ -103,7 +107,7 @@ export default function ExamListPage() {
                   </Button>
                   <Button
                     component={Link}
-                    to={`/exams/${quiz.id}/play`}
+                    to={`/exams/${exam.id}/play`}
                     variant="outlined"
                     size="small"
                   >
@@ -116,7 +120,7 @@ export default function ExamListPage() {
         ))}
       </Grid>
 
-      {filteredQuizzes.length === 0 && (
+      {filteredExams.length === 0 && (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
             暂无符合条件的考试

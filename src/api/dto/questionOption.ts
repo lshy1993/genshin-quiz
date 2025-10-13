@@ -5,13 +5,14 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { QuestionOptionsType } from './questionOptionsType';
+import type { QuestionOptionType } from './questionOptionType';
 
-export type QuestionOptions = {
+export interface QuestionOption {
+  id: string;
   /** 选项类型 */
-  type: QuestionOptionsType;
+  type: QuestionOptionType;
   /** 选项文本 */
   text?: string;
   /** 选项图片URL */
   image?: string;
-};
+}

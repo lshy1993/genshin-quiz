@@ -9,10 +9,10 @@
 /**
  * 选项类型
  */
-export type QuestionOptionsType = (typeof QuestionOptionsType)[keyof typeof QuestionOptionsType];
+export type QuestionOptionType = (typeof QuestionOptionType)[keyof typeof QuestionOptionType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const QuestionOptionsType = {
+export const QuestionOptionType = {
   text: 'text',
   image: 'image',
 } as const;

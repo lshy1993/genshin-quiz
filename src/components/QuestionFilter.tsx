@@ -2,17 +2,10 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
 import { Box, Button, Chip, Stack, TextField, Typography } from '@mui/material';
 import { t } from 'i18next';
-import type { Question, QuizCategory, QuizDifficulty } from '@/api/dto';
-import { QuestionQuestionType } from '@/api/dto';
+import { type Question, QuestionCategory, QuestionDifficulty, QuestionType } from '@/api/dto';
 
 interface QuestionFilterProps {
-  questionList: (Question & {
-    category: QuizCategory;
-    difficulty: QuizDifficulty;
-    answerCount: number;
-    correctRate: number;
-    availableLanguages: string[];
-  })[];
+  questionList: Question[];
   search: string;
   setSearch: (value: string) => void;
   difficulty: string;
@@ -43,13 +36,11 @@ export default function QuestionFilter({
   setSortAsc,
 }: QuestionFilterProps) {
   // 获取所有分类、难度、题型、语言
-  const allCategories = Array.from(new Set(questionList.map((q) => q.category).filter(Boolean)));
-  const allDifficulties = Array.from(
-    new Set(questionList.map((q) => q.difficulty).filter(Boolean)),
-  );
-  const allQuestionTypes = Object.values(QuestionQuestionType);
+  const allCategories = Object.values(QuestionCategory);
+  const allDifficulties = Object.values(QuestionDifficulty);
+  const allQuestionTypes = Object.values(QuestionType);
   const allLanguages = Array.from(
-    new Set(questionList.flatMap((q) => q.availableLanguages).filter(Boolean)),
+    new Set(questionList.flatMap((q) => q.languages).filter(Boolean)),
   );
 
   const handleQuestionTypeToggle = (type: string) => {
@@ -164,26 +155,7 @@ export default function QuestionFilter({
         </Box>
       </Stack>
 
-      {/* 语言筛选 */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
-          支持语言
-        </Typography>
-        <Stack direction="row" flexWrap="wrap" gap={1}>
-          {allLanguages.map((lang) => (
-            <Chip
-              key={lang}
-              label={getLanguageLabel(lang)}
-              variant={selectedLanguages.includes(lang) ? 'filled' : 'outlined'}
-              onClick={() => handleLanguageToggle(lang)}
-              clickable
-              size="small"
-            />
-          ))}
-        </Stack>
-      </Box>
-
-      {/* 关键词搜索 - 最下面，右侧有按钮 */}
+      {/* 关键词搜索 + 语言单选 - 最下面，右侧有按钮，语言优先级最低 */}
       <Stack direction="row" spacing={2} alignItems="center">
         <TextField
           fullWidth
@@ -194,6 +166,22 @@ export default function QuestionFilter({
           placeholder="输入题目内容进行搜索..."
           size="small"
         />
+        {/* 语言单选 */}
+        <TextField
+          select
+          label="语言"
+          value={selectedLanguages[0] || ''}
+          onChange={(e) => setSelectedLanguages(e.target.value ? [e.target.value] : [])}
+          size="small"
+          sx={{ minWidth: 100 }}
+        >
+          <option value="">全部</option>
+          {allLanguages.map((lang) => (
+            <option key={lang} value={lang}>
+              {getLanguageLabel(lang)}
+            </option>
+          ))}
+        </TextField>
         <Button
           variant="outlined"
           startIcon={<SortIcon />}

@@ -1,26 +1,32 @@
 import {
+  Alert,
   Box,
   Button,
   Card,
   CardContent,
+  Checkbox,
   Chip,
-  List,
-  ListItem,
-  ListItemText,
+  FormControlLabel,
+  FormGroup,
+  Radio,
+  RadioGroup,
   Typography,
 } from '@mui/material';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useGetQuiz } from '../../api/genshinQuizAPI';
+import { mockQuestionData } from '@/util/mock';
 
 export default function QuestionDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const quizId = Number(id);
-  const { data: quiz, error } = useGetQuiz(quizId);
+  // 这里用 mock 数据，实际可用 useGetQuestion(id)
+  const question = mockQuestionData.find((q) => q.id === id);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [submitted, setSubmitted] = useState(false);
 
-  if (error) {
+  if (!question) {
     return (
       <Box sx={{ p: 3 }}>
-        <Typography color="error">加载题目详情失败: {error.message}</Typography>
+        <Typography color="error">未找到该题目</Typography>
         <Button component={Link} to="/questions" sx={{ mt: 2 }}>
           返回题目列表
         </Button>
@@ -28,69 +34,102 @@ export default function QuestionDetailPage() {
     );
   }
 
-  if (!quiz) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Typography>加载中...</Typography>
-      </Box>
-    );
-  }
+  // 判断题型
+  const isSingle =
+    question.question_type === 'single_choice' || question.question_type === 'true_false';
+  const isMultiple = question.question_type === 'multiple_choice';
+
+  // 选项内容
+  const options = question.options;
+
+  // 正确答案
+  const correct = ['1', '2'];
+  const isCorrect = isSingle
+    ? selected.length === 1 && correct.includes(selected[0])
+    : selected.length === correct.length && selected.every((v) => correct.includes(v));
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
       <Button component={Link} to="/questions" sx={{ mb: 2 }}>
         ← 返回题目列表
       </Button>
 
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Typography variant="h4" component="h1" gutterBottom>
-            {quiz.title}
+          <Typography variant="h5" gutterBottom>
+            {question.question_text}
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-            {quiz.description}
-          </Typography>
-
           <Box sx={{ mb: 2 }}>
-            <Chip label={quiz.difficulty} color="primary" sx={{ mr: 1 }} />
-            <Chip label={quiz.category} color="secondary" sx={{ mr: 1 }} />
+            <Chip label={question.difficulty} color="primary" sx={{ mr: 1 }} />
+            <Chip label={question.category} color="secondary" sx={{ mr: 1 }} />
           </Box>
-
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            题目数量: {quiz.questions.length}
-            {quiz.time_limit && ` | 时间限制: ${quiz.time_limit}秒`}
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            创建时间: {question.created_at.toLocaleString()}
           </Typography>
 
-          <Typography variant="caption" color="text.secondary">
-            创建时间: {new Date(quiz.created_at).toLocaleString()}
-          </Typography>
-        </CardContent>
-      </Card>
-
-      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-        <Button component={Link} to={`/quizzes/${quiz.id}/play`} variant="contained" size="large">
-          开始答题
-        </Button>
-        <Button component={Link} to={`/quizzes/${quiz.id}/edit`} variant="outlined">
-          编辑测验
-        </Button>
-      </Box>
-
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            题目预览
-          </Typography>
-          <List>
-            {quiz.questions.map((question, index) => (
-              <ListItem key={question.id} divider>
-                <ListItemText
-                  primary={`${index + 1}. ${question.question_text}`}
-                  secondary={`类型: ${question.question_type} | 分数: ${question.points || 10}`}
+          {/* 选项区 */}
+          {isSingle && (
+            <RadioGroup value={selected[0] || ''} onChange={(e) => setSelected([e.target.value])}>
+              {options.map((opt, idx) => (
+                <FormControlLabel
+                  key={idx}
+                  value={String(idx)}
+                  control={<Radio />}
+                  label={opt.text || opt.image || ''}
+                  disabled={submitted}
                 />
-              </ListItem>
-            ))}
-          </List>
+              ))}
+            </RadioGroup>
+          )}
+          {isMultiple && (
+            <FormGroup>
+              {options.map((opt, idx) => (
+                <FormControlLabel
+                  key={idx}
+                  control={
+                    <Checkbox
+                      checked={selected.includes(String(idx))}
+                      onChange={(e) => {
+                        if (e.target.checked) setSelected([...selected, String(idx)]);
+                        else setSelected(selected.filter((v) => v !== String(idx)));
+                      }}
+                      disabled={submitted}
+                    />
+                  }
+                  label={opt.text || opt.image || ''}
+                />
+              ))}
+            </FormGroup>
+          )}
+
+          {/* 提交与结果 */}
+          {!submitted && (
+            <Button
+              variant="contained"
+              sx={{ mt: 2 }}
+              disabled={selected.length === 0}
+              onClick={() => setSubmitted(true)}
+            >
+              提交答案
+            </Button>
+          )}
+          {submitted && (
+            <Alert severity={isCorrect ? 'success' : 'error'} sx={{ mt: 2 }}>
+              {isCorrect ? '回答正确！' : '回答错误！'}
+            </Alert>
+          )}
+          {submitted && (
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                正确答案：{correct.map((idx) => options[Number(idx)]?.text || '').join('，')}
+              </Typography>
+              {question.explanation && (
+                <Typography variant="body2" color="info.main" sx={{ mt: 1 }}>
+                  解析：{question.explanation}
+                </Typography>
+              )}
+            </Box>
+          )}
         </CardContent>
       </Card>
     </Box>

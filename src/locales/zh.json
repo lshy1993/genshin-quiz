@@ -57,9 +57,9 @@
     },
     "category": {
       "lore": "剧情",
-      "characters": "角色",
-      "weapons": "武器",
-      "artifacts": "圣遗物",
+      "character": "角色",
+      "weapon": "武器",
+      "artifact": "圣遗物",
       "world": "大世界",
       "gameplay": "玩法",
       "combat": "战斗",

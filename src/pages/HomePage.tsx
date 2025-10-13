@@ -4,17 +4,18 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   CircularProgress,
   Grid,
   Typography,
 } from '@mui/material';
 import { t } from 'i18next';
 import { Link } from 'react-router-dom';
-import type { Quiz } from '../api/dto';
-import { useGetQuizzes } from '../api/genshinQuizAPI';
+import type { Exam } from '../api/dto';
+import { useGetExams } from '../api/genshinQuizAPI';
 
 export default function HomePage() {
-  const { data: quizzes, isLoading, error } = useGetQuizzes();
+  const { data: examRes, isLoading, error } = useGetExams();
 
   if (isLoading) {
     return <CircularProgress />;
@@ -28,7 +29,7 @@ export default function HomePage() {
     );
   }
 
-  const featuredQuizzes: Quiz[] = quizzes?.quizzes?.slice(0, 3) || [];
+  const featuredExams: Exam[] = examRes?.exams?.slice(0, 3) || [];
 
   return (
     <>
@@ -52,22 +53,27 @@ export default function HomePage() {
         精选测验
       </Typography>
       <Grid container spacing={3}>
-        {featuredQuizzes.map((quiz) => (
-          <Grid item xs={12} md={4} key={quiz.id}>
+        {featuredExams.map((exam) => (
+          <Grid item xs={12} md={4} key={exam.id}>
             <Card>
               <CardContent>
                 <Typography variant="h6" component="h3" gutterBottom>
-                  {quiz.title}
+                  {exam.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  {quiz.description}
+                  {exam.description}
                 </Typography>
                 <Typography variant="caption" display="block" sx={{ mb: 2 }}>
-                  难度: {quiz.difficulty} | 分类: {quiz.category}
+                  难度: {exam.difficulty}
                 </Typography>
+                <Box>
+                  {exam.categories?.map((cat) => (
+                    <Chip key={cat} label={cat} color="secondary" size="small" sx={{ mr: 0.5 }} />
+                  ))}
+                </Box>
                 <Button
                   component={Link}
-                  to={`/questions/${quiz.id}`}
+                  to={`/questions/${exam.id}`}
                   variant="contained"
                   size="small"
                 >

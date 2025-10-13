@@ -8,7 +8,7 @@
 
 import type { QuestionCategory } from './questionCategory';
 import type { QuestionDifficulty } from './questionDifficulty';
-import type { QuestionOptions } from './questionOptions';
+import type { QuestionOption } from './questionOption';
 import type { QuestionType } from './questionType';
 
 export interface Question {
@@ -17,8 +17,13 @@ export interface Question {
   question_type: QuestionType;
   category: QuestionCategory;
   difficulty: QuestionDifficulty;
-  options: QuestionOptions;
+  options: QuestionOption[];
   explanation?: string;
+  languages: string[];
+  /** 总答题人数 */
+  answer_count?: number;
+  /** 总答对人数 */
+  correct_count?: number;
   created_by: string;
   created_at: Date;
 }
