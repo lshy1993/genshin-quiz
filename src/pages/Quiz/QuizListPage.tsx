@@ -1,9 +1,9 @@
 import { Box, Button, Card, CardContent, Chip, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import type { Quiz } from '../api/dto';
-import { useGetQuizzes } from '../api/genshinQuizAPI';
+import type { Quiz } from '@/api/dto';
+import { useGetQuizzes } from '@/api/genshinQuizAPI';
 
-export default function QuizzesListPage() {
+export default function QuizListPage() {
   const { data: quizzes, error } = useGetQuizzes();
 
   if (error) {

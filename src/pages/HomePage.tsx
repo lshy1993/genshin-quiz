@@ -1,16 +1,30 @@
-import { Box, Button, Card, CardContent, Grid, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  Typography,
+} from '@mui/material';
+import { t } from 'i18next';
 import { Link } from 'react-router-dom';
 import type { Quiz } from '../api/dto';
 import { useGetQuizzes } from '../api/genshinQuizAPI';
 
 export default function HomePage() {
-  const { data: quizzes, error } = useGetQuizzes();
+  const { data: quizzes, isLoading, error } = useGetQuizzes();
 
+  if (isLoading) {
+    return <CircularProgress />;
+  }
   if (error) {
+    console.error('Error fetching quizzes:', error);
     return (
-      <Box sx={{ p: 3 }}>
-        <Typography color="error">加载测验数据失败: {error.message}</Typography>
-      </Box>
+      <Alert severity="error">
+        <Typography color="error">{t('common.loading_failed')}</Typography>
+      </Alert>
     );
   }
 

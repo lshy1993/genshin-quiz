@@ -1,3 +1,3 @@
-export const AdminRouteComponent = () => {
+export default function AdminRouteComponent() {
   return null;
-};
+}

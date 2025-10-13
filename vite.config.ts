@@ -7,7 +7,6 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   plugins: [react(), viteTsconfigPaths(), svgr()],
   resolve: {
-    preserveSymlinks: true,
     alias: {
       '@': '/src',
     },
@@ -17,7 +16,7 @@ export default defineConfig({
     host: true, // 使服务器在所有网络接口上可用
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: process.env.VITE_API_URL || 'http://localhost:8080',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

@@ -1,0 +1,46 @@
+{
+  "common": {
+    "btn_label": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "back": "Back",
+      "retry": "Retry",
+      "ok": "OK",
+      "close": "Close",
+      "delete": "Delete",
+      "edit": "Edit",
+      "save": "Save",
+      "confirm": "Confirm",
+      "yes": "Yes",
+      "no": "No",
+      "next": "Next",
+      "previous": "Previous"
+    },
+    "label": {
+      "loading": "Loading...",
+      "loading_failed": "Loading failed",
+      "submit_success": "Submission succeeded",
+      "submit_failed": "Submission failed"
+    }
+  },
+  "topbar": {
+    "title": "Genshin Quiz",
+    "label": {},
+    "btn_label": {
+      "home": "Home",
+      "quiz": "Quiz",
+      "vote": "Vote",
+      "rank": "Rank",
+      "about": "About",
+      "login_signup": "Login/Sign Up",
+      "logout": "Logout"
+    }
+  },
+  "home": {},
+  "404": {
+    "title_not_found": "Page Not Found",
+    "label_not_found": "The page you are looking for does not exist.",
+    "btn_label.home": "Go to Home",
+    "btn_label.quizzes": "Browse Quizzes"
+  }
+}

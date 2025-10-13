@@ -1,7 +1,10 @@
 import { Box, Button, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { t } from 'i18next';
+import { useNavigate } from 'react-router-dom';
 
 export default function NotFoundPage() {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
@@ -17,17 +20,17 @@ export default function NotFoundPage() {
         404
       </Typography>
       <Typography variant="h4" gutterBottom>
-        页面未找到
+        {t('404.title_not_found')}
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        抱歉，您访问的页面不存在。
+        {t('404.label_not_found')}
       </Typography>
-      <Box>
-        <Button component={Link} to="/" variant="contained" size="large" sx={{ mr: 2 }}>
-          返回首页
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+        <Button variant="contained" size="large" onClick={() => navigate('/')}>
+          {t('404.btn_label.home')}
         </Button>
-        <Button component={Link} to="/quizzes" variant="outlined" size="large">
-          浏览测验
+        <Button variant="outlined" size="large" onClick={() => navigate('/quizzes')}>
+          {t('404.btn_label.quizzes')}
         </Button>
       </Box>
     </Box>

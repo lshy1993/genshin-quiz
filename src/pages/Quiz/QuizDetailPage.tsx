@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
-import { useGetQuiz } from '../api/genshinQuizAPI';
+import { useGetQuiz } from '../../api/genshinQuizAPI';
 
 export default function QuizDetailPage() {
   const { id } = useParams<{ id: string }>();
