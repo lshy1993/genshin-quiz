@@ -6,10 +6,13 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type QuestionQuestionType = (typeof QuestionQuestionType)[keyof typeof QuestionQuestionType];
+/**
+ * 题目类型
+ */
+export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const QuestionQuestionType = {
+export const QuestionType = {
   single_choice: 'single_choice',
   multiple_choice: 'multiple_choice',
   true_false: 'true_false',

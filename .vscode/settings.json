@@ -13,6 +13,9 @@
   "[javascriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
   "editor.tabSize": 2,
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit",

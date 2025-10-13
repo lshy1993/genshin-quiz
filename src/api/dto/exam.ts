@@ -6,19 +6,20 @@
  * OpenAPI spec version: 1.0.0
  */
 
+import type { ExamQuestionsItem } from './examQuestionsItem';
 import type { QuestionCategory } from './questionCategory';
 import type { QuestionDifficulty } from './questionDifficulty';
-import type { QuestionOptions } from './questionOptions';
-import type { QuestionType } from './questionType';
 
-export interface Question {
+export interface Exam {
   id: string;
-  question_text: string;
-  question_type: QuestionType;
-  category: QuestionCategory;
+  title: string;
+  description?: string;
+  categories?: QuestionCategory[];
   difficulty: QuestionDifficulty;
-  options: QuestionOptions;
-  explanation?: string;
+  questions: ExamQuestionsItem[];
+  /** Time limit in seconds */
+  time_limit?: number;
   created_by: string;
   created_at: Date;
+  updated_at: Date;
 }

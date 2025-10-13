@@ -7,13 +7,15 @@
  */
 
 export interface User {
-  id: number;
-  username: string;
-  email: string;
-  display_name?: string;
-  avatar_url?: string;
-  total_score?: number;
-  quizzes_completed?: number;
-  created_at: Date;
-  updated_at: Date;
+  uuid: string;
+  nickname: string;
+  avatar_url: string;
+  country: string;
+  ip: string;
+  total_answers: number;
+  correct_answers: number;
+  questions_created: number;
+  votes: number;
+  registered_at: Date;
+  last_login_at: Date;
 }

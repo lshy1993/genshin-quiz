@@ -5,16 +5,11 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+import type { Question } from './question';
 
-export type GetUsersParams = {
-  ids?: string[];
-  /**
-   * @minimum 1
-   * @maximum 100
-   */
+export type GetQuestions200 = {
+  questions?: Question[];
+  total?: number;
   limit?: number;
-  /**
-   * @minimum 0
-   */
   offset?: number;
 };

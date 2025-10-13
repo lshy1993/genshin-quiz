@@ -6,16 +6,19 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type QuizCategory = (typeof QuizCategory)[keyof typeof QuizCategory];
+/**
+ * 题目分类
+ */
+export type QuestionCategory = (typeof QuestionCategory)[keyof typeof QuestionCategory];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const QuizCategory = {
+export const QuestionCategory = {
+  character: 'character',
+  weapon: 'weapon',
+  artifact: 'artifact',
   lore: 'lore',
-  characters: 'characters',
-  world: 'world',
-  weapons: 'weapons',
-  artifacts: 'artifacts',
   gameplay: 'gameplay',
+  world: 'world',
   combat: 'combat',
   music: 'music',
   statistics: 'statistics',

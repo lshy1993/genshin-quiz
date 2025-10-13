@@ -5,8 +5,10 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+import type { QuestionCategory } from './questionCategory';
+import type { QuestionDifficulty } from './questionDifficulty';
 
-export type GetUsersParams = {
+export type GetExamsParams = {
   ids?: string[];
   /**
    * @minimum 1
@@ -17,4 +19,6 @@ export type GetUsersParams = {
    * @minimum 0
    */
   offset?: number;
+  category?: QuestionCategory;
+  difficulty?: QuestionDifficulty;
 };

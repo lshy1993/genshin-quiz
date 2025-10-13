@@ -6,10 +6,13 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetQuizzesDifficulty = (typeof GetQuizzesDifficulty)[keyof typeof GetQuizzesDifficulty];
+/**
+ * 难度等级
+ */
+export type QuestionDifficulty = (typeof QuestionDifficulty)[keyof typeof QuestionDifficulty];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const GetQuizzesDifficulty = {
+export const QuestionDifficulty = {
   easy: 'easy',
   medium: 'medium',
   hard: 'hard',

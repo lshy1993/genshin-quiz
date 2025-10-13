@@ -6,12 +6,13 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type CreateQuizRequestDifficulty =
-  (typeof CreateQuizRequestDifficulty)[keyof typeof CreateQuizRequestDifficulty];
+/**
+ * 选项类型
+ */
+export type QuestionOptionsType = (typeof QuestionOptionsType)[keyof typeof QuestionOptionsType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const CreateQuizRequestDifficulty = {
-  easy: 'easy',
-  medium: 'medium',
-  hard: 'hard',
+export const QuestionOptionsType = {
+  text: 'text',
+  image: 'image',
 } as const;

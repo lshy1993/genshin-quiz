@@ -6,15 +6,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetUsersParams = {
-  ids?: string[];
-  /**
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: number;
-  /**
-   * @minimum 0
-   */
-  offset?: number;
+export type PostVoteBody = {
+  option_ids: string[];
+  /** 是否匿名投票 */
+  anonymous?: boolean;
 };

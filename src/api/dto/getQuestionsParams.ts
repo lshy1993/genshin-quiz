@@ -5,10 +5,11 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { GetQuizzesCategory } from './getQuizzesCategory';
-import type { GetQuizzesDifficulty } from './getQuizzesDifficulty';
+import type { QuestionCategory } from './questionCategory';
+import type { QuestionDifficulty } from './questionDifficulty';
 
-export type GetQuizzesParams = {
+export type GetQuestionsParams = {
+  ids?: string[];
   /**
    * @minimum 1
    * @maximum 100
@@ -18,6 +19,6 @@ export type GetQuizzesParams = {
    * @minimum 0
    */
   offset?: number;
-  category?: GetQuizzesCategory;
-  difficulty?: GetQuizzesDifficulty;
+  category?: QuestionCategory;
+  difficulty?: QuestionDifficulty;
 };

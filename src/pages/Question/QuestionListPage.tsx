@@ -1,21 +1,8 @@
-import {
-  Box,
-  Chip,
-  LinearProgress,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
-import { t } from 'i18next';
+import { Box, Typography } from '@mui/material';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import QuestionFilter from '@/components/QuestionFilter';
 import { mockQuestionData } from '@/util/mock';
+import QuestionTable from './QuestionTable';
 // import { useGetQuestions } from '@/api/genshinQuizAPI';
 
 export default function QuestionListPage() {
@@ -61,29 +48,16 @@ export default function QuestionListPage() {
     });
   }
 
-  const getCategoryLabel = (category: string) => {
-    return t(`question.category.${category}`);
-  };
-
-  const getDifficultyLabel = (diff: string) => {
-    return t(`question.difficulty.${diff}`);
-  };
-
-  const getDifficultyColor = (diff: string): 'success' | 'warning' | 'error' | 'default' => {
-    switch (diff) {
-      case 'easy':
-        return 'success';
-      case 'medium':
-        return 'warning';
-      case 'hard':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
-
   return (
-    <Box sx={{ maxWidth: 1200, mx: 'auto', py: 4 }}>
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: 900,
+        minWidth: 0,
+        mx: 'auto',
+        py: 4,
+      }}
+    >
       {/* Banner */}
       <Box
         sx={{
@@ -119,89 +93,7 @@ export default function QuestionListPage() {
       />
 
       {/* 题目表格 */}
-      <TableContainer component={Paper} sx={{ mt: 3 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>题目内容</TableCell>
-              <TableCell align="center">分类</TableCell>
-              <TableCell align="right">正确率</TableCell>
-              <TableCell align="right">难度</TableCell>
-              <TableCell align="right">回答人次</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredQuestions.map((question) => (
-              <TableRow
-                key={question.id}
-                hover
-                component={Link}
-                to={`/questions/${question.id}`}
-                sx={{
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    backgroundColor: 'action.hover',
-                  },
-                }}
-              >
-                <TableCell>
-                  <Typography variant="body2" sx={{ maxWidth: 400 }}>
-                    {question.question_text.length > 60
-                      ? `${question.question_text.substring(0, 60)}...`
-                      : question.question_text}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Chip
-                    label={getCategoryLabel(question.category)}
-                    color="secondary"
-                    size="small"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <Box
-                    sx={{
-                      width: 100,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      justifyContent: 'flex-end',
-                    }}
-                  >
-                    <LinearProgress
-                      variant="determinate"
-                      value={question.correctRate * 100}
-                      sx={{ flexGrow: 1, height: 6, borderRadius: 3 }}
-                      color={
-                        question.correctRate > 0.7
-                          ? 'success'
-                          : question.correctRate > 0.5
-                            ? 'warning'
-                            : 'error'
-                      }
-                    />
-                    <Typography variant="caption" sx={{ minWidth: 35 }}>
-                      {Math.round(question.correctRate * 100)}%
-                    </Typography>
-                  </Box>
-                </TableCell>
-                <TableCell align="right">
-                  <Typography variant="body2" color={getDifficultyColor(question.difficulty)}>
-                    {getDifficultyLabel(question.difficulty)}
-                  </Typography>
-                </TableCell>
-                <TableCell align="right">
-                  <Typography variant="body2" color="text.secondary">
-                    {question.answerCount.toLocaleString()}
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <QuestionTable questions={filteredQuestions} />
 
       {filteredQuestions.length === 0 && (
         <Box sx={{ textAlign: 'center', mt: 4 }}>

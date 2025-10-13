@@ -12,22 +12,185 @@ import type { SWRMutationConfiguration } from 'swr/mutation';
 import useSWRMutation from 'swr/mutation';
 
 import type {
+  AuthResponse,
   BadRequestResponse,
-  CreateQuizRequest,
-  CreateUserRequest,
-  GetQuizzes200,
-  GetQuizzesParams,
+  Exam,
+  GetExams200,
+  GetExamsParams,
+  GetQuestions200,
+  GetQuestionsParams,
   GetUsers200,
   GetUsersParams,
+  GetVotes200,
+  GetVotesParams,
   InternalServerErrorResponse,
   NotFoundResponse,
-  Quiz,
-  UpdateQuizRequest,
-  UpdateUserRequest,
+  PostForgotPasswordBody,
+  PostLoginUserBody,
+  PostRegisterUserBody,
+  PostVoteBody,
+  Question,
+  QuestionWithAnswer,
+  UnauthorizedResponse,
   User,
+  Vote,
 } from './dto';
 
 import { Fetcher } from './fetcher/fetcher';
+
+/**
+ * @summary Register a new user
+ */
+export const postRegisterUser = (postRegisterUserBody: PostRegisterUserBody) => {
+  return Fetcher<AuthResponse>({
+    url: `/auth/register`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: postRegisterUserBody,
+  });
+};
+
+export const getPostRegisterUserMutationFetcher = () => {
+  return (_: Key, { arg }: { arg: PostRegisterUserBody }) => {
+    return postRegisterUser(arg);
+  };
+};
+export const getPostRegisterUserMutationKey = () => [`/auth/register`] as const;
+
+export type PostRegisterUserMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postRegisterUser>>
+>;
+export type PostRegisterUserMutationError = BadRequestResponse | InternalServerErrorResponse;
+
+/**
+ * @summary Register a new user
+ */
+export const usePostRegisterUser = <
+  TError = BadRequestResponse | InternalServerErrorResponse,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postRegisterUser>>,
+    TError,
+    Key,
+    PostRegisterUserBody,
+    Awaited<ReturnType<typeof postRegisterUser>>
+  > & { swrKey?: string };
+}) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostRegisterUserMutationKey();
+  const swrFn = getPostRegisterUserMutationFetcher();
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Login user
+ */
+export const postLoginUser = (postLoginUserBody: PostLoginUserBody) => {
+  return Fetcher<AuthResponse>({
+    url: `/auth/login`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: postLoginUserBody,
+  });
+};
+
+export const getPostLoginUserMutationFetcher = () => {
+  return (_: Key, { arg }: { arg: PostLoginUserBody }) => {
+    return postLoginUser(arg);
+  };
+};
+export const getPostLoginUserMutationKey = () => [`/auth/login`] as const;
+
+export type PostLoginUserMutationResult = NonNullable<Awaited<ReturnType<typeof postLoginUser>>>;
+export type PostLoginUserMutationError =
+  | BadRequestResponse
+  | undefined
+  | InternalServerErrorResponse;
+
+/**
+ * @summary Login user
+ */
+export const usePostLoginUser = <
+  TError = BadRequestResponse | undefined | InternalServerErrorResponse,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postLoginUser>>,
+    TError,
+    Key,
+    PostLoginUserBody,
+    Awaited<ReturnType<typeof postLoginUser>>
+  > & { swrKey?: string };
+}) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostLoginUserMutationKey();
+  const swrFn = getPostLoginUserMutationFetcher();
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Request password reset
+ */
+export const postForgotPassword = (postForgotPasswordBody: PostForgotPasswordBody) => {
+  return Fetcher<void>({
+    url: `/auth/forgot-password`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: postForgotPasswordBody,
+  });
+};
+
+export const getPostForgotPasswordMutationFetcher = () => {
+  return (_: Key, { arg }: { arg: PostForgotPasswordBody }) => {
+    return postForgotPassword(arg);
+  };
+};
+export const getPostForgotPasswordMutationKey = () => [`/auth/forgot-password`] as const;
+
+export type PostForgotPasswordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postForgotPassword>>
+>;
+export type PostForgotPasswordMutationError = BadRequestResponse | InternalServerErrorResponse;
+
+/**
+ * @summary Request password reset
+ */
+export const usePostForgotPassword = <
+  TError = BadRequestResponse | InternalServerErrorResponse,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postForgotPassword>>,
+    TError,
+    Key,
+    PostForgotPasswordBody,
+    Awaited<ReturnType<typeof postForgotPassword>>
+  > & { swrKey?: string };
+}) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostForgotPasswordMutationKey();
+  const swrFn = getPostForgotPasswordMutationFetcher();
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
 
 /**
  * @summary Get all users
@@ -40,12 +203,17 @@ export const getGetUsersKey = (params?: GetUsersParams) =>
   [`/users`, ...(params ? [params] : [])] as const;
 
 export type GetUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>;
-export type GetUsersQueryError = InternalServerErrorResponse;
+export type GetUsersQueryError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | InternalServerErrorResponse;
 
 /**
  * @summary Get all users
  */
-export const useGetUsers = <TError = InternalServerErrorResponse>(
+export const useGetUsers = <
+  TError = BadRequestResponse | UnauthorizedResponse | InternalServerErrorResponse,
+>(
   params?: GetUsersParams,
   options?: {
     swr?: SWRConfiguration<Awaited<ReturnType<typeof getUsers>>, TError> & {
@@ -69,60 +237,13 @@ export const useGetUsers = <TError = InternalServerErrorResponse>(
 };
 
 /**
- * @summary Create a new user
- */
-export const createUser = (createUserRequest: CreateUserRequest) => {
-  return Fetcher<User>({
-    url: `/users`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: createUserRequest,
-  });
-};
-
-export const getCreateUserMutationFetcher = () => {
-  return (_: Key, { arg }: { arg: CreateUserRequest }) => {
-    return createUser(arg);
-  };
-};
-export const getCreateUserMutationKey = () => [`/users`] as const;
-
-export type CreateUserMutationResult = NonNullable<Awaited<ReturnType<typeof createUser>>>;
-export type CreateUserMutationError = BadRequestResponse | InternalServerErrorResponse;
-
-/**
- * @summary Create a new user
- */
-export const useCreateUser = <TError = BadRequestResponse | InternalServerErrorResponse>(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof createUser>>,
-    TError,
-    Key,
-    CreateUserRequest,
-    Awaited<ReturnType<typeof createUser>>
-  > & { swrKey?: string };
-}) => {
-  const { swr: swrOptions } = options ?? {};
-
-  const swrKey = swrOptions?.swrKey ?? getCreateUserMutationKey();
-  const swrFn = getCreateUserMutationFetcher();
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
-
-  return {
-    swrKey,
-    ...query,
-  };
-};
-
-/**
  * @summary Get user by ID
  */
-export const getUser = (id: number) => {
+export const getUser = (id: string) => {
   return Fetcher<User>({ url: `/users/${id}`, method: 'GET' });
 };
 
-export const getGetUserKey = (id: number) => [`/users/${id}`] as const;
+export const getGetUserKey = (id: string) => [`/users/${id}`] as const;
 
 export type GetUserQueryResult = NonNullable<Awaited<ReturnType<typeof getUser>>>;
 export type GetUserQueryError = NotFoundResponse | InternalServerErrorResponse;
@@ -131,7 +252,7 @@ export type GetUserQueryError = NotFoundResponse | InternalServerErrorResponse;
  * @summary Get user by ID
  */
 export const useGetUser = <TError = NotFoundResponse | InternalServerErrorResponse>(
-  id: number,
+  id: string,
   options?: {
     swr?: SWRConfiguration<Awaited<ReturnType<typeof getUser>>, TError> & {
       swrKey?: Key;
@@ -156,25 +277,26 @@ export const useGetUser = <TError = NotFoundResponse | InternalServerErrorRespon
 /**
  * @summary Update user
  */
-export const updateUser = (id: number, updateUserRequest: UpdateUserRequest) => {
+export const updateUser = (id: string, user: User) => {
   return Fetcher<User>({
     url: `/users/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    data: updateUserRequest,
+    data: user,
   });
 };
 
-export const getUpdateUserMutationFetcher = (id: number) => {
-  return (_: Key, { arg }: { arg: UpdateUserRequest }) => {
+export const getUpdateUserMutationFetcher = (id: string) => {
+  return (_: Key, { arg }: { arg: User }) => {
     return updateUser(id, arg);
   };
 };
-export const getUpdateUserMutationKey = (id: number) => [`/users/${id}`] as const;
+export const getUpdateUserMutationKey = (id: string) => [`/users/${id}`] as const;
 
 export type UpdateUserMutationResult = NonNullable<Awaited<ReturnType<typeof updateUser>>>;
 export type UpdateUserMutationError =
   | BadRequestResponse
+  | UnauthorizedResponse
   | NotFoundResponse
   | InternalServerErrorResponse;
 
@@ -182,15 +304,19 @@ export type UpdateUserMutationError =
  * @summary Update user
  */
 export const useUpdateUser = <
-  TError = BadRequestResponse | NotFoundResponse | InternalServerErrorResponse,
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
 >(
-  id: number,
+  id: string,
   options?: {
     swr?: SWRMutationConfiguration<
       Awaited<ReturnType<typeof updateUser>>,
       TError,
       Key,
-      UpdateUserRequest,
+      User,
       Awaited<ReturnType<typeof updateUser>>
     > & { swrKey?: string };
   },
@@ -211,25 +337,35 @@ export const useUpdateUser = <
 /**
  * @summary Delete user
  */
-export const deleteUser = (id: number) => {
+export const deleteUser = (id: string) => {
   return Fetcher<void>({ url: `/users/${id}`, method: 'DELETE' });
 };
 
-export const getDeleteUserMutationFetcher = (id: number) => {
+export const getDeleteUserMutationFetcher = (id: string) => {
   return (_: Key, __: { arg: Arguments }) => {
     return deleteUser(id);
   };
 };
-export const getDeleteUserMutationKey = (id: number) => [`/users/${id}`] as const;
+export const getDeleteUserMutationKey = (id: string) => [`/users/${id}`] as const;
 
 export type DeleteUserMutationResult = NonNullable<Awaited<ReturnType<typeof deleteUser>>>;
-export type DeleteUserMutationError = NotFoundResponse | InternalServerErrorResponse;
+export type DeleteUserMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | NotFoundResponse
+  | InternalServerErrorResponse;
 
 /**
  * @summary Delete user
  */
-export const useDeleteUser = <TError = NotFoundResponse | InternalServerErrorResponse>(
-  id: number,
+export const useDeleteUser = <
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+>(
+  id: string,
   options?: {
     swr?: SWRMutationConfiguration<
       Awaited<ReturnType<typeof deleteUser>>,
@@ -254,25 +390,25 @@ export const useDeleteUser = <TError = NotFoundResponse | InternalServerErrorRes
 };
 
 /**
- * @summary Get all quizzes
+ * @summary Get all questions
  */
-export const getQuizzes = (params?: GetQuizzesParams) => {
-  return Fetcher<GetQuizzes200>({ url: `/quizzes`, method: 'GET', params });
+export const getQuestions = (params?: GetQuestionsParams) => {
+  return Fetcher<GetQuestions200>({ url: `/questions`, method: 'GET', params });
 };
 
-export const getGetQuizzesKey = (params?: GetQuizzesParams) =>
-  [`/quizzes`, ...(params ? [params] : [])] as const;
+export const getGetQuestionsKey = (params?: GetQuestionsParams) =>
+  [`/questions`, ...(params ? [params] : [])] as const;
 
-export type GetQuizzesQueryResult = NonNullable<Awaited<ReturnType<typeof getQuizzes>>>;
-export type GetQuizzesQueryError = InternalServerErrorResponse;
+export type GetQuestionsQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestions>>>;
+export type GetQuestionsQueryError = InternalServerErrorResponse;
 
 /**
- * @summary Get all quizzes
+ * @summary Get all questions
  */
-export const useGetQuizzes = <TError = InternalServerErrorResponse>(
-  params?: GetQuizzesParams,
+export const useGetQuestions = <TError = InternalServerErrorResponse>(
+  params?: GetQuestionsParams,
   options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getQuizzes>>, TError> & {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getQuestions>>, TError> & {
       swrKey?: Key;
       enabled?: boolean;
     };
@@ -281,8 +417,8 @@ export const useGetQuizzes = <TError = InternalServerErrorResponse>(
   const { swr: swrOptions } = options ?? {};
 
   const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetQuizzesKey(params) : null));
-  const swrFn = () => getQuizzes(params);
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetQuestionsKey(params) : null));
+  const swrFn = () => getQuestions(params);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
@@ -293,43 +429,50 @@ export const useGetQuizzes = <TError = InternalServerErrorResponse>(
 };
 
 /**
- * @summary Create a new quiz
+ * @summary Create a new question
  */
-export const createQuiz = (createQuizRequest: CreateQuizRequest) => {
-  return Fetcher<Quiz>({
-    url: `/quizzes`,
+export const postCreateQuestion = (questionWithAnswer: QuestionWithAnswer) => {
+  return Fetcher<QuestionWithAnswer>({
+    url: `/questions`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    data: createQuizRequest,
+    data: questionWithAnswer,
   });
 };
 
-export const getCreateQuizMutationFetcher = () => {
-  return (_: Key, { arg }: { arg: CreateQuizRequest }) => {
-    return createQuiz(arg);
+export const getPostCreateQuestionMutationFetcher = () => {
+  return (_: Key, { arg }: { arg: QuestionWithAnswer }) => {
+    return postCreateQuestion(arg);
   };
 };
-export const getCreateQuizMutationKey = () => [`/quizzes`] as const;
+export const getPostCreateQuestionMutationKey = () => [`/questions`] as const;
 
-export type CreateQuizMutationResult = NonNullable<Awaited<ReturnType<typeof createQuiz>>>;
-export type CreateQuizMutationError = BadRequestResponse | InternalServerErrorResponse;
+export type PostCreateQuestionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postCreateQuestion>>
+>;
+export type PostCreateQuestionMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | InternalServerErrorResponse;
 
 /**
- * @summary Create a new quiz
+ * @summary Create a new question
  */
-export const useCreateQuiz = <TError = BadRequestResponse | InternalServerErrorResponse>(options?: {
+export const usePostCreateQuestion = <
+  TError = BadRequestResponse | UnauthorizedResponse | InternalServerErrorResponse,
+>(options?: {
   swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof createQuiz>>,
+    Awaited<ReturnType<typeof postCreateQuestion>>,
     TError,
     Key,
-    CreateQuizRequest,
-    Awaited<ReturnType<typeof createQuiz>>
+    QuestionWithAnswer,
+    Awaited<ReturnType<typeof postCreateQuestion>>
   > & { swrKey?: string };
 }) => {
   const { swr: swrOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getCreateQuizMutationKey();
-  const swrFn = getCreateQuizMutationFetcher();
+  const swrKey = swrOptions?.swrKey ?? getPostCreateQuestionMutationKey();
+  const swrFn = getPostCreateQuestionMutationFetcher();
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
@@ -340,24 +483,29 @@ export const useCreateQuiz = <TError = BadRequestResponse | InternalServerErrorR
 };
 
 /**
- * @summary Get quiz by ID
+ * @summary Get question by ID
  */
-export const getQuiz = (id: number) => {
-  return Fetcher<Quiz>({ url: `/quizzes/${id}`, method: 'GET' });
+export const getQuestion = (id: string) => {
+  return Fetcher<Question>({ url: `/questions/${id}`, method: 'GET' });
 };
 
-export const getGetQuizKey = (id: number) => [`/quizzes/${id}`] as const;
+export const getGetQuestionKey = (id: string) => [`/questions/${id}`] as const;
 
-export type GetQuizQueryResult = NonNullable<Awaited<ReturnType<typeof getQuiz>>>;
-export type GetQuizQueryError = NotFoundResponse | InternalServerErrorResponse;
+export type GetQuestionQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestion>>>;
+export type GetQuestionQueryError =
+  | BadRequestResponse
+  | NotFoundResponse
+  | InternalServerErrorResponse;
 
 /**
- * @summary Get quiz by ID
+ * @summary Get question by ID
  */
-export const useGetQuiz = <TError = NotFoundResponse | InternalServerErrorResponse>(
-  id: number,
+export const useGetQuestion = <
+  TError = BadRequestResponse | NotFoundResponse | InternalServerErrorResponse,
+>(
+  id: string,
   options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getQuiz>>, TError> & {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getQuestion>>, TError> & {
       swrKey?: Key;
       enabled?: boolean;
     };
@@ -366,8 +514,8 @@ export const useGetQuiz = <TError = NotFoundResponse | InternalServerErrorRespon
   const { swr: swrOptions } = options ?? {};
 
   const isEnabled = swrOptions?.enabled !== false && !!id;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetQuizKey(id) : null));
-  const swrFn = () => getQuiz(id);
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetQuestionKey(id) : null));
+  const swrFn = () => getQuestion(id);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
@@ -378,51 +526,56 @@ export const useGetQuiz = <TError = NotFoundResponse | InternalServerErrorRespon
 };
 
 /**
- * @summary Update quiz
+ * @summary Update question
  */
-export const updateQuiz = (id: number, updateQuizRequest: UpdateQuizRequest) => {
-  return Fetcher<Quiz>({
-    url: `/quizzes/${id}`,
+export const updateQuestion = (id: string, questionWithAnswer: QuestionWithAnswer) => {
+  return Fetcher<QuestionWithAnswer>({
+    url: `/questions/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    data: updateQuizRequest,
+    data: questionWithAnswer,
   });
 };
 
-export const getUpdateQuizMutationFetcher = (id: number) => {
-  return (_: Key, { arg }: { arg: UpdateQuizRequest }) => {
-    return updateQuiz(id, arg);
+export const getUpdateQuestionMutationFetcher = (id: string) => {
+  return (_: Key, { arg }: { arg: QuestionWithAnswer }) => {
+    return updateQuestion(id, arg);
   };
 };
-export const getUpdateQuizMutationKey = (id: number) => [`/quizzes/${id}`] as const;
+export const getUpdateQuestionMutationKey = (id: string) => [`/questions/${id}`] as const;
 
-export type UpdateQuizMutationResult = NonNullable<Awaited<ReturnType<typeof updateQuiz>>>;
-export type UpdateQuizMutationError =
+export type UpdateQuestionMutationResult = NonNullable<Awaited<ReturnType<typeof updateQuestion>>>;
+export type UpdateQuestionMutationError =
   | BadRequestResponse
+  | UnauthorizedResponse
   | NotFoundResponse
   | InternalServerErrorResponse;
 
 /**
- * @summary Update quiz
+ * @summary Update question
  */
-export const useUpdateQuiz = <
-  TError = BadRequestResponse | NotFoundResponse | InternalServerErrorResponse,
+export const useUpdateQuestion = <
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
 >(
-  id: number,
+  id: string,
   options?: {
     swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof updateQuiz>>,
+      Awaited<ReturnType<typeof updateQuestion>>,
       TError,
       Key,
-      UpdateQuizRequest,
-      Awaited<ReturnType<typeof updateQuiz>>
+      QuestionWithAnswer,
+      Awaited<ReturnType<typeof updateQuestion>>
     > & { swrKey?: string };
   },
 ) => {
   const { swr: swrOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getUpdateQuizMutationKey(id);
-  const swrFn = getUpdateQuizMutationFetcher(id);
+  const swrKey = swrOptions?.swrKey ?? getUpdateQuestionMutationKey(id);
+  const swrFn = getUpdateQuestionMutationFetcher(id);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 
@@ -433,41 +586,488 @@ export const useUpdateQuiz = <
 };
 
 /**
- * @summary Delete quiz
+ * @summary Delete question
  */
-export const deleteQuiz = (id: number) => {
-  return Fetcher<void>({ url: `/quizzes/${id}`, method: 'DELETE' });
+export const deleteQuestion = (id: string) => {
+  return Fetcher<void>({ url: `/questions/${id}`, method: 'DELETE' });
 };
 
-export const getDeleteQuizMutationFetcher = (id: number) => {
+export const getDeleteQuestionMutationFetcher = (id: string) => {
   return (_: Key, __: { arg: Arguments }) => {
-    return deleteQuiz(id);
+    return deleteQuestion(id);
   };
 };
-export const getDeleteQuizMutationKey = (id: number) => [`/quizzes/${id}`] as const;
+export const getDeleteQuestionMutationKey = (id: string) => [`/questions/${id}`] as const;
 
-export type DeleteQuizMutationResult = NonNullable<Awaited<ReturnType<typeof deleteQuiz>>>;
-export type DeleteQuizMutationError = NotFoundResponse | InternalServerErrorResponse;
+export type DeleteQuestionMutationResult = NonNullable<Awaited<ReturnType<typeof deleteQuestion>>>;
+export type DeleteQuestionMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | NotFoundResponse
+  | InternalServerErrorResponse;
 
 /**
- * @summary Delete quiz
+ * @summary Delete question
  */
-export const useDeleteQuiz = <TError = NotFoundResponse | InternalServerErrorResponse>(
-  id: number,
+export const useDeleteQuestion = <
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+>(
+  id: string,
   options?: {
     swr?: SWRMutationConfiguration<
-      Awaited<ReturnType<typeof deleteQuiz>>,
+      Awaited<ReturnType<typeof deleteQuestion>>,
       TError,
       Key,
       Arguments,
-      Awaited<ReturnType<typeof deleteQuiz>>
+      Awaited<ReturnType<typeof deleteQuestion>>
     > & { swrKey?: string };
   },
 ) => {
   const { swr: swrOptions } = options ?? {};
 
-  const swrKey = swrOptions?.swrKey ?? getDeleteQuizMutationKey(id);
-  const swrFn = getDeleteQuizMutationFetcher(id);
+  const swrKey = swrOptions?.swrKey ?? getDeleteQuestionMutationKey(id);
+  const swrFn = getDeleteQuestionMutationFetcher(id);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Get all exams
+ */
+export const getExams = (params?: GetExamsParams) => {
+  return Fetcher<GetExams200>({ url: `/exams`, method: 'GET', params });
+};
+
+export const getGetExamsKey = (params?: GetExamsParams) =>
+  [`/exams`, ...(params ? [params] : [])] as const;
+
+export type GetExamsQueryResult = NonNullable<Awaited<ReturnType<typeof getExams>>>;
+export type GetExamsQueryError = InternalServerErrorResponse;
+
+/**
+ * @summary Get all exams
+ */
+export const useGetExams = <TError = InternalServerErrorResponse>(
+  params?: GetExamsParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getExams>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetExamsKey(params) : null));
+  const swrFn = () => getExams(params);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Create a new exam
+ */
+export const postCreateExam = (exam: Exam) => {
+  return Fetcher<Exam>({
+    url: `/exams`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: exam,
+  });
+};
+
+export const getPostCreateExamMutationFetcher = () => {
+  return (_: Key, { arg }: { arg: Exam }) => {
+    return postCreateExam(arg);
+  };
+};
+export const getPostCreateExamMutationKey = () => [`/exams`] as const;
+
+export type PostCreateExamMutationResult = NonNullable<Awaited<ReturnType<typeof postCreateExam>>>;
+export type PostCreateExamMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary Create a new exam
+ */
+export const usePostCreateExam = <
+  TError = BadRequestResponse | UnauthorizedResponse | InternalServerErrorResponse,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postCreateExam>>,
+    TError,
+    Key,
+    Exam,
+    Awaited<ReturnType<typeof postCreateExam>>
+  > & { swrKey?: string };
+}) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostCreateExamMutationKey();
+  const swrFn = getPostCreateExamMutationFetcher();
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Get exam by ID
+ */
+export const getExam = (id: string) => {
+  return Fetcher<Exam>({ url: `/exams/${id}`, method: 'GET' });
+};
+
+export const getGetExamKey = (id: string) => [`/exams/${id}`] as const;
+
+export type GetExamQueryResult = NonNullable<Awaited<ReturnType<typeof getExam>>>;
+export type GetExamQueryError = BadRequestResponse | NotFoundResponse | InternalServerErrorResponse;
+
+/**
+ * @summary Get exam by ID
+ */
+export const useGetExam = <
+  TError = BadRequestResponse | NotFoundResponse | InternalServerErrorResponse,
+>(
+  id: string,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getExam>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!id;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetExamKey(id) : null));
+  const swrFn = () => getExam(id);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Update exam
+ */
+export const updateExam = (id: string, exam: Exam) => {
+  return Fetcher<Exam>({
+    url: `/exams/${id}`,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    data: exam,
+  });
+};
+
+export const getUpdateExamMutationFetcher = (id: string) => {
+  return (_: Key, { arg }: { arg: Exam }) => {
+    return updateExam(id, arg);
+  };
+};
+export const getUpdateExamMutationKey = (id: string) => [`/exams/${id}`] as const;
+
+export type UpdateExamMutationResult = NonNullable<Awaited<ReturnType<typeof updateExam>>>;
+export type UpdateExamMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | NotFoundResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary Update exam
+ */
+export const useUpdateExam = <
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+>(
+  id: string,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof updateExam>>,
+      TError,
+      Key,
+      Exam,
+      Awaited<ReturnType<typeof updateExam>>
+    > & { swrKey?: string };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getUpdateExamMutationKey(id);
+  const swrFn = getUpdateExamMutationFetcher(id);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Delete exam
+ */
+export const deleteExam = (id: string) => {
+  return Fetcher<void>({ url: `/exams/${id}`, method: 'DELETE' });
+};
+
+export const getDeleteExamMutationFetcher = (id: string) => {
+  return (_: Key, __: { arg: Arguments }) => {
+    return deleteExam(id);
+  };
+};
+export const getDeleteExamMutationKey = (id: string) => [`/exams/${id}`] as const;
+
+export type DeleteExamMutationResult = NonNullable<Awaited<ReturnType<typeof deleteExam>>>;
+export type DeleteExamMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | NotFoundResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary Delete exam
+ */
+export const useDeleteExam = <
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+>(
+  id: string,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof deleteExam>>,
+      TError,
+      Key,
+      Arguments,
+      Awaited<ReturnType<typeof deleteExam>>
+    > & { swrKey?: string };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getDeleteExamMutationKey(id);
+  const swrFn = getDeleteExamMutationFetcher(id);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary 创建投票
+ */
+export const postCreateVote = (vote: Vote) => {
+  return Fetcher<Vote>({
+    url: `/votes`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: vote,
+  });
+};
+
+export const getPostCreateVoteMutationFetcher = () => {
+  return (_: Key, { arg }: { arg: Vote }) => {
+    return postCreateVote(arg);
+  };
+};
+export const getPostCreateVoteMutationKey = () => [`/votes`] as const;
+
+export type PostCreateVoteMutationResult = NonNullable<Awaited<ReturnType<typeof postCreateVote>>>;
+export type PostCreateVoteMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary 创建投票
+ */
+export const usePostCreateVote = <
+  TError = BadRequestResponse | UnauthorizedResponse | InternalServerErrorResponse,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postCreateVote>>,
+    TError,
+    Key,
+    Vote,
+    Awaited<ReturnType<typeof postCreateVote>>
+  > & { swrKey?: string };
+}) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostCreateVoteMutationKey();
+  const swrFn = getPostCreateVoteMutationFetcher();
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary 获取投票列表
+ */
+export const getVotes = (params?: GetVotesParams) => {
+  return Fetcher<GetVotes200>({ url: `/votes`, method: 'GET', params });
+};
+
+export const getGetVotesKey = (params?: GetVotesParams) =>
+  [`/votes`, ...(params ? [params] : [])] as const;
+
+export type GetVotesQueryResult = NonNullable<Awaited<ReturnType<typeof getVotes>>>;
+export type GetVotesQueryError = InternalServerErrorResponse;
+
+/**
+ * @summary 获取投票列表
+ */
+export const useGetVotes = <TError = InternalServerErrorResponse>(
+  params?: GetVotesParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getVotes>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetVotesKey(params) : null));
+  const swrFn = () => getVotes(params);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary 获取投票详情（含当前结果）
+ */
+export const getVote = (id: string) => {
+  return Fetcher<Vote>({ url: `/votes/${id}`, method: 'GET' });
+};
+
+export const getGetVoteKey = (id: string) => [`/votes/${id}`] as const;
+
+export type GetVoteQueryResult = NonNullable<Awaited<ReturnType<typeof getVote>>>;
+export type GetVoteQueryError = BadRequestResponse | NotFoundResponse | InternalServerErrorResponse;
+
+/**
+ * @summary 获取投票详情（含当前结果）
+ */
+export const useGetVote = <
+  TError = BadRequestResponse | NotFoundResponse | InternalServerErrorResponse,
+>(
+  id: string,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getVote>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!id;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetVoteKey(id) : null));
+  const swrFn = () => getVote(id);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary 投票
+ */
+export const postVote = (id: string, postVoteBody: PostVoteBody) => {
+  return Fetcher<void>({
+    url: `/votes/${id}/vote`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: postVoteBody,
+  });
+};
+
+export const getPostVoteMutationFetcher = (id: string) => {
+  return (_: Key, { arg }: { arg: PostVoteBody }) => {
+    return postVote(id, arg);
+  };
+};
+export const getPostVoteMutationKey = (id: string) => [`/votes/${id}/vote`] as const;
+
+export type PostVoteMutationResult = NonNullable<Awaited<ReturnType<typeof postVote>>>;
+export type PostVoteMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | NotFoundResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary 投票
+ */
+export const usePostVote = <
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+>(
+  id: string,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof postVote>>,
+      TError,
+      Key,
+      PostVoteBody,
+      Awaited<ReturnType<typeof postVote>>
+    > & { swrKey?: string };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostVoteMutationKey(id);
+  const swrFn = getPostVoteMutationFetcher(id);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 

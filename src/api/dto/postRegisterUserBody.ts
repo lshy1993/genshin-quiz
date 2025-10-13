@@ -6,14 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export interface CreateUserRequest {
-  /**
-   * @minLength 3
-   * @maxLength 50
-   */
-  username: string;
+export type PostRegisterUserBody = {
   email: string;
-  /** @maxLength 100 */
-  display_name?: string;
-  avatar_url?: string;
-}
+  password: string;
+};

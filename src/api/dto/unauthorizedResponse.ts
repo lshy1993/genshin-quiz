@@ -5,11 +5,9 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { Quiz } from './quiz';
+import type { Error } from './error';
 
-export type GetQuizzes200 = {
-  quizzes?: Quiz[];
-  total?: number;
-  limit?: number;
-  offset?: number;
-};
+/**
+ * Unauthorized
+ */
+export type UnauthorizedResponse = Error;
