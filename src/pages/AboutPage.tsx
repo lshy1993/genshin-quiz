@@ -38,8 +38,8 @@ export default function AboutPage() {
       </Typography>
 
       <Box sx={{ mt: 4 }}>
-        <Button component={Link} to="/quizzes" variant="contained" size="large" sx={{ mr: 2 }}>
-          开始测验
+        <Button component={Link} to="/questions" variant="contained" size="large" sx={{ mr: 2 }}>
+          浏览题目
         </Button>
         <Button component={Link} to="/" variant="outlined" size="large">
           返回首页

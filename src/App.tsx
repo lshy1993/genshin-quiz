@@ -5,11 +5,13 @@ import AdminRouteComponent from './admin/AdminRouteComponent';
 import TopBarComponent from './components/TopBarComponent';
 
 import AboutPage from './pages/AboutPage';
+import ExamDetailPage from './pages/Exam/ExamDetailPage';
+import ExamListPage from './pages/Exam/ExamListPage';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
-import QuizDetailPage from './pages/Quiz/QuizDetailPage';
-import QuizListPage from './pages/Quiz/QuizListPage';
+import QuestionDetailPage from './pages/Question/QuestionDetailPage';
+import QuestionListPage from './pages/Question/QuestionListPage';
 import VoteDetailPage from './pages/Vote/VoteDetailPage';
 import VoteListPage from './pages/Vote/VoteListPage';
 
@@ -38,10 +40,12 @@ function App() {
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/quiz" element={<QuizListPage />} />
-            <Route path="/quiz/:id" element={<QuizDetailPage />} />
-            <Route path="/vote" element={<VoteListPage />} />
+            <Route path="/questions" element={<QuestionListPage />} />
+            <Route path="/question/:id" element={<QuestionDetailPage />} />
+            <Route path="/votes" element={<VoteListPage />} />
             <Route path="/vote/:id" element={<VoteDetailPage />} />
+            <Route path="/exams" element={<ExamListPage />} />
+            <Route path="/exam/:id" element={<ExamDetailPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

@@ -29,8 +29,8 @@ export default function NotFoundPage() {
         <Button variant="contained" size="large" onClick={() => navigate('/')}>
           {t('404.btn_label.home')}
         </Button>
-        <Button variant="outlined" size="large" onClick={() => navigate('/quizzes')}>
-          {t('404.btn_label.quizzes')}
+        <Button variant="outlined" size="large" onClick={() => navigate('/questions')}>
+          {t('404.btn_label.questions')}
         </Button>
       </Box>
     </Box>

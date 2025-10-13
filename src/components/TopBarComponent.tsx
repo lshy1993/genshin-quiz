@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Tab, Tabs, Toolbar, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UserInfoBox } from './UserInfoBox';
@@ -7,26 +7,21 @@ export default function TopBarComponent() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
-
-  const NaviButton = ({ path }: { path: string }) => {
-    return (
-      <Button
-        color="inherit"
-        variant={isActive(`/${path}`) ? 'outlined' : 'text'}
-        onClick={() => navigate(`/${path}`)}
-      >
-        {t(`topbar.btn_label.${path}`)}
-      </Button>
-    );
-  };
+  const navItems = [
+    { labelKey: 'home', path: '/home' },
+    { labelKey: 'votes', path: '/votes' },
+    { labelKey: 'questions', path: '/questions' },
+    { labelKey: 'exams', path: '/exams' },
+    { labelKey: 'rank', path: '/rank' },
+    { labelKey: 'about', path: '/about' },
+  ];
+  const currentTab = navItems.findIndex((item) => location.pathname.startsWith(item.path));
+  const tabValue = currentTab === -1 ? 0 : currentTab;
 
   return (
     <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+      <Toolbar variant="dense" sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Button
             color="inherit"
             sx={{
@@ -36,15 +31,26 @@ export default function TopBarComponent() {
             }}
             onClick={() => navigate('/')}
           >
-            {t('topbar.title')}
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              {t('topbar.title')}
+            </Typography>
           </Button>
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <NaviButton path="home" />
-          <NaviButton path="quiz" />
-          <NaviButton path="vote" />
-          <NaviButton path="rank" />
-          <NaviButton path="about" />
+          <Tabs
+            sx={{ minHeight: 50, display: 'flex', alignItems: 'center', gap: 2 }}
+            value={tabValue}
+            onChange={(_, idx) => navigate(navItems[idx].path)}
+            textColor="inherit"
+            indicatorColor="secondary"
+            centered
+          >
+            {navItems.map((item) => (
+              <Tab
+                key={item.path}
+                label={t(`topbar.btn_label.${item.labelKey}`)}
+                sx={{ minWidth: 80 }}
+              />
+            ))}
+          </Tabs>
         </Box>
         <UserInfoBox />
       </Toolbar>

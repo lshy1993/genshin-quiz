@@ -40,8 +40,8 @@ export default function HomePage() {
         <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
           测试你对原神世界的了解程度
         </Typography>
-        <Button component={Link} to="/quizzes" variant="contained" size="large" sx={{ mr: 2 }}>
-          开始测验
+        <Button component={Link} to="/questions" variant="contained" size="large" sx={{ mr: 2 }}>
+          浏览题目
         </Button>
         <Button component={Link} to="/about" variant="outlined" size="large">
           了解更多
@@ -67,7 +67,7 @@ export default function HomePage() {
                 </Typography>
                 <Button
                   component={Link}
-                  to={`/quizzes/${quiz.id}`}
+                  to={`/questions/${quiz.id}`}
                   variant="contained"
                   size="small"
                 >

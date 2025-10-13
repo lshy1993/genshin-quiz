@@ -59,7 +59,7 @@ export default function VoteListPage() {
   );
 
   return (
-    <Box sx={{ maxWidth: 700, mx: 'auto', py: 4 }}>
+    <Box sx={{ maxWidth: 900, mx: 'auto', py: 4 }}>
       {/* Banner */}
       <Box
         sx={{

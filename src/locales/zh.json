@@ -2,5 +2,5 @@
   "404.title_not_found": "页面未找到",
   "404.label_not_found": "抱歉，您访问的页面不存在。",
   "404.btn_label.home": "返回首页",
-  "404.btn_label.quizzes": "浏览测验"
+  "404.btn_label.questions": "浏览题目"
 }
