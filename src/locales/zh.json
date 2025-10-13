@@ -1,6 +1,72 @@
 {
-  "404.title_not_found": "页面未找到",
-  "404.label_not_found": "抱歉，您访问的页面不存在。",
-  "404.btn_label.home": "返回首页",
-  "404.btn_label.questions": "浏览题目"
+  "common": {
+    "btn_label": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "back": "Back",
+      "retry": "Retry",
+      "ok": "OK",
+      "close": "Close",
+      "delete": "Delete",
+      "edit": "Edit",
+      "save": "Save",
+      "confirm": "Confirm",
+      "yes": "Yes",
+      "no": "No",
+      "next": "Next",
+      "previous": "Previous"
+    },
+    "label": {
+      "loading": "Loading...",
+      "loading_failed": "Loading failed",
+      "submit_success": "Submission succeeded",
+      "submit_failed": "Submission failed"
+    }
+  },
+  "topbar": {
+    "title": "Genshin Quiz",
+    "label": {},
+    "btn_label": {
+      "home": "Home",
+      "questions": "Questions",
+      "votes": "Votes",
+      "exams": "Exams",
+      "rank": "Rank",
+      "about": "About",
+      "login_signup": "Login/Sign Up",
+      "logout": "Logout"
+    }
+  },
+  "home": {},
+  "404": {
+    "title_not_found": "页面未找到",
+    "label_not_found": "抱歉，您访问的页面不存在。",
+    "btn_label.home": "返回首页",
+    "btn_label.questions": "浏览题目"
+  },
+  "question": {
+    "type": {
+      "single_choice": "单选题",
+      "multiple_choice": "多选题",
+      "true_false": "判断题"
+    },
+    "difficulty": {
+      "easy": "简单",
+      "medium": "中等",
+      "hard": "困难"
+    },
+    "category": {
+      "lore": "剧情",
+      "characters": "角色",
+      "weapons": "武器",
+      "artifacts": "圣遗物",
+      "world": "大世界",
+      "gameplay": "玩法",
+      "combat": "战斗",
+      "music": "音乐",
+      "statistics": "统计",
+      "fun": "趣味",
+      "other": "其他"
+    }
+  }
 }

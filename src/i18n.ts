@@ -15,9 +15,9 @@ i18n
       ja: { translation: ja },
       zh: { translation: zh },
     },
-    lng: 'en',
+    lng: 'zh',
     supportedLngs: ['zh', 'ja', 'en'],
-    fallbackLng: 'en',
+    fallbackLng: 'zh',
     debug: true,
 
     interpolation: {

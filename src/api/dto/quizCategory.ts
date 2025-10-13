@@ -10,9 +10,15 @@ export type QuizCategory = (typeof QuizCategory)[keyof typeof QuizCategory];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QuizCategory = {
+  lore: 'lore',
   characters: 'characters',
+  world: 'world',
   weapons: 'weapons',
   artifacts: 'artifacts',
-  lore: 'lore',
   gameplay: 'gameplay',
+  combat: 'combat',
+  music: 'music',
+  statistics: 'statistics',
+  fun: 'fun',
+  other: 'other',
 } as const;

@@ -1,15 +1,7 @@
+import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
-import {
-  Box,
-  Chip,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Box, Button, Chip, Stack, TextField, Typography } from '@mui/material';
+import { t } from 'i18next';
 import type { Question, QuizCategory, QuizDifficulty } from '@/api/dto';
 import { QuestionQuestionType } from '@/api/dto';
 
@@ -19,50 +11,46 @@ interface QuestionFilterProps {
     difficulty: QuizDifficulty;
     answerCount: number;
     correctRate: number;
+    availableLanguages: string[];
   })[];
   search: string;
   setSearch: (value: string) => void;
   difficulty: string;
   setDifficulty: (value: string) => void;
-  selectedCategories: string[];
-  setSelectedCategories: (value: string[]) => void;
+  selectedCategory: string;
+  setSelectedCategory: (value: string) => void;
   selectedQuestionTypes: string[];
   setSelectedQuestionTypes: (value: string[]) => void;
-  sortBy: 'default' | 'difficulty' | 'category' | 'answerCount' | 'correctRate';
-  setSortBy: (value: 'default' | 'difficulty' | 'category' | 'answerCount' | 'correctRate') => void;
+  selectedLanguages: string[];
+  setSelectedLanguages: (value: string[]) => void;
+
   sortAsc: boolean;
   setSortAsc: (value: boolean) => void;
 }
-
 export default function QuestionFilter({
   questionList,
   search,
   setSearch,
   difficulty,
   setDifficulty,
-  selectedCategories,
-  setSelectedCategories,
+  selectedCategory,
+  setSelectedCategory,
   selectedQuestionTypes,
   setSelectedQuestionTypes,
-  sortBy,
-  setSortBy,
+  selectedLanguages,
+  setSelectedLanguages,
   sortAsc,
   setSortAsc,
 }: QuestionFilterProps) {
-  // 获取所有分类、难度、题型
+  // 获取所有分类、难度、题型、语言
   const allCategories = Array.from(new Set(questionList.map((q) => q.category).filter(Boolean)));
   const allDifficulties = Array.from(
     new Set(questionList.map((q) => q.difficulty).filter(Boolean)),
   );
   const allQuestionTypes = Object.values(QuestionQuestionType);
-
-  const handleCategoryToggle = (category: string) => {
-    setSelectedCategories(
-      selectedCategories.includes(category)
-        ? selectedCategories.filter((c) => c !== category)
-        : [...selectedCategories, category],
-    );
-  };
+  const allLanguages = Array.from(
+    new Set(questionList.flatMap((q) => q.availableLanguages).filter(Boolean)),
+  );
 
   const handleQuestionTypeToggle = (type: string) => {
     setSelectedQuestionTypes(
@@ -72,139 +60,151 @@ export default function QuestionFilter({
     );
   };
 
+  const handleLanguageToggle = (lang: string) => {
+    setSelectedLanguages(
+      selectedLanguages.includes(lang)
+        ? selectedLanguages.filter((l) => l !== lang)
+        : [...selectedLanguages, lang],
+    );
+  };
+
   const getQuestionTypeLabel = (type: string) => {
-    switch (type) {
-      case 'multiple_choice':
-        return '单选题';
-      case 'true_false':
-        return '判断题';
-      case 'fill_in_blank':
-        return '填空题';
-      default:
-        return type;
-    }
+    return t(`question.type.${type}`);
   };
 
   const getDifficultyLabel = (diff: string) => {
-    switch (diff) {
-      case 'easy':
-        return '简单';
-      case 'medium':
-        return '中等';
-      case 'hard':
-        return '困难';
-      default:
-        return diff;
-    }
+    return t(`question.difficulty.${diff}`);
   };
 
   const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case 'lore':
-        return '剧情背景';
-      case 'characters':
-        return '角色';
-      case 'gameplay':
-        return '游戏玩法';
-      case 'items':
-        return '物品道具';
-      case 'events':
-        return '活动';
+    return t(`question.category.${category}`);
+  };
+
+  const getLanguageLabel = (lang: string) => {
+    switch (lang) {
+      case 'zh':
+        return '中文';
+      case 'en':
+        return 'English';
+      case 'ja':
+        return '日本語';
+      case 'ko':
+        return '한국어';
       default:
-        return category;
+        return lang;
     }
   };
 
   return (
     <Box sx={{ mb: 3, p: 3, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
-      {/* 搜索框 */}
-      <TextField
-        fullWidth
-        label="搜索题目"
-        variant="outlined"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        sx={{ mb: 2 }}
-        placeholder="输入题目内容进行搜索..."
-      />
-
-      {/* 分类筛选 */}
-      <Box sx={{ mb: 2 }}>
-        <InputLabel sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 'medium' }}>题目分类</InputLabel>
+      {/* 分类筛选 - 单选，方形chip，单独一行 */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
+          题目分类
+        </Typography>
         <Stack direction="row" flexWrap="wrap" gap={1}>
+          <Chip
+            label="全部"
+            variant={selectedCategory === '' ? 'filled' : 'outlined'}
+            onClick={() => setSelectedCategory('')}
+            clickable
+            sx={{ borderRadius: 1 }}
+          />
           {allCategories.map((category) => (
             <Chip
               key={category}
               label={getCategoryLabel(category)}
-              variant={selectedCategories.includes(category) ? 'filled' : 'outlined'}
-              onClick={() => handleCategoryToggle(category)}
+              variant={selectedCategory === category ? 'filled' : 'outlined'}
+              onClick={() => setSelectedCategory(category)}
               clickable
+              sx={{ borderRadius: 1 }}
             />
           ))}
         </Stack>
       </Box>
 
-      {/* 题型筛选 */}
-      <Box sx={{ mb: 2 }}>
-        <InputLabel sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 'medium' }}>题目类型</InputLabel>
-        <Stack direction="row" flexWrap="wrap" gap={1}>
-          {allQuestionTypes.map((type) => (
-            <Chip
-              key={type}
-              label={getQuestionTypeLabel(type)}
-              variant={selectedQuestionTypes.includes(type) ? 'filled' : 'outlined'}
-              onClick={() => handleQuestionTypeToggle(type)}
-              clickable
-            />
-          ))}
-        </Stack>
-      </Box>
-
-      {/* 难度和排序 */}
-      <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>难度</InputLabel>
-          <Select value={difficulty} label="难度" onChange={(e) => setDifficulty(e.target.value)}>
-            <MenuItem value="">全部</MenuItem>
-            {allDifficulties.map((diff) => (
-              <MenuItem key={diff} value={diff}>
-                {getDifficultyLabel(diff)}
-              </MenuItem>
+      {/* 题型和难度筛选 - 同一行 */}
+      <Stack direction="row" spacing={4} sx={{ mb: 3 }}>
+        {/* 题型筛选 - 多选 */}
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
+            题目类型
+          </Typography>
+          <Stack direction="row" flexWrap="wrap" gap={1}>
+            {allQuestionTypes.map((type) => (
+              <Chip
+                key={type}
+                label={getQuestionTypeLabel(type)}
+                variant={selectedQuestionTypes.includes(type) ? 'filled' : 'outlined'}
+                onClick={() => handleQuestionTypeToggle(type)}
+                clickable
+                size="small"
+              />
             ))}
-          </Select>
-        </FormControl>
+          </Stack>
+        </Box>
 
-        <FormControl sx={{ minWidth: 140 }}>
-          <InputLabel>排序方式</InputLabel>
-          <Select
-            value={sortBy}
-            label="排序方式"
-            onChange={(e) =>
-              setSortBy(
-                e.target.value as
-                  | 'default'
-                  | 'difficulty'
-                  | 'category'
-                  | 'answerCount'
-                  | 'correctRate',
-              )
-            }
-          >
-            <MenuItem value="default">默认</MenuItem>
-            <MenuItem value="difficulty">难度</MenuItem>
-            <MenuItem value="category">分类</MenuItem>
-            <MenuItem value="answerCount">回答人次</MenuItem>
-            <MenuItem value="correctRate">正确率</MenuItem>
-          </Select>
-        </FormControl>
+        {/* 难度筛选 - 多选 */}
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
+            难度等级
+          </Typography>
+          <Stack direction="row" flexWrap="wrap" gap={1}>
+            {allDifficulties.map((diff) => (
+              <Chip
+                key={diff}
+                label={getDifficultyLabel(diff)}
+                variant={difficulty === diff ? 'filled' : 'outlined'}
+                onClick={() => setDifficulty(difficulty === diff ? '' : diff)}
+                clickable
+                size="small"
+              />
+            ))}
+          </Stack>
+        </Box>
+      </Stack>
 
-        <IconButton
+      {/* 语言筛选 */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
+          支持语言
+        </Typography>
+        <Stack direction="row" flexWrap="wrap" gap={1}>
+          {allLanguages.map((lang) => (
+            <Chip
+              key={lang}
+              label={getLanguageLabel(lang)}
+              variant={selectedLanguages.includes(lang) ? 'filled' : 'outlined'}
+              onClick={() => handleLanguageToggle(lang)}
+              clickable
+              size="small"
+            />
+          ))}
+        </Stack>
+      </Box>
+
+      {/* 关键词搜索 - 最下面，右侧有按钮 */}
+      <Stack direction="row" spacing={2} alignItems="center">
+        <TextField
+          fullWidth
+          label="搜索题目"
+          variant="outlined"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="输入题目内容进行搜索..."
+          size="small"
+        />
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          sx={{ minWidth: 120 }}
           onClick={() => setSortAsc(!sortAsc)}
-          color={sortAsc ? 'primary' : 'default'}
-          title={sortAsc ? '升序' : '降序'}
         >
-          <SortIcon sx={{ transform: sortAsc ? 'rotate(0deg)' : 'rotate(180deg)' }} />
-        </IconButton>
+          {sortAsc ? '升序' : '降序'}
+        </Button>
+        <Button variant="outlined" startIcon={<FilterListIcon />} sx={{ minWidth: 120 }}>
+          详细过滤
+        </Button>
       </Stack>
     </Box>
   );

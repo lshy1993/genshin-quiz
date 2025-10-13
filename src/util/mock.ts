@@ -9,6 +9,7 @@ export const mockQuestionData: (Question & {
   difficulty: QuizDifficulty;
   answerCount: number;
   correctRate: number;
+  availableLanguages: string[]; // 支持的语言
 })[] = [
   {
     id: 1,
@@ -23,6 +24,7 @@ export const mockQuestionData: (Question & {
     difficulty: QuizDifficulty.easy,
     answerCount: 1250,
     correctRate: 0.85,
+    availableLanguages: ['zh', 'en', 'ja'],
   },
   {
     id: 2,
@@ -36,6 +38,7 @@ export const mockQuestionData: (Question & {
     difficulty: QuizDifficulty.easy,
     answerCount: 980,
     correctRate: 0.92,
+    availableLanguages: ['zh', 'en'],
   },
   {
     id: 3,
@@ -50,11 +53,12 @@ export const mockQuestionData: (Question & {
     difficulty: QuizDifficulty.medium,
     answerCount: 756,
     correctRate: 0.68,
+    availableLanguages: ['zh'],
   },
   {
     id: 4,
     question_text: '原神中最高等级是多少？',
-    question_type: QuestionQuestionType.fill_in_blank,
+    question_type: QuestionQuestionType.single_choice,
     correct_answer: '90',
     explanation: '目前原神中角色和武器的最高等级都是90级',
     points: 10,
@@ -63,6 +67,7 @@ export const mockQuestionData: (Question & {
     difficulty: QuizDifficulty.medium,
     answerCount: 643,
     correctRate: 0.73,
+    availableLanguages: ['zh', 'en', 'ja'],
   },
   {
     id: 5,
@@ -73,10 +78,11 @@ export const mockQuestionData: (Question & {
     explanation: '在合适的条件下，融化反应能造成2倍伤害，是最高的增伤反应',
     points: 20,
     order_index: 5,
-    category: QuizCategory.gameplay,
+    category: QuizCategory.combat,
     difficulty: QuizDifficulty.hard,
     answerCount: 432,
     correctRate: 0.45,
+    availableLanguages: ['zh', 'en'],
   },
 ];
 

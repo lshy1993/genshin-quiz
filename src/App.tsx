@@ -41,11 +41,11 @@ function App() {
             <Route path="/home" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/questions" element={<QuestionListPage />} />
-            <Route path="/question/:id" element={<QuestionDetailPage />} />
+            <Route path="/questions/:id" element={<QuestionDetailPage />} />
             <Route path="/votes" element={<VoteListPage />} />
-            <Route path="/vote/:id" element={<VoteDetailPage />} />
+            <Route path="/votes/:id" element={<VoteDetailPage />} />
             <Route path="/exams" element={<ExamListPage />} />
-            <Route path="/exam/:id" element={<ExamDetailPage />} />
+            <Route path="/exams/:id" element={<ExamDetailPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

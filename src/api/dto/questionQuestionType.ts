@@ -10,7 +10,7 @@ export type QuestionQuestionType = (typeof QuestionQuestionType)[keyof typeof Qu
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QuestionQuestionType = {
+  single_choice: 'single_choice',
   multiple_choice: 'multiple_choice',
   true_false: 'true_false',
-  fill_in_blank: 'fill_in_blank',
 } as const;

@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Chip,
   LinearProgress,
   Paper,
@@ -12,9 +11,9 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { t } from 'i18next';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import QuestionFilter from '@/components/QuestionFilter';
 import { mockQuestionData } from '@/util/mock';
 // import { useGetQuestions } from '@/api/genshinQuizAPI';
@@ -26,8 +25,9 @@ export default function QuestionListPage() {
 
   const [search, setSearch] = useState('');
   const [difficulty, setDifficulty] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<string[]>([]);
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<
     'default' | 'difficulty' | 'category' | 'answerCount' | 'correctRate'
   >('default');
@@ -36,9 +36,11 @@ export default function QuestionListPage() {
   // 排序和过滤
   let filteredQuestions = questionList.filter(
     (question) =>
-      (selectedCategories.length === 0 || selectedCategories.includes(question.category)) &&
+      (selectedCategory === '' || question.category === selectedCategory) &&
       (selectedQuestionTypes.length === 0 ||
         selectedQuestionTypes.includes(question.question_type)) &&
+      (selectedLanguages.length === 0 ||
+        selectedLanguages.some((lang) => question.availableLanguages.includes(lang))) &&
       (search ? question.question_text.includes(search) : true) &&
       (difficulty ? question.difficulty === difficulty : true),
   );
@@ -60,46 +62,11 @@ export default function QuestionListPage() {
   }
 
   const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case 'lore':
-        return '剧情背景';
-      case 'characters':
-        return '角色';
-      case 'gameplay':
-        return '游戏玩法';
-      case 'items':
-        return '物品道具';
-      case 'events':
-        return '活动';
-      default:
-        return category;
-    }
+    return t(`question.category.${category}`);
   };
 
   const getDifficultyLabel = (diff: string) => {
-    switch (diff) {
-      case 'easy':
-        return '简单';
-      case 'medium':
-        return '中等';
-      case 'hard':
-        return '困难';
-      default:
-        return diff;
-    }
-  };
-
-  const getQuestionTypeLabel = (type: string) => {
-    switch (type) {
-      case 'multiple_choice':
-        return '单选题';
-      case 'true_false':
-        return '判断题';
-      case 'fill_in_blank':
-        return '填空题';
-      default:
-        return type;
-    }
+    return t(`question.difficulty.${diff}`);
   };
 
   const getDifficultyColor = (diff: string): 'success' | 'warning' | 'error' | 'default' => {
@@ -141,12 +108,12 @@ export default function QuestionListPage() {
         setSearch={setSearch}
         difficulty={difficulty}
         setDifficulty={setDifficulty}
-        selectedCategories={selectedCategories}
-        setSelectedCategories={setSelectedCategories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
         selectedQuestionTypes={selectedQuestionTypes}
         setSelectedQuestionTypes={setSelectedQuestionTypes}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
+        selectedLanguages={selectedLanguages}
+        setSelectedLanguages={setSelectedLanguages}
         sortAsc={sortAsc}
         setSortAsc={setSortAsc}
       />
@@ -158,20 +125,31 @@ export default function QuestionListPage() {
             <TableRow>
               <TableCell>题目内容</TableCell>
               <TableCell align="center">分类</TableCell>
-              <TableCell align="center">难度</TableCell>
-              <TableCell align="center">题型</TableCell>
-              <TableCell align="center">回答人次</TableCell>
-              <TableCell align="center">正确率</TableCell>
-              <TableCell align="center">操作</TableCell>
+              <TableCell align="right">正确率</TableCell>
+              <TableCell align="right">难度</TableCell>
+              <TableCell align="right">回答人次</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredQuestions.map((question) => (
-              <TableRow key={question.id} hover>
+              <TableRow
+                key={question.id}
+                hover
+                component={Link}
+                to={`/questions/${question.id}`}
+                sx={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'action.hover',
+                  },
+                }}
+              >
                 <TableCell>
-                  <Typography variant="body2" sx={{ maxWidth: 300 }}>
-                    {question.question_text.length > 50
-                      ? `${question.question_text.substring(0, 50)}...`
+                  <Typography variant="body2" sx={{ maxWidth: 400 }}>
+                    {question.question_text.length > 60
+                      ? `${question.question_text.substring(0, 60)}...`
                       : question.question_text}
                   </Typography>
                 </TableCell>
@@ -182,25 +160,16 @@ export default function QuestionListPage() {
                     size="small"
                   />
                 </TableCell>
-                <TableCell align="center">
-                  <Chip
-                    label={getDifficultyLabel(question.difficulty)}
-                    color={getDifficultyColor(question.difficulty)}
-                    size="small"
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  <Chip
-                    label={getQuestionTypeLabel(question.question_type)}
-                    variant="outlined"
-                    size="small"
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant="body2">{question.answerCount.toLocaleString()}</Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Box sx={{ width: 80, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <TableCell align="right">
+                  <Box
+                    sx={{
+                      width: 100,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      justifyContent: 'flex-end',
+                    }}
+                  >
                     <LinearProgress
                       variant="determinate"
                       value={question.correctRate * 100}
@@ -218,15 +187,15 @@ export default function QuestionListPage() {
                     </Typography>
                   </Box>
                 </TableCell>
-                <TableCell align="center">
-                  <Button
-                    component={Link}
-                    to={`/questions/${question.id}`}
-                    variant="contained"
-                    size="small"
-                  >
-                    查看
-                  </Button>
+                <TableCell align="right">
+                  <Typography variant="body2" color={getDifficultyColor(question.difficulty)}>
+                    {getDifficultyLabel(question.difficulty)}
+                  </Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography variant="body2" color="text.secondary">
+                    {question.answerCount.toLocaleString()}
+                  </Typography>
                 </TableCell>
               </TableRow>
             ))}
