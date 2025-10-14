@@ -16,6 +16,7 @@ import type { Question } from '@/api/dto';
 import {
   formatCount,
   getCategoryLabel,
+  getCorrectRate,
   getDifficultyColor,
   getDifficultyLabel,
 } from '@/util/utils';
@@ -27,22 +28,16 @@ interface QuestionTableProps {
 export default function QuestionTable({ questions }: QuestionTableProps) {
   const navigate = useNavigate();
 
-  const getCorrectRate = (q: Question): number => {
-    if (!q.answer_count || !q.correct_count) return 0;
-    if (q.answer_count === 0) return 0;
-    return q.correct_count / q.answer_count;
-  };
-
   const renderCorrectRate = (question: Question) => {
-    const rate = getCorrectRate(question);
+    const rate = getCorrectRate(question, 1);
     return (
-      <Tooltip title={`${(rate * 100).toFixed(1)}%`} arrow>
+      <Tooltip title={`${rate}%`} arrow>
         <TableCell align="right">
           <LinearProgress
             sx={{ height: 8, borderRadius: 4, width: 60 }}
             variant="determinate"
-            value={rate * 100}
-            color={rate > 0.7 ? 'success' : rate > 0.5 ? 'warning' : 'error'}
+            value={rate}
+            color={rate > 70 ? 'success' : rate > 50 ? 'warning' : 'error'}
           />
         </TableCell>
       </Tooltip>

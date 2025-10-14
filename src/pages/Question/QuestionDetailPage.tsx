@@ -4,19 +4,17 @@ import {
   Button,
   Card,
   CardContent,
-  Checkbox,
   Chip,
-  FormControlLabel,
-  FormGroup,
-  Radio,
-  RadioGroup,
   Stack,
+  Tab,
+  Tabs,
   Typography,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import PageContainer from '@/components/PageContainer';
+import QuestionChoices from '@/components/QuestionChoices';
 import QuestionMySubmission from '@/components/QuestionMySubmission';
 import QuestionRecentSubmission from '@/components/QuestionRecentSubmission';
 import QuestionStatistics from '@/components/QuestionStatistics';
@@ -25,11 +23,13 @@ import {
   mockRecentQuestionSubmissions,
   type QuestionSubmission,
 } from '@/util/mock';
+import { getCorrectRate } from '@/util/utils';
 
 export default function QuestionDetailPage() {
   const { id } = useParams<{ id: string }>();
   // 这里用 mock 数据，实际可用 useGetQuestion(id)
   const question = mockQuestionData.find((q) => q.id === id);
+  const [currentTab, setCurrentTab] = useState(0);
   const [selected, setSelected] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [submissionList, setSubmissionList] = useState<QuestionSubmission[]>([]);
@@ -51,7 +51,6 @@ export default function QuestionDetailPage() {
   // 判断题型
   const isSingle =
     question.question_type === 'single_choice' || question.question_type === 'true_false';
-  const isMultiple = question.question_type === 'multiple_choice';
 
   // 选项内容
   const options = question.options;
@@ -105,11 +104,21 @@ export default function QuestionDetailPage() {
 
   return (
     <PageContainer>
-      <Button size="small" component={Link} to="/questions">
-        ← 返回题目列表
-      </Button>
+      <Box>
+        <Button size="small" component={Link} to="/questions">
+          ← 返回题目列表
+        </Button>
+        <Button>上一题</Button>
+        <Button>下一题</Button>
+        <Button>随机一题</Button>
+      </Box>
       <Card>
-        <CardContent>
+        <Tabs value={currentTab} onChange={(_, v) => setCurrentTab(v)}>
+          <Tab label="描述" />
+          <Tab label="提交记录" />
+          <Tab label="关于" />
+        </Tabs>
+        <CardContent hidden={currentTab !== 0}>
           <Typography variant="h5" gutterBottom>
             {question.question_text}
           </Typography>
@@ -117,43 +126,13 @@ export default function QuestionDetailPage() {
             <Chip label={question.difficulty} color="primary" sx={{ mr: 1 }} />
             <Chip label={question.category} color="secondary" sx={{ mr: 1 }} />
           </Box>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            创建时间: {question.created_at.toLocaleString()}
-          </Typography>
-          {/* 选项区 */}
-          {isSingle && (
-            <RadioGroup value={selected[0] || ''} onChange={(e) => setSelected([e.target.value])}>
-              {options.map((opt, _) => (
-                <FormControlLabel
-                  key={opt.id}
-                  value={opt.id}
-                  control={<Radio />}
-                  label={opt.text || opt.image || ''}
-                  disabled={submitted}
-                />
-              ))}
-            </RadioGroup>
-          )}
-          {isMultiple && (
-            <FormGroup>
-              {options.map((opt, _) => (
-                <FormControlLabel
-                  key={opt.id}
-                  control={
-                    <Checkbox
-                      checked={selected.includes(opt.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) setSelected([...selected, opt.id]);
-                        else setSelected(selected.filter((v) => v !== opt.id));
-                      }}
-                      disabled={submitted}
-                    />
-                  }
-                  label={opt.text || opt.image || ''}
-                />
-              ))}
-            </FormGroup>
-          )}
+          <QuestionChoices
+            options={options}
+            selected={selected}
+            setSelected={setSelected}
+            submitted={submitted}
+            question_type={question.question_type}
+          />
           {/* 提交与结果/多次尝试/提交记录 */}
           <Stack spacing={2} sx={{ mt: 2 }}>
             {!submitted ? (
@@ -180,10 +159,24 @@ export default function QuestionDetailPage() {
             )}
           </Stack>
         </CardContent>
-      </Card>
-      <Card>
-        <QuestionMySubmission submissionList={submissionList} options={options} />
-        <QuestionRecentSubmission recentSubmissions={recentSubmissions} />
+        <CardContent hidden={currentTab !== 1}>
+          <QuestionMySubmission submissionList={submissionList} options={options} />
+          <QuestionRecentSubmission recentSubmissions={recentSubmissions} />
+        </CardContent>
+        <CardContent hidden={currentTab !== 2}>
+          <Typography variant="body2" color="text.secondary">
+            创建时间: {question.created_at.toLocaleString()}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            作者: {question.created_by}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            正确次数: {question.correct_count}/{question.answer_count}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            正确率: {getCorrectRate(question, 1)}%
+          </Typography>
+        </CardContent>
       </Card>
     </PageContainer>
   );

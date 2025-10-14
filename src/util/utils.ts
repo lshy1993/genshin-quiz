@@ -1,9 +1,17 @@
 import { t } from 'i18next';
+import type { Question } from '@/api/dto';
 
 export function formatCount(count: number): string {
   if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1).replace(/\.0$/, '')}m`;
   if (count >= 1_000) return `${(count / 1_000).toFixed(1).replace(/\.0$/, '')}k`;
   return count.toString();
+}
+
+export function getCorrectRate(q: Question, fixed: number = 1): number {
+  if (!q.answer_count || !q.correct_count) return 0;
+  if (q.answer_count === 0) return 0;
+  const rate = q.correct_count / q.answer_count;
+  return parseFloat((rate * 100).toFixed(fixed));
 }
 
 export function getQuestionTypeLabel(type: string): string {
