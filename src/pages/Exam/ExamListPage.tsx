@@ -37,12 +37,20 @@ export default function ExamListPage() {
   }
 
   return (
-    <Box sx={{ maxWidth: 900, mx: 'auto', py: 4 }}>
-      {/* Banner */}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 3,
+        width: '100%',
+        maxWidth: 900,
+        minWidth: 480,
+        mx: 'auto',
+      }}
+    >
       <Box
         sx={{
-          mb: 3,
-          p: 3,
+          p: 1,
           bgcolor: 'primary.main',
           color: 'primary.contrastText',
           borderRadius: 2,
@@ -50,9 +58,9 @@ export default function ExamListPage() {
         }}
       >
         <Typography variant="h4" fontWeight="bold">
-          考试列表
+          测验列表
         </Typography>
-        <Typography variant="subtitle1">查找并参与你感兴趣的考试，提升你的知识水平！</Typography>
+        <Typography variant="subtitle1">查找并参与你感兴趣的测验，提升你的知识水平！</Typography>
       </Box>
 
       {/* 筛选区 */}

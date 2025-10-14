@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useMemo, useState } from 'react';
-import type { Question } from '@/api/dto';
 import { allCategories, allDifficulties, allLanguages, allQuestionTypes } from '@/util/enum';
 import {
   getCategoryLabel,
@@ -21,7 +20,6 @@ import {
 } from '@/util/utils';
 
 interface QuestionFilterProps {
-  questionList: Question[];
   search: string;
   setSearch: (value: string) => void;
   selectedDifficulties: string[];
@@ -36,7 +34,6 @@ interface QuestionFilterProps {
   setSortAsc: (value: boolean) => void;
 }
 export default function QuestionFilter({
-  questionList,
   search,
   setSearch,
   selectedCategory,

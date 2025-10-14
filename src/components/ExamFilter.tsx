@@ -13,6 +13,7 @@ import {
 import type { Exam } from '@/api/dto';
 import { QuestionCategory } from '@/api/dto';
 import { mockTags } from '@/util/mock';
+import { getCategoryLabel } from '@/util/utils';
 
 interface ExamFilterProps {
   examList: Exam[]; // 使用Exam类型
@@ -65,35 +66,27 @@ export default function ExamFilter({
   };
 
   return (
-    <Box sx={{ mb: 3, p: 3, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
-      {/* 搜索框 */}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Stack direction="row" flexWrap="wrap" gap={1}>
+        {allCategories.map((category) => (
+          <Chip
+            key={category}
+            label={getCategoryLabel(category)}
+            variant={selectedCategories.includes(category) ? 'filled' : 'outlined'}
+            onClick={() => handleCategoryToggle(category)}
+            clickable
+          />
+        ))}
+      </Stack>
       <TextField
         fullWidth
-        label="搜索考试"
+        label="搜索测验"
         variant="outlined"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        sx={{ mb: 2 }}
       />
 
-      {/* 分类筛选 */}
-      <Box sx={{ mb: 2 }}>
-        <InputLabel sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 'medium' }}>分类</InputLabel>
-        <Stack direction="row" flexWrap="wrap" gap={1}>
-          {allCategories.map((category) => (
-            <Chip
-              key={category}
-              label={category}
-              variant={selectedCategories.includes(category) ? 'filled' : 'outlined'}
-              onClick={() => handleCategoryToggle(category)}
-              clickable
-            />
-          ))}
-        </Stack>
-      </Box>
-
-      {/* 标签筛选 */}
-      <Box sx={{ mb: 2 }}>
+      {/* <Box>
         <InputLabel sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 'medium' }}>标签</InputLabel>
         <Stack direction="row" flexWrap="wrap" gap={1}>
           {allTags.map((tag) => (
@@ -106,9 +99,7 @@ export default function ExamFilter({
             />
           ))}
         </Stack>
-      </Box>
-
-      {/* 难度和排序 */}
+      </Box> */}
       <Stack direction="row" spacing={2} alignItems="center">
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>难度</InputLabel>

@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
 import { useState } from 'react';
 import QuestionFilter from '@/components/QuestionFilter';
+import QuestionTable from '@/components/QuestionTable';
 import { mockQuestionData } from '@/util/mock';
-import QuestionTable from '../../components/QuestionTable';
 // import { useGetQuestions } from '@/api/genshinQuizAPI';
 
 export default function QuestionListPage() {
@@ -95,7 +95,6 @@ export default function QuestionListPage() {
         <Typography variant="subtitle1">浏览所有题目，点击查看详情并开始答题！</Typography>
       </Box>
       <QuestionFilter
-        questionList={questionList}
         search={search}
         setSearch={setSearch}
         selectedDifficulties={selectedDifficulties}
