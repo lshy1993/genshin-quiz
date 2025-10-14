@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import type { Exam } from '@/api/dto';
 import { QuestionCategory } from '@/api/dto';
+import { ExamSortType } from '@/util/enum';
 import { mockTags } from '@/util/mock';
 import { getCategoryLabel } from '@/util/utils';
 
@@ -25,8 +26,8 @@ interface ExamFilterProps {
   setSelectedTags: (value: string[]) => void;
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
-  sortBy: 'default' | 'title' | 'difficulty';
-  setSortBy: (value: 'default' | 'title' | 'difficulty') => void;
+  sortBy: ExamSortType;
+  setSortBy: (value: ExamSortType) => void;
   sortAsc: boolean;
   setSortAsc: (value: boolean) => void;
 }
@@ -118,11 +119,11 @@ export default function ExamFilter({
           <Select
             value={sortBy}
             label="排序"
-            onChange={(e) => setSortBy(e.target.value as 'default' | 'title' | 'difficulty')}
+            onChange={(e) => setSortBy(e.target.value as ExamSortType)}
           >
-            <MenuItem value="default">默认</MenuItem>
-            <MenuItem value="title">标题</MenuItem>
-            <MenuItem value="difficulty">难度</MenuItem>
+            <MenuItem value={ExamSortType.DEFAULT}>默认</MenuItem>
+            <MenuItem value={ExamSortType.TITLE}>标题</MenuItem>
+            <MenuItem value={ExamSortType.DIFFICULTY}>难度</MenuItem>
           </Select>
         </FormControl>
 

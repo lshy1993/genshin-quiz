@@ -15,4 +15,5 @@ export interface QuestionOption {
   text?: string;
   /** 选项图片URL */
   image?: string;
+  count?: number; // 选中次数，可选，统计时才有
 }

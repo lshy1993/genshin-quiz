@@ -1,27 +1,19 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Card, CardActionArea, CardContent, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BannerBox from '@/components/BannerBox';
+import PageContainer from '@/components/PageContainer';
+import VoteFilter from '@/components/VoteFilter';
+import { VoteType } from '@/util/enum';
 import { mockVotes } from '@/util/mock';
 
 // import { useGetVotes } from '@/api/vote';
 
 export default function VoteListPage() {
-  // const { data: votes = [] } = useGetVotes({ status: 'ongoing' });
-  const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState('');
   const navigate = useNavigate();
+  // const { data: votes = [] } = useGetVotes({ status: 'ongoing' });
+  const [search, setSearch] = useState<string>('');
+  const [typeFilter, setTypeFilter] = useState<VoteType>(VoteType.ONGOING);
 
   // 过滤和搜索
   const filteredVotes = mockVotes.filter(
@@ -29,53 +21,14 @@ export default function VoteListPage() {
   );
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 3,
-        width: '100%',
-        maxWidth: 900,
-        minWidth: 480,
-        mx: 'auto',
-      }}
-    >
-      <Box
-        sx={{
-          p: 1,
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
-          borderRadius: 2,
-          textAlign: 'center',
-        }}
-      >
-        <Typography variant="h4" fontWeight="bold">
-          正在进行中的投票
-        </Typography>
-        <Typography variant="subtitle1">参与喜欢的话题，为你支持的选项投票吧！</Typography>
-      </Box>
-
-      {/* 搜索和过滤器 */}
-      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-        <TextField
-          label="搜索投票"
-          variant="outlined"
-          size="small"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          sx={{ flex: 2 }}
-        />
-        <FormControl size="small" sx={{ minWidth: 120 }}>
-          <InputLabel>类型</InputLabel>
-          <Select label="类型" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-            <MenuItem value="">全部</MenuItem>
-            <MenuItem value="单选">单选</MenuItem>
-            <MenuItem value="多选">多选</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-
-      {/* Vote 列表 */}
+    <PageContainer>
+      <BannerBox title={'投票列表'} subtitle={'参与投票吧！谁是真正的人气王！'} />
+      <VoteFilter
+        search={search}
+        setSearch={setSearch}
+        typeFilter={typeFilter}
+        setTypeFilter={setTypeFilter}
+      />
       <Grid container direction="column" spacing={2}>
         {filteredVotes.map((vote) => (
           <Card key={vote.id}>
@@ -113,6 +66,6 @@ export default function VoteListPage() {
           </Box>
         )}
       </Grid>
-    </Box>
+    </PageContainer>
   );
 }

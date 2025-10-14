@@ -1,7 +1,9 @@
-import { Box, Typography } from '@mui/material';
 import { useState } from 'react';
+import BannerBox from '@/components/BannerBox';
+import PageContainer from '@/components/PageContainer';
 import QuestionFilter from '@/components/QuestionFilter';
 import QuestionTable from '@/components/QuestionTable';
+import { QuestionSortType } from '@/util/enum';
 import { mockQuestionData } from '@/util/mock';
 // import { useGetQuestions } from '@/api/genshinQuizAPI';
 
@@ -15,10 +17,8 @@ export default function QuestionListPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<
-    'default' | 'difficulty' | 'category' | 'answerCount' | 'correctRate'
-  >('default');
-  const [sortAsc, setSortAsc] = useState(true);
+  const [sortBy, setSortBy] = useState<QuestionSortType>(QuestionSortType.DEFAULT);
+  const [sortAsc, setSortAsc] = useState<boolean>(true);
 
   // 排序和过滤
   let filteredQuestions = questionList.filter(
@@ -69,31 +69,8 @@ export default function QuestionListPage() {
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 3,
-        width: '100%',
-        maxWidth: 900,
-        minWidth: 480,
-        mx: 'auto',
-      }}
-    >
-      <Box
-        sx={{
-          p: 1,
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
-          borderRadius: 2,
-          textAlign: 'center',
-        }}
-      >
-        <Typography variant="h4" fontWeight="bold">
-          题目列表
-        </Typography>
-        <Typography variant="subtitle1">浏览所有题目，点击查看详情并开始答题！</Typography>
-      </Box>
+    <PageContainer>
+      <BannerBox title={'题目列表'} subtitle={'浏览所有题目，点击查看详情并开始答题！'} />
       <QuestionFilter
         search={search}
         setSearch={setSearch}
@@ -109,6 +86,6 @@ export default function QuestionListPage() {
         setSortAsc={setSortAsc}
       />
       <QuestionTable questions={filteredQuestions} />
-    </Box>
+    </PageContainer>
   );
 }

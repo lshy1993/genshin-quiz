@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import type { Vote, VoteOption } from '@/api/dto';
 import type { Exam } from '@/api/dto/exam';
 import type { Question } from '@/api/dto/question';
@@ -15,10 +16,10 @@ export const mockQuestionData: Question[] = [
     category: QuestionCategory.lore,
     difficulty: QuestionDifficulty.easy,
     options: [
-      { id: 'option-1', type: QuestionOptionType.text, text: 'miHoYo' },
-      { id: 'option-2', type: QuestionOptionType.text, text: 'Tencent' },
-      { id: 'option-3', type: QuestionOptionType.text, text: 'NetEase' },
-      { id: 'option-4', type: QuestionOptionType.text, text: 'Blizzard' },
+      { id: 'option-1', type: QuestionOptionType.text, text: 'miHoYo', count: 560 },
+      { id: 'option-2', type: QuestionOptionType.text, text: 'Tencent', count: 34 },
+      { id: 'option-3', type: QuestionOptionType.text, text: 'NetEase', count: 12 },
+      { id: 'option-4', type: QuestionOptionType.text, text: 'Blizzard', count: 8 },
     ],
     explanation: 'miHoYo（现在叫HoYoverse）是原神的开发商',
     languages: ['zh', 'en'],
@@ -65,6 +66,19 @@ export const mockQuestionData: Question[] = [
     created_by: 'e1a4c2b7-8d3e-4f6a-9b2c-5f7d8e9c0a1b',
     created_at: new Date('2023-10-03T12:00:00Z'),
   },
+];
+
+export type QuestionSubmission = {
+  user_name: string;
+  selected?: string[];
+  correct: boolean;
+  submitted_at: DateTime;
+};
+
+export const mockRecentQuestionSubmissions: QuestionSubmission[] = [
+  { user_name: '小明', correct: true, submitted_at: DateTime.now() },
+  { user_name: 'Alice', correct: false, submitted_at: DateTime.now() },
+  { user_name: 'Bob', correct: true, submitted_at: DateTime.now() },
 ];
 
 export const mockExamData: Exam[] = [

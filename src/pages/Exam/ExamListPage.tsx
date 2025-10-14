@@ -2,7 +2,10 @@ import { Box, Button, Card, CardContent, Chip, Grid, Typography } from '@mui/mat
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Exam } from '@/api/dto';
+import BannerBox from '@/components/BannerBox';
 import ExamFilter from '@/components/ExamFilter';
+import PageContainer from '@/components/PageContainer';
+import { ExamSortType } from '@/util/enum';
 import { mockExamData } from '@/util/mock';
 
 export default function ExamListPage() {
@@ -12,8 +15,8 @@ export default function ExamListPage() {
   const [difficulty, setDifficulty] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<'default' | 'title' | 'difficulty'>('default');
-  const [sortAsc, setSortAsc] = useState(true);
+  const [sortBy, setSortBy] = useState<ExamSortType>(ExamSortType.DEFAULT);
+  const [sortAsc, setSortAsc] = useState<boolean>(true);
 
   // 排序和过滤
   let filteredExams = examList.filter(
@@ -37,33 +40,8 @@ export default function ExamListPage() {
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 3,
-        width: '100%',
-        maxWidth: 900,
-        minWidth: 480,
-        mx: 'auto',
-      }}
-    >
-      <Box
-        sx={{
-          p: 1,
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
-          borderRadius: 2,
-          textAlign: 'center',
-        }}
-      >
-        <Typography variant="h4" fontWeight="bold">
-          测验列表
-        </Typography>
-        <Typography variant="subtitle1">查找并参与你感兴趣的测验，提升你的知识水平！</Typography>
-      </Box>
-
-      {/* 筛选区 */}
+    <PageContainer>
+      <BannerBox title={'测验列表'} subtitle={'查找并参与你感兴趣的测验，提升你的知识水平！'} />
       <ExamFilter
         examList={examList}
         search={search}
@@ -79,7 +57,6 @@ export default function ExamListPage() {
         sortAsc={sortAsc}
         setSortAsc={setSortAsc}
       />
-
       {/* Exam 列表 */}
       <Grid container spacing={3}>
         {filteredExams.map((exam) => (
@@ -128,6 +105,6 @@ export default function ExamListPage() {
           </Typography>
         </Box>
       )}
-    </Box>
+    </PageContainer>
   );
 }
