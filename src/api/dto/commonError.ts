@@ -5,9 +5,9 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { CommonError } from './commonError';
 
-/**
- * Unauthorized
- */
-export type UnauthorizedResponse = CommonError;
+export interface CommonError {
+  error: string;
+  message: string;
+  code: number;
+}

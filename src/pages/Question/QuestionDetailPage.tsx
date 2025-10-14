@@ -49,7 +49,17 @@ export default function QuestionDetailPage() {
     : selected.length === correct.length && selected.every((v) => correct.includes(v));
 
   return (
-    <Box sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 3,
+        width: '100%',
+        maxWidth: 900,
+        minWidth: 480,
+        mx: 'auto',
+      }}
+    >
       <Button component={Link} to="/questions" sx={{ mb: 2 }}>
         ← 返回题目列表
       </Button>
@@ -70,10 +80,10 @@ export default function QuestionDetailPage() {
           {/* 选项区 */}
           {isSingle && (
             <RadioGroup value={selected[0] || ''} onChange={(e) => setSelected([e.target.value])}>
-              {options.map((opt, idx) => (
+              {options.map((opt, _) => (
                 <FormControlLabel
-                  key={idx}
-                  value={String(idx)}
+                  key={opt.id}
+                  value={opt.id}
                   control={<Radio />}
                   label={opt.text || opt.image || ''}
                   disabled={submitted}
@@ -83,15 +93,15 @@ export default function QuestionDetailPage() {
           )}
           {isMultiple && (
             <FormGroup>
-              {options.map((opt, idx) => (
+              {options.map((opt, _) => (
                 <FormControlLabel
-                  key={idx}
+                  key={opt.id}
                   control={
                     <Checkbox
-                      checked={selected.includes(String(idx))}
+                      checked={selected.includes(opt.id)}
                       onChange={(e) => {
-                        if (e.target.checked) setSelected([...selected, String(idx)]);
-                        else setSelected(selected.filter((v) => v !== String(idx)));
+                        if (e.target.checked) setSelected([...selected, opt.id]);
+                        else setSelected(selected.filter((v) => v !== opt.id));
                       }}
                       disabled={submitted}
                     />
@@ -121,7 +131,8 @@ export default function QuestionDetailPage() {
           {submitted && (
             <Box sx={{ mt: 2 }}>
               <Typography variant="body2" color="text.secondary">
-                正确答案：{correct.map((idx) => options[Number(idx)]?.text || '').join('，')}
+                正确答案：
+                {correct.map((id) => options.find((opt) => opt.id === id)?.text || '').join('，')}
               </Typography>
               {question.explanation && (
                 <Typography variant="body2" color="info.main" sx={{ mt: 1 }}>

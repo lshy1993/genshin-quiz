@@ -33,6 +33,7 @@ function App() {
             display: 'flex',
             flexDirection: 'column',
             overflowY: 'auto',
+            p: 3,
           }}
         >
           <Routes>

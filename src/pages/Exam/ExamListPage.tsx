@@ -75,48 +75,41 @@ export default function ExamListPage() {
       {/* Exam 列表 */}
       <Grid container spacing={3}>
         {filteredExams.map((exam) => (
-          <Grid item xs={12} md={6} lg={4} key={exam.id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" component="h3" gutterBottom>
-                  {exam.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  {exam.description}
-                </Typography>
-                <Box>
-                  {exam.categories?.map((cat) => (
-                    <Chip key={cat} label={cat} color="secondary" size="small" sx={{ mr: 0.5 }} />
-                  ))}
-                </Box>
-                <Box sx={{ mb: 2 }}>
-                  <Chip label={exam.difficulty} color="primary" size="small" sx={{ mr: 1 }} />
-                </Box>
-                <Typography variant="caption" display="block" sx={{ mb: 2 }}>
-                  题目数量: {exam.questions.length}
-                  {exam.time_limit && ` | 时间限制: ${exam.time_limit}秒`}
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Button
-                    component={Link}
-                    to={`/exams/${exam.id}`}
-                    variant="contained"
-                    size="small"
-                  >
-                    查看详情
-                  </Button>
-                  <Button
-                    component={Link}
-                    to={`/exams/${exam.id}/play`}
-                    variant="outlined"
-                    size="small"
-                  >
-                    开始考试
-                  </Button>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
+          <Card key={exam.id}>
+            <CardContent>
+              <Typography variant="h6" component="h3" gutterBottom>
+                {exam.title}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                {exam.description}
+              </Typography>
+              <Box>
+                {exam.categories?.map((cat) => (
+                  <Chip key={cat} label={cat} color="secondary" size="small" sx={{ mr: 0.5 }} />
+                ))}
+              </Box>
+              <Box sx={{ mb: 2 }}>
+                <Chip label={exam.difficulty} color="primary" size="small" sx={{ mr: 1 }} />
+              </Box>
+              <Typography variant="caption" display="block" sx={{ mb: 2 }}>
+                题目数量: {exam.questions.length}
+                {exam.time_limit && ` | 时间限制: ${exam.time_limit}秒`}
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button component={Link} to={`/exams/${exam.id}`} variant="contained" size="small">
+                  查看详情
+                </Button>
+                <Button
+                  component={Link}
+                  to={`/exams/${exam.id}/play`}
+                  variant="outlined"
+                  size="small"
+                >
+                  开始考试
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
         ))}
       </Grid>
 

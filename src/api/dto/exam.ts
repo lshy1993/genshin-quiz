@@ -12,6 +12,7 @@ import type { QuestionDifficulty } from './questionDifficulty';
 
 export interface Exam {
   id: string;
+  public: boolean;
   title: string;
   description?: string;
   categories?: QuestionCategory[];

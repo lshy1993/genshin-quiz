@@ -13,6 +13,7 @@ import type { QuestionType } from './questionType';
 
 export interface Question {
   id: string;
+  public: boolean;
   question_text: string;
   question_type: QuestionType;
   category: QuestionCategory;

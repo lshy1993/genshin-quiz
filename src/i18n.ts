@@ -5,6 +5,7 @@ import { initReactI18next } from 'react-i18next';
 import en from './locales/en.json';
 import ja from './locales/ja.json';
 import zh from './locales/zh.json';
+import { allLanguages } from './util/enum';
 
 i18n
   .use(LanguageDetector)
@@ -16,7 +17,7 @@ i18n
       zh: { translation: zh },
     },
     lng: 'zh',
-    supportedLngs: ['zh', 'ja', 'en'],
+    supportedLngs: allLanguages,
     fallbackLng: 'zh',
     debug: true,
 

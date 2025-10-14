@@ -5,6 +5,7 @@ import App from './App.tsx';
 import './index.css';
 
 import './i18n';
+import DevHelperWrapper from './components/DevHelperWrapper.tsx';
 import { UserProvider } from './context/UserContext.tsx';
 
 const theme = createTheme({
@@ -16,13 +17,21 @@ const theme = createTheme({
   },
 });
 
+const isDev = import.meta.env.MODE === 'development';
+
 const rootElement = document.getElementById('root');
 if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
       <ThemeProvider theme={theme}>
         <UserProvider>
-          <App />
+          {isDev ? (
+            <DevHelperWrapper>
+              <App />
+            </DevHelperWrapper>
+          ) : (
+            <App />
+          )}
         </UserProvider>
       </ThemeProvider>
     </StrictMode>,

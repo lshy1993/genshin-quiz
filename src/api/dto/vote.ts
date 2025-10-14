@@ -9,11 +9,15 @@ import type { VoteOption } from './voteOption';
 
 export interface Vote {
   id: string;
+  public: boolean;
   title: string;
   description?: string;
   created_by: string;
   created_at?: Date;
   expires_at?: Date;
-  votes_per_user?: number;
+  expired: boolean;
+  votes_per_user: number;
   options: VoteOption[];
+  participants?: number;
+  total_votes?: number;
 }

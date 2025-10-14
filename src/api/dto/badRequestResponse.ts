@@ -5,9 +5,9 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { Error } from './error';
+import type { CommonError } from './commonError';
 
 /**
  * Bad request
  */
-export type BadRequestResponse = Error;
+export type BadRequestResponse = CommonError;

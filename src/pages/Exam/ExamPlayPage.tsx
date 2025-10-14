@@ -1,80 +1,43 @@
 import {
   Alert,
   Box,
-  Button,
   Card,
   CardContent,
-  FormControl,
-  FormControlLabel,
+  Chip,
   LinearProgress,
-  Radio,
-  RadioGroup,
+  Stack,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useGetQuiz } from '../api/genshinQuizAPI';
+import type { Exam, Question } from '@/api/dto';
+import { mockQuestionData } from '@/util/mock';
 
-export default function QuizPlayPage() {
-  const { id } = useParams<{ id: string }>();
-  const quizId = Number(id);
-  const { data: quiz, error } = useGetQuiz(quizId);
+interface Props {
+  exam: Exam;
+}
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [score, setScore] = useState(0);
+interface AnswerRecord {
+  point: number; // 该题得分
+  answer: number; // 你的答案
+  correct: boolean; // 是否正确
+}
 
-  if (error) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Typography color="error">加载测验失败: {error.message}</Typography>
-        <Button component={Link} to="/quizzes" sx={{ mt: 2 }}>
-          返回测验列表
-        </Button>
-      </Box>
-    );
-  }
+export default function ExamPlayPage({ exam }: Props) {
+  const questionIds = exam.questions.map((q) => q.question_id);
+  const questions: Question[] = mockQuestionData.filter((q) => questionIds.includes(q.id));
 
-  if (!quiz) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Typography>加载中...</Typography>
-      </Box>
-    );
-  }
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [answers, setAnswers] = useState<Record<number, AnswerRecord>>({});
 
-  const currentQuestion = quiz.questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
+  const currentQuestion = questions[currentQuestionIndex];
 
-  const handleAnswerChange = (questionId: number, answer: string) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: answer,
-    }));
-  };
+  if (currentQuestionIndex > exam.questions.length - 1) {
+    // 统计得分
+    const correctAnswers = Object.values(answers).filter(
+      (record) => record.correct === true,
+    ).length;
+    const totalScore = (correctAnswers / exam.questions.length) * 100;
 
-  const handleNext = () => {
-    if (currentQuestionIndex < quiz.questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-    } else {
-      // 完成测验，计算分数
-      const correctAnswers = quiz.questions.filter(
-        (question) => answers[question.id] === question.correct_answer,
-      ).length;
-      const totalScore = (correctAnswers / quiz.questions.length) * 100;
-      setScore(Math.round(totalScore));
-      setIsCompleted(true);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
-    }
-  };
-
-  if (isCompleted) {
     return (
       <Box sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
         <Card>
@@ -83,20 +46,41 @@ export default function QuizPlayPage() {
               测验完成！
             </Typography>
             <Typography variant="h5" color="primary" gutterBottom>
-              你的得分: {score}%
+              你的得分: {Math.round(totalScore)}%
             </Typography>
             <Typography variant="body1" sx={{ mb: 3 }}>
-              正确答案: {quiz.questions.filter((q) => answers[q.id] === q.correct_answer).length} /{' '}
-              {quiz.questions.length}
+              正确答案: {correctAnswers} / {exam.questions.length}
             </Typography>
-            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-              <Button component={Link} to={`/quizzes/${quiz.id}`} variant="contained">
-                查看详情
-              </Button>
-              <Button component={Link} to="/quizzes" variant="outlined">
-                更多测验
-              </Button>
-            </Box>
+            <Stack>
+              {questions.map((q, idx) => {
+                const record = answers[idx];
+                return (
+                  <Box key={q.id} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Box sx={{ width: '10%' }}>{idx + 1}</Box>
+                    <Box sx={{ width: '60%' }}>{q.question_text || '-'}</Box>
+                    <Box sx={{ width: '30%' }}>
+                      {record ? (
+                        record.answer
+                      ) : (
+                        <Chip label="未作答" color="default" size="small" />
+                      )}
+                    </Box>
+                    <Box>
+                      {record ? (
+                        record.correct ? (
+                          <Chip label="正确" color="success" size="small" />
+                        ) : (
+                          <Chip label="错误" color="error" size="small" />
+                        )
+                      ) : (
+                        <Chip label="未作答" color="default" size="small" />
+                      )}
+                    </Box>
+                    <Box>{record ? record.point : 0}</Box>
+                  </Box>
+                );
+              })}
+            </Stack>
           </CardContent>
         </Card>
       </Box>
@@ -107,46 +91,27 @@ export default function QuizPlayPage() {
     <Box sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" gutterBottom>
-          {quiz.title}
+          {exam.title}
         </Typography>
-        <LinearProgress variant="determinate" value={progress} sx={{ mb: 2 }} />
+        <LinearProgress
+          variant="determinate"
+          value={((currentQuestionIndex + 1) / questions.length) * 100}
+          sx={{ mb: 2 }}
+        />
         <Typography variant="body2" color="text.secondary">
-          题目 {currentQuestionIndex + 1} / {quiz.questions.length}
+          题目 {currentQuestionIndex + 1} / {questions.length}
         </Typography>
       </Box>
-
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             {currentQuestion.question_text}
           </Typography>
-
-          <FormControl component="fieldset" sx={{ width: '100%' }}>
-            <RadioGroup
-              value={answers[currentQuestion.id] || ''}
-              onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-            >
-              {currentQuestion.options?.map((option, index) => (
-                <FormControlLabel key={index} value={option} control={<Radio />} label={option} />
-              ))}
-            </RadioGroup>
-          </FormControl>
         </CardContent>
       </Card>
-
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button onClick={handlePrevious} disabled={currentQuestionIndex === 0} variant="outlined">
-          上一题
-        </Button>
-
-        <Button onClick={handleNext} variant="contained" disabled={!answers[currentQuestion.id]}>
-          {currentQuestionIndex === quiz.questions.length - 1 ? '完成测验' : '下一题'}
-        </Button>
-      </Box>
-
-      {quiz.time_limit && (
+      {exam.time_limit && (
         <Alert severity="info" sx={{ mt: 2 }}>
-          时间限制: {quiz.time_limit} 秒
+          时间限制: {exam.time_limit} 秒
         </Alert>
       )}
     </Box>

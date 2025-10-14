@@ -8,6 +8,7 @@
 
 export * from './authResponse';
 export * from './badRequestResponse';
+export * from './commonError';
 export * from './error';
 export * from './exam';
 export * from './examQuestionsItem';

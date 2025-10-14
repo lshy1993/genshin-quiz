@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { useState } from 'react';
 import QuestionFilter from '@/components/QuestionFilter';
 import { mockQuestionData } from '@/util/mock';
-import QuestionTable from './QuestionTable';
+import QuestionTable from '../../components/QuestionTable';
 // import { useGetQuestions } from '@/api/genshinQuizAPI';
 
 export default function QuestionListPage() {
@@ -11,7 +11,7 @@ export default function QuestionListPage() {
   const questionList = mockQuestionData;
 
   const [search, setSearch] = useState('');
-  const [difficulty, setDifficulty] = useState('');
+  const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
@@ -29,7 +29,7 @@ export default function QuestionListPage() {
       (selectedLanguages.length === 0 ||
         selectedLanguages.some((lang) => question.languages.includes(lang))) &&
       (search ? question.question_text.includes(search) : true) &&
-      (difficulty ? question.difficulty === difficulty : true),
+      (selectedDifficulties.length > 0 ? selectedDifficulties.includes(question.difficulty) : true),
   );
 
   if (sortBy !== 'default') {
@@ -71,18 +71,18 @@ export default function QuestionListPage() {
   return (
     <Box
       sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 3,
         width: '100%',
         maxWidth: 900,
-        minWidth: 0,
+        minWidth: 480,
         mx: 'auto',
-        py: 4,
       }}
     >
-      {/* Banner */}
       <Box
         sx={{
-          mb: 3,
-          p: 3,
+          p: 1,
           bgcolor: 'primary.main',
           color: 'primary.contrastText',
           borderRadius: 2,
@@ -94,14 +94,12 @@ export default function QuestionListPage() {
         </Typography>
         <Typography variant="subtitle1">浏览所有题目，点击查看详情并开始答题！</Typography>
       </Box>
-
-      {/* 筛选区 */}
       <QuestionFilter
         questionList={questionList}
         search={search}
         setSearch={setSearch}
-        difficulty={difficulty}
-        setDifficulty={setDifficulty}
+        selectedDifficulties={selectedDifficulties}
+        setSelectedDifficulties={setSelectedDifficulties}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
         selectedQuestionTypes={selectedQuestionTypes}
@@ -111,8 +109,6 @@ export default function QuestionListPage() {
         sortAsc={sortAsc}
         setSortAsc={setSortAsc}
       />
-
-      {/* 题目表格 */}
       <QuestionTable questions={filteredQuestions} />
     </Box>
   );

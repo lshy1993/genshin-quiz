@@ -1,6 +1,5 @@
 import {
   Box,
-  Chip,
   LinearProgress,
   Paper,
   Table,
@@ -12,31 +11,23 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { t } from 'i18next';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { Question } from '@/api/dto';
+import {
+  formatCount,
+  getCategoryLabel,
+  getDifficultyColor,
+  getDifficultyLabel,
+} from '@/util/utils';
 
 interface QuestionTableProps {
   questions: Question[];
 }
 
-const getCategoryLabel = (category: string) => t(`question.category.${category}`);
-const getDifficultyLabel = (diff: string) => t(`question.difficulty.${diff}`);
-const getDifficultyColor = (diff: string): 'success' | 'warning' | 'error' | 'default' => {
-  switch (diff) {
-    case 'easy':
-      return 'success';
-    case 'medium':
-      return 'warning';
-    case 'hard':
-      return 'error';
-    default:
-      return 'default';
-  }
-};
-
 export default function QuestionTable({ questions }: QuestionTableProps) {
-  const getCorrectRate = (q: Question) => {
+  const navigate = useNavigate();
+
+  const getCorrectRate = (q: Question): number => {
     if (!q.answer_count || !q.correct_count) return 0;
     if (q.answer_count === 0) return 0;
     return q.correct_count / q.answer_count;
@@ -45,15 +36,15 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
   const renderCorrectRate = (question: Question) => {
     const rate = getCorrectRate(question);
     return (
-      <Tooltip title={`${Math.round(rate * 100)}%`} arrow>
-        <span>
+      <Tooltip title={`${(rate * 100).toFixed(1)}%`} arrow>
+        <TableCell align="right">
           <LinearProgress
+            sx={{ height: 8, borderRadius: 4, width: 60 }}
             variant="determinate"
             value={rate * 100}
-            sx={{ height: 6, borderRadius: 3, width: 60 }}
             color={rate > 0.7 ? 'success' : rate > 0.5 ? 'warning' : 'error'}
           />
-        </span>
+        </TableCell>
       </Tooltip>
     );
   };
@@ -69,21 +60,19 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
   }
 
   return (
-    <TableContainer component={Paper} sx={{ mt: 3 }}>
-      <Table>
+    <TableContainer component={Paper}>
+      <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 420 }}>题目内容</TableCell>
-            <TableCell align="center" sx={{ width: 120 }}>
-              分类
-            </TableCell>
-            <TableCell align="right" sx={{ width: 100 }}>
+            <TableCell sx={{ width: 80 }}>分类</TableCell>
+            <TableCell sx={{ minWidth: 200 }}>题目内容</TableCell>
+            <TableCell align="right" sx={{ width: 60 }}>
               正确率
             </TableCell>
-            <TableCell align="right" sx={{ width: 100 }}>
+            <TableCell align="right" sx={{ width: 60 }}>
               难度
             </TableCell>
-            <TableCell align="right" sx={{ width: 120 }}>
+            <TableCell align="right" sx={{ width: 60 }}>
               回答人次
             </TableCell>
           </TableRow>
@@ -93,8 +82,6 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
             <TableRow
               key={question.id}
               hover
-              component={Link}
-              to={`/questions/${question.id}`}
               sx={{
                 textDecoration: 'none',
                 color: 'inherit',
@@ -103,27 +90,36 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                   backgroundColor: 'action.hover',
                 },
               }}
+              onClick={() => {
+                navigate(`/questions/${question.id}`);
+              }}
             >
               <TableCell>
-                <Typography variant="body2" sx={{ maxWidth: 400 }}>
+                <Typography variant="body2">{getCategoryLabel(question.category)}</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="body2">
                   {question.question_text.length > 60
                     ? `${question.question_text.substring(0, 60)}...`
                     : question.question_text}
                 </Typography>
               </TableCell>
-              <TableCell align="center">
-                <Chip label={getCategoryLabel(question.category)} color="secondary" size="small" />
-              </TableCell>
-              <TableCell align="right">{renderCorrectRate(question)}</TableCell>
+              {renderCorrectRate(question)}
               <TableCell align="right">
                 <Typography variant="body2" color={getDifficultyColor(question.difficulty)}>
                   {getDifficultyLabel(question.difficulty)}
                 </Typography>
               </TableCell>
               <TableCell align="right">
-                <Typography variant="body2" color="text.secondary">
-                  {question.answer_count ?? 0}
-                </Typography>
+                <Tooltip
+                  title={(question.answer_count ?? 0).toLocaleString()}
+                  arrow
+                  placement="bottom-end"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {formatCount(question.answer_count ?? 0)}
+                  </Typography>
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}
