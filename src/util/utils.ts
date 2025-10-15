@@ -1,7 +1,10 @@
 import { t } from 'i18next';
 import type { Question } from '@/api/dto';
 
-export function formatCount(count: number): string {
+export function formatNumberShort(count: number): string {
+  if (count >= 1_000_000_000_000)
+    return `${(count / 1_000_000_000_000).toFixed(1).replace(/\.0$/, '')}t`;
+  if (count >= 1_000_000_000) return `${(count / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}b`;
   if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1).replace(/\.0$/, '')}m`;
   if (count >= 1_000) return `${(count / 1_000).toFixed(1).replace(/\.0$/, '')}k`;
   return count.toString();
@@ -52,4 +55,17 @@ export function getDifficultyColor(diff: string): 'success' | 'warning' | 'error
     default:
       return 'default';
   }
+}
+
+export function areAnswersEqual(answer: string[], selected: string[]): boolean {
+  const answerSet = new Set(answer);
+  const selectedSet = new Set(selected);
+
+  if (answerSet.size !== selectedSet.size) return false;
+
+  for (const uuid of answerSet) {
+    if (!selectedSet.has(uuid)) return false;
+  }
+
+  return true;
 }

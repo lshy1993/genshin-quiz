@@ -36,8 +36,8 @@ export const mockQuestionData: Question[] = [
     category: QuestionCategory.character,
     difficulty: QuestionDifficulty.easy,
     options: [
-      { id: 'option-1', type: QuestionOptionType.text, text: '正确' },
-      { id: 'option-2', type: QuestionOptionType.text, text: '错误' },
+      { id: 'option-1', type: QuestionOptionType.text, text: 'true', count: 100 },
+      { id: 'option-2', type: QuestionOptionType.text, text: 'false', count: 15 },
     ],
     explanation: '温迪确实是蒙德的风神巴巴托斯',
     languages: ['zh'],
@@ -54,10 +54,9 @@ export const mockQuestionData: Question[] = [
     category: QuestionCategory.lore,
     difficulty: QuestionDifficulty.medium,
     options: [
-      { id: 'option-1', type: QuestionOptionType.text, text: '钟离' },
-      { id: 'option-2', type: QuestionOptionType.text, text: '岩王帝君' },
-      { id: 'option-3', type: QuestionOptionType.text, text: '摩拉克斯' },
-      { id: 'option-4', type: QuestionOptionType.text, text: '以上都是' },
+      { id: 'option-1', type: QuestionOptionType.text, text: '钟离', count: 90000 },
+      { id: 'option-2', type: QuestionOptionType.text, text: '岩王帝君', count: 87000 },
+      { id: 'option-3', type: QuestionOptionType.text, text: '摩拉克斯', count: 85000 },
     ],
     explanation: '钟离、岩王帝君、摩拉克斯都是同一个人的不同称呼',
     languages: ['zh', 'en', 'ja'],
@@ -65,6 +64,21 @@ export const mockQuestionData: Question[] = [
     correct_count: 90000,
     created_by: 'e1a4c2b7-8d3e-4f6a-9b2c-5f7d8e9c0a1b',
     created_at: new Date('2023-10-03T12:00:00Z'),
+  },
+];
+
+export const mockQuestionAnswers = [
+  {
+    question_id: 'ad1f5c3e-4b2e-4c3a-9f1e-2b6d7e8f9a0b',
+    answers: ['option-1'],
+  },
+  {
+    question_id: 'b2f5c3e2-4b2e-4c3a-9f1e-2b6d7e8f9a0c',
+    answers: ['option-1'],
+  },
+  {
+    question_id: 'c3f5c3e2-4b2e-4c3a-9f1e-2b6d7e8f9a0d',
+    answers: ['option-1', 'option-2', 'option-3'],
   },
 ];
 

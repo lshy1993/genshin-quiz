@@ -14,7 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import type { Question } from '@/api/dto';
 import {
-  formatCount,
+  formatNumberShort,
   getCategoryLabel,
   getCorrectRate,
   getDifficultyColor,
@@ -112,7 +112,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                   placement="bottom-end"
                 >
                   <Typography variant="body2" color="text.secondary">
-                    {formatCount(question.answer_count ?? 0)}
+                    {formatNumberShort(question.answer_count ?? 0)}
                   </Typography>
                 </Tooltip>
               </TableCell>

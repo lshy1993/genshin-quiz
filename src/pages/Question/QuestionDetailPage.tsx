@@ -24,7 +24,8 @@ import QuestionMetaFooter from '@/components/Question/QuestionMetaFooter';
 import QuestionMetaHeader from '@/components/Question/QuestionMetaHeader';
 import QuestionMySubmission from '@/components/Question/QuestionMySubmission';
 import QuestionRecentSubmission from '@/components/Question/QuestionRecentSubmission';
-import { mockQuestionData, type QuestionSubmission } from '@/util/mock';
+import { mockQuestionAnswers, mockQuestionData, type QuestionSubmission } from '@/util/mock';
+import { areAnswersEqual } from '@/util/utils';
 
 export default function QuestionDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -46,28 +47,18 @@ export default function QuestionDetailPage() {
     );
   }
 
-  // mock 提交处理
+  // mock 提交处理 （实际应调用提交接口）
   const handleSubmit = (selectedOptions: string[]) => {
     // 正确答案（假设用 options 的 id，实际应从 question.answers 获取）
-    const correct = question.options
-      .filter(
-        (opt) =>
-          opt.text?.includes('正确') || opt.text?.includes('以上都是') || opt.text === 'miHoYo',
-      )
-      .map((opt) => opt.id);
-    // 判断题型
-    const isSingle =
-      question.question_type === 'single_choice' || question.question_type === 'true_false';
-    const isCorrect = isSingle
-      ? selectedOptions.length === 1 && correct.includes(selectedOptions[0])
-      : selectedOptions.length === correct.length &&
-        selectedOptions.every((v) => correct.includes(v));
-    // mock 数据更新
+    const answers = mockQuestionAnswers.find((a) => a.question_id === question.id)?.answers ?? [];
+    // 三种题型直接比对set是否一致
+    const isCorrect = areAnswersEqual(answers, selectedOptions);
+    // mock 返回数据更新
     setQuestion((q) => {
       return {
         ...q,
         solved: isCorrect,
-        answers: correct,
+        answers: answers,
       };
     });
     setSubmissionList((list) => [

@@ -1,5 +1,7 @@
-import { Box, Button } from '@mui/material';
+import { Alert, Button, Stack } from '@mui/material';
+import { t } from 'i18next';
 import type { QuestionOption } from '@/api/dto';
+import DualProgressBar from '../DualProgressBar';
 
 interface Props {
   options: QuestionOption[];
@@ -16,20 +18,41 @@ export default function renderTrueFalse({
   setSelected,
   submitted,
 }: Props) {
+  const yesOption = options.find((opt) => opt.text === 'true');
+  const noOption = options.find((opt) => opt.text === 'false');
+
+  if (!yesOption || !noOption) {
+    return <Alert severity="error">{t('question.error.options_invalid')}</Alert>;
+  }
+
+  const yesCount = yesOption.count ?? 0;
+  const noCount = noOption.count ?? 0;
+
   return (
-    <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
-      {options.slice(0, 2).map((opt) => (
+    <>
+      <Stack spacing={2} direction="row">
         <Button
-          key={opt.id}
-          variant={selected[0] === opt.id ? 'contained' : 'outlined'}
-          color={opt.text === '正确' ? 'success' : opt.text === '错误' ? 'error' : 'primary'}
+          key={yesOption.id}
+          variant={selected[0] === yesOption.id ? 'contained' : 'outlined'}
+          color={'success'}
           sx={{ flex: 1, height: 56, fontSize: 20, borderRadius: 2 }}
-          onClick={() => !submitted && setSelected([opt.id])}
+          onClick={() => !submitted && setSelected([yesOption.id])}
           disabled={submitted}
         >
-          {opt.text || opt.image || ''}
+          {'正确'}
         </Button>
-      ))}
-    </Box>
+        <Button
+          key={noOption.id}
+          variant={selected[0] === noOption.id ? 'contained' : 'outlined'}
+          color={'error'}
+          sx={{ flex: 1, height: 56, fontSize: 20, borderRadius: 2 }}
+          onClick={() => !submitted && setSelected([noOption.id])}
+          disabled={submitted}
+        >
+          {'错误'}
+        </Button>
+      </Stack>
+      {solved && <DualProgressBar yesCount={yesCount} noCount={noCount} />}
+    </>
   );
 }

@@ -4,9 +4,11 @@ import {
   FormControlLabel,
   FormGroup,
   LinearProgress,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import type { QuestionOption } from '@/api/dto';
+import { formatNumberShort } from '@/util/utils';
 
 interface Props {
   options: QuestionOption[];
@@ -23,37 +25,46 @@ export default function renderMultiple({
   setSelected,
   submitted,
 }: Props) {
-  return (
-    <FormGroup>
-      {options.map((opt, _) => (
-        <Box key={opt.id}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selected.includes(opt.id)}
-                onChange={(e) => {
-                  if (e.target.checked) setSelected([...selected, opt.id]);
-                  else setSelected(selected.filter((v) => v !== opt.id));
-                }}
-                disabled={submitted}
-              />
-            }
-            label={opt.text || opt.image || ''}
-          />
-          {solved && (
-            <Box sx={{ minWidth: 120, flex: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-              <LinearProgress
-                variant="determinate"
-                value={opt.count ? Math.min(opt.count * 2, 100) : 0}
-                sx={{ height: 10, borderRadius: 1, flex: 1 }}
-              />
-              <Typography variant="caption" color="text.secondary" sx={{ minWidth: 32 }}>
-                {opt.count ?? 0}票
+  const maxCount = Math.max(...options.map((opt) => opt.count ?? 0), 1);
+
+  const renderOption = (opt: QuestionOption) => {
+    const percent = maxCount > 0 ? Math.round(((opt.count ?? 0) / maxCount) * 100) : 0;
+    return (
+      <Box key={opt.id}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={selected.includes(opt.id)}
+              onChange={(e) => {
+                if (e.target.checked) setSelected([...selected, opt.id]);
+                else setSelected(selected.filter((v) => v !== opt.id));
+              }}
+              disabled={submitted}
+            />
+          }
+          label={opt.text || opt.image || ''}
+        />
+        {solved && (
+          <Box sx={{ minWidth: 120, flex: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <LinearProgress
+              variant="determinate"
+              value={percent}
+              sx={{ height: 16, flex: 1, transition: '0.5s' }}
+            />
+            <Tooltip title={opt.count ?? 0} placement="bottom" arrow>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ textAlign: 'right', minWidth: 40 }}
+              >
+                {`${formatNumberShort(opt.count ?? 0)}`}
               </Typography>
-            </Box>
-          )}
-        </Box>
-      ))}
-    </FormGroup>
-  );
+            </Tooltip>
+          </Box>
+        )}
+      </Box>
+    );
+  };
+
+  return <FormGroup>{options.map((opt, _) => renderOption(opt))}</FormGroup>;
 }
