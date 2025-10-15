@@ -40,3 +40,4 @@ export * from './user';
 export * from './vote';
 export * from './voteOption';
 export * from './voteOptionType';
+export * from './voteVotedOptions';

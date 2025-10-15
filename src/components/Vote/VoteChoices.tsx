@@ -13,33 +13,61 @@ import {
   TableSortLabel,
   TextField,
   ToggleButton,
-  ToggleButtonGroup,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import type { VoteOption } from '@/api/dto';
+import type { VoteOption, VoteVotedOptions } from '@/api/dto';
 
 interface Props {
   options: VoteOption[];
-  voted: string[];
+  voted: VoteVotedOptions;
   maxVotes: number;
-  handleSubmit: (selected: string[]) => void;
+  votesPerOption: number; // 每个选项最大可投票数
+  handleSubmit: (selected: VoteVotedOptions) => void;
 }
 
-export default function VoteChoices({ options, voted, maxVotes, handleSubmit }: Props) {
-  const submitted = voted.length > 0;
-  const [selected, setSelected] = useState<string[]>(voted);
+export default function VoteChoices({
+  options,
+  voted,
+  maxVotes,
+  votesPerOption,
+  handleSubmit,
+}: Props) {
+  const submitted = Object.values(voted).some((count) => count > 0);
+  const [selected, setSelected] = useState<VoteVotedOptions>(voted);
   const [filter, setFilter] = useState<string>('');
   const [sortByVotes, setSortByVotes] = useState<'' | 'asc' | 'desc'>('');
   const [showSelectedOnly, setShowSelectedOnly] = useState<boolean>(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
+  const handleAdd = (id: string) => {
+    setSelected((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 0) + 1,
+    }));
+  };
+
+  const handleRemove = (id: string) => {
+    setSelected((prev) => ({
+      ...prev,
+      [id]: prev[id] - 1,
+    }));
+  };
+
   const handleSelect = (id: string) => {
+    // 单选
     if (submitted) return;
-    if (selected.includes(id)) {
-      setSelected(selected.filter((i) => i !== id));
-    } else if (selected.length < maxVotes) {
-      setSelected([...selected, id]);
+    if (selected[id]) {
+      setSelected((prev) => {
+        const newSelected = { ...prev };
+        delete newSelected[id];
+        return newSelected;
+      });
+    } else {
+      setSelected((prev) => ({
+        ...prev,
+        [id]: 1,
+      }));
     }
   };
 
@@ -56,7 +84,8 @@ export default function VoteChoices({ options, voted, maxVotes, handleSubmit }: 
     return (
       <Stack direction="row" spacing={2} alignItems="center">
         <Typography>
-          {submitted ? `已投 ${voted.length} 项` : `已选 ${selectedCount}/${maxVotes}`}
+          {submitted ? '已投' : '已选'}
+          {` ${selectedCount}/${maxVotes}`}
         </Typography>
         <Chip
           label={'仅看已选'}
@@ -75,6 +104,65 @@ export default function VoteChoices({ options, voted, maxVotes, handleSubmit }: 
     );
   };
 
+  const renderResult = (option: VoteOption) => {
+    const votesForThisOption = voted[option.id] || 0;
+    if (votesForThisOption > 0) {
+      return (
+        <Chip
+          label={votesPerOption === 1 ? '已投' : `${votesForThisOption}票`}
+          color="success"
+          size="small"
+        />
+      );
+    }
+    return null;
+  };
+
+  const renderAction = (option: VoteOption) => {
+    if (votesPerOption === 1) {
+      const isVoted = option.id in selected && selected[option.id] > 0;
+      return (
+        <ToggleButton
+          size="small"
+          value={option.id}
+          selected={isVoted}
+          disabled={!isVoted && selectedCount >= maxVotes}
+          onClick={() => handleSelect(option.id)}
+        >
+          {isVoted ? '取消' : '选择'}
+        </ToggleButton>
+      );
+    } else {
+      // 多选
+      const votesForThisOption = selected[option.id] || 0;
+      const overOptionMax = votesPerOption > 0 && votesForThisOption >= votesPerOption;
+      const overUserMax = selectedCount >= maxVotes;
+      return (
+        <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => handleRemove(option.id)}
+            disabled={votesForThisOption < 1}
+            sx={{ minWidth: 32 }}
+          >
+            -
+          </Button>
+          <Typography sx={{ minWidth: 24, textAlign: 'center' }}>{votesForThisOption}</Typography>
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => handleAdd(option.id)}
+            disabled={overOptionMax || overUserMax}
+            sx={{ minWidth: 32 }}
+          >
+            +
+          </Button>
+        </Stack>
+      );
+    }
+  };
+
   const filteredItems = options.filter(
     (option) => option.text?.includes(filter) || option.description?.includes(filter),
   );
@@ -87,11 +175,11 @@ export default function VoteChoices({ options, voted, maxVotes, handleSubmit }: 
     filteredItems.splice(
       0,
       filteredItems.length,
-      ...filteredItems.filter((o) => selected.includes(o.id)),
+      ...filteredItems.filter((o) => selected[o.id] > 0),
     );
   }
 
-  const selectedCount = options.filter((option) => selected.includes(option.id)).length;
+  const selectedCount = Object.values(selected).reduce((acc, count) => acc + count, 0);
 
   return (
     <>
@@ -118,7 +206,7 @@ export default function VoteChoices({ options, voted, maxVotes, handleSubmit }: 
               <TableCell>#</TableCell>
               <TableCell>选项</TableCell>
               <TableCell>简介</TableCell>
-              <TableCell align="right">操作</TableCell>
+              <TableCell align="right">投票</TableCell>
               {submitted && (
                 <TableCell align="right" sortDirection={sortByVotes === '' ? false : sortByVotes}>
                   <TableSortLabel
@@ -134,30 +222,12 @@ export default function VoteChoices({ options, voted, maxVotes, handleSubmit }: 
           </TableHead>
           <TableBody>
             {filteredItems.map((item, index) => (
-              <TableRow key={item.id} hover selected={selected.includes(item.id)}>
+              <TableRow key={item.id} hover selected={selected[item.id] > 0}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.text}</TableCell>
                 <TableCell>{item.description}</TableCell>
                 <TableCell align="right">
-                  {submitted ? (
-                    selected.includes(item.id) ? (
-                      <Chip label="已投" color="success" size="small" />
-                    ) : null
-                  ) : (
-                    <ToggleButtonGroup
-                      value={selected}
-                      onChange={() => handleSelect(item.id)}
-                      size="small"
-                    >
-                      <ToggleButton
-                        value={item.id}
-                        selected={selected.includes(item.id)}
-                        disabled={!selected.includes(item.id) && selected.length >= maxVotes}
-                      >
-                        {selected.includes(item.id) ? '取消' : '选择'}
-                      </ToggleButton>
-                    </ToggleButtonGroup>
-                  )}
+                  {submitted ? renderResult(item) : renderAction(item)}
                 </TableCell>
                 {submitted && <TableCell align="right">{item.votes}</TableCell>}
               </TableRow>
