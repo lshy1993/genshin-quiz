@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import BannerBox from '@/components/BannerBox';
 import PageContainer from '@/components/PageContainer';
-import QuestionFilter from '@/components/QuestionFilter';
-import QuestionTable from '@/components/QuestionTable';
+import QuestionFilter from '@/components/Question/QuestionFilter';
+import QuestionTable from '@/components/Question/QuestionTable';
 import { QuestionSortType } from '@/util/enum';
 import { mockQuestionData } from '@/util/mock';
 // import { useGetQuestions } from '@/api/genshinQuizAPI';

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Exam } from '@/api/dto';
 import BannerBox from '@/components/BannerBox';
-import ExamFilter from '@/components/ExamFilter';
+import ExamFilter from '@/components/Exam/ExamFilter';
 import PageContainer from '@/components/PageContainer';
 import { ExamSortType } from '@/util/enum';
 import { mockExamData } from '@/util/mock';

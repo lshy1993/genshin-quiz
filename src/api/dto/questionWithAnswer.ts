@@ -8,4 +8,6 @@
 import type { Question } from './question';
 import type { QuestionWithAnswerAllOf } from './questionWithAnswerAllOf';
 
-export type QuestionWithAnswer = Question & QuestionWithAnswerAllOf;
+export type QuestionWithAnswer = Question &
+  QuestionWithAnswerAllOf &
+  Required<Pick<Question & QuestionWithAnswerAllOf, 'answers'>>;

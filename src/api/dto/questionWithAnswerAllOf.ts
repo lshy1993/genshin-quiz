@@ -6,6 +6,4 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type QuestionWithAnswerAllOf = {
-  answer: string[];
-};
+export type QuestionWithAnswerAllOf = { [key: string]: unknown };

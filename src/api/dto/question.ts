@@ -13,14 +13,20 @@ import type { QuestionType } from './questionType';
 
 export interface Question {
   id: string;
+  /** 是否公开可见 */
   public: boolean;
-  question_text: string;
+  /** 是否已经通过了 */
+  solved?: boolean;
   question_type: QuestionType;
   category: QuestionCategory;
   difficulty: QuestionDifficulty;
+  /** 支持的多语言列表 */
+  languages: string[];
+  question_text: string;
   options: QuestionOption[];
   explanation?: string;
-  languages: string[];
+  /** 正确选项ID */
+  answers?: string[];
   /** 总答题人数 */
   answer_count?: number;
   /** 总答对人数 */

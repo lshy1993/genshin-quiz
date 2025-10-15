@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import type { QuestionOption } from '@/api/dto';
 import type { QuestionSubmission } from '@/util/mock';
 
@@ -10,7 +10,6 @@ interface Props {
 export default function QuestionMySubmission({ submissionList, options }: Props) {
   return (
     <Box>
-      <Divider sx={{ my: 1 }} />
       <Typography variant="subtitle2">我的提交记录</Typography>
       {submissionList.map((sub, idx) => (
         <Stack key={sub.submitted_at.toISO()} direction="row" spacing={1}>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BannerBox from '@/components/BannerBox';
 import PageContainer from '@/components/PageContainer';
-import VoteFilter from '@/components/VoteFilter';
+import VoteFilter from '@/components/Vote/VoteFilter';
 import { VoteType } from '@/util/enum';
 import { mockVotes } from '@/util/mock';
 
