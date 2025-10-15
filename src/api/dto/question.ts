@@ -8,6 +8,7 @@
 
 import type { QuestionCategory } from './questionCategory';
 import type { QuestionDifficulty } from './questionDifficulty';
+import type { QuestionLikeStatus } from './questionLikeStatus';
 import type { QuestionOption } from './questionOption';
 import type { QuestionType } from './questionType';
 
@@ -17,6 +18,8 @@ export interface Question {
   public: boolean;
   /** 是否已经通过了 */
   solved?: boolean;
+  /** 点赞状态，1=已点赞，-1=已点踩，0=未操作 */
+  likeStatus?: QuestionLikeStatus;
   question_type: QuestionType;
   category: QuestionCategory;
   difficulty: QuestionDifficulty;
@@ -31,6 +34,8 @@ export interface Question {
   answer_count?: number;
   /** 总答对人数 */
   correct_count?: number;
+  /** 点赞数 */
+  likes?: number;
   created_by: string;
   created_at: Date;
 }

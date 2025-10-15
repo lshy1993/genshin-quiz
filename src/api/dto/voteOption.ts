@@ -9,9 +9,15 @@ import type { VoteOptionType } from './voteOptionType';
 
 export interface VoteOption {
   id: string;
+  /** 选项类型（文本、图片、音乐） */
   type: VoteOptionType;
+  /** 选项文本 */
   text?: string;
+  /** 选项图片URL */
   image_url?: string;
+  /** 选项音乐URL */
   music_url?: string;
+  /** 选项描述 */
+  description?: string;
   votes?: number;
 }

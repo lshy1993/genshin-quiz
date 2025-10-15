@@ -1,7 +1,8 @@
 import Axios, { type AxiosRequestConfig, type AxiosRequestHeaders } from 'axios';
+import { DateTime } from 'luxon';
 import qs from 'qs';
 
-const axios = Axios.create({
+const axiosClient = Axios.create({
   baseURL: '/api/',
   timeout: 5000,
   headers: {
@@ -16,7 +17,7 @@ const axios = Axios.create({
     : [],
 });
 
-axios.interceptors.request.use((config) => {
+axiosClient.interceptors.request.use((config) => {
   if (config.method && ['post', 'put', 'patch'].includes(config.method)) {
     // 如果已经手动设置了 Content-Type，保持不变
     if (config.headers?.['Content-Type']) {
@@ -37,11 +38,16 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
+axiosClient.interceptors.response.use((originalResponse) => {
+  handleDates(originalResponse.data);
+  return originalResponse;
+});
+
 export const Fetcher = async <T>(config: AxiosRequestConfig): Promise<T> => {
   // if (getJWT() === '') {
   //     return Promise.reject('No JWT token set');
   // }
-  const promise = await axios
+  const promise = await axiosClient
     .request<T>(config)
     .then((res) => res.data)
     .catch((err) => {
@@ -59,13 +65,33 @@ export const Fetcher = async <T>(config: AxiosRequestConfig): Promise<T> => {
 export default Fetcher;
 
 export const getJWT = () => {
-  return axios.defaults.headers.common.Authorization?.toString() ?? '';
+  return axiosClient.defaults.headers.common.Authorization?.toString() ?? '';
 };
 
 export const setJWT = (token: string) => {
   if (token) {
-    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+    axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
   } else {
-    delete axios.defaults.headers.common.Authorization;
+    delete axiosClient.defaults.headers.common.Authorization;
   }
 };
+
+const isoDateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?$/;
+
+function isIsoDateString(value: any): boolean {
+  return value && typeof value === 'string' && isoDateFormat.test(value);
+}
+
+function handleDates(body: any) {
+  if (body === null || body === undefined || typeof body !== 'object') return body;
+
+  for (const key of Object.keys(body)) {
+    const value = body[key];
+    if (isIsoDateString(value)) {
+      // body[key] = new Date(value); // default JS conversion
+      body[key] = DateTime.fromISO(value); // Luxon conversion
+    } else if (typeof value === 'object') {
+      handleDates(value);
+    }
+  }
+}

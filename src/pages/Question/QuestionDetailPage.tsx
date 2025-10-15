@@ -23,7 +23,6 @@ import QuestionChoices from '@/components/Question/QuestionChoices';
 import QuestionMetaFooter from '@/components/Question/QuestionMetaFooter';
 import QuestionMetaHeader from '@/components/Question/QuestionMetaHeader';
 import QuestionMySubmission from '@/components/Question/QuestionMySubmission';
-import QuestionRecentSubmission from '@/components/Question/QuestionRecentSubmission';
 import { mockQuestionAnswers, mockQuestionData, type QuestionSubmission } from '@/util/mock';
 import { areAnswersEqual } from '@/util/utils';
 
@@ -72,6 +71,16 @@ export default function QuestionDetailPage() {
     ]);
   };
 
+  const handleLike = (likeStatus: 1 | 0 | -1) => {
+    // mock 更新数据，实际应调用接口
+    setQuestion((q) => {
+      return {
+        ...q,
+        likeStatus: likeStatus,
+      };
+    });
+  };
+
   return (
     <PageContainer>
       <Box>
@@ -104,16 +113,13 @@ export default function QuestionDetailPage() {
             <Stack spacing={2} divider={<Divider flexItem />}>
               <QuestionMetaHeader question={question} />
               <QuestionChoices question={question} handleSubmit={handleSubmit} />
-              <QuestionMetaFooter question={question} />
+              <QuestionMetaFooter question={question} handleLike={handleLike} />
             </Stack>
           </CardContent>
         )}
         {currentTab === 1 && (
           <CardContent>
-            <Stack spacing={2} divider={<Divider flexItem />}>
-              <QuestionMySubmission submissionList={submissionList} options={question.options} />
-              <QuestionRecentSubmission questionId={question.id} />
-            </Stack>
+            <QuestionMySubmission submissionList={submissionList} options={question.options} />
           </CardContent>
         )}
       </Card>

@@ -7,13 +7,13 @@
  */
 
 /**
- * 选项类型（文本、图片、音乐）
+ * 点赞状态，1=已点赞，-1=已点踩，0=未操作
  */
-export type VoteOptionType = (typeof VoteOptionType)[keyof typeof VoteOptionType];
+export type QuestionLikeStatus = (typeof QuestionLikeStatus)[keyof typeof QuestionLikeStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const VoteOptionType = {
-  text: 'text',
-  image: 'image',
-  music: 'music',
+export const QuestionLikeStatus = {
+  NUMBER_1: 1,
+  NUMBER_0: 0,
+  NUMBER_MINUS_1: -1,
 } as const;

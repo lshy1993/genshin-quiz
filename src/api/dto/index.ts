@@ -29,6 +29,7 @@ export * from './postVoteBody';
 export * from './question';
 export * from './questionCategory';
 export * from './questionDifficulty';
+export * from './questionLikeStatus';
 export * from './questionOption';
 export * from './questionOptionType';
 export * from './questionType';

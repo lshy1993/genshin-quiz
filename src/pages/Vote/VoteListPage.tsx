@@ -32,7 +32,7 @@ export default function VoteListPage() {
       <Grid container direction="column" spacing={2}>
         {filteredVotes.map((vote) => (
           <Card key={vote.id}>
-            <CardActionArea onClick={() => navigate(`/vote/${vote.id}`)}>
+            <CardActionArea onClick={() => navigate(`/votes/${vote.id}`)}>
               <CardContent>
                 <Typography variant="h6" fontWeight="bold">
                   {vote.title}

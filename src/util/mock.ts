@@ -159,16 +159,70 @@ export const mockTags = [
 ];
 
 export const mockVoteOptions: VoteOption[] = [
-  { id: 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', text: '选项1', type: 'text' },
-  { id: 'b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e', text: '选项2', type: 'text' },
-  { id: 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f', text: '选项3', type: 'text' },
-  { id: 'd4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a', text: '选项4', type: 'text' },
-  { id: 'e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b', text: '选项5', type: 'text' },
-  { id: 'f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c', text: '选项6', type: 'text' },
-  { id: 'a7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d', text: '选项7', type: 'text' },
-  { id: 'b8c9d0e1-f2a3-4b5c-6d7e-8f9a0b1c2d3e', text: '选项8', type: 'text' },
-  { id: 'c9d0e1f2-a3b4-5c6d-7e8f-9a0b1c2d3e4f', text: '选项9', type: 'text' },
-  { id: 'd0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a', text: '选项10', type: 'text' },
+  {
+    id: 'option-1',
+    type: 'text',
+    text: '派蒙',
+    description: '旅行者的好伙伴',
+    votes: 100,
+  },
+  { id: 'option-2', type: 'text', text: '空', description: '男主角', votes: 80 },
+  { id: 'option-3', type: 'text', text: '荧', description: '女主角', votes: 100 },
+  { id: 'option-4', type: 'text', text: '钟离', description: '岩王爷', votes: 60 },
+  { id: 'option-5', type: 'text', text: '胡桃', description: '往生堂堂主', votes: 40 },
+];
+
+export const mockVotes: Vote[] = [
+  {
+    id: 'c8f2a7b4-3e1d-4c2f-8b9a-2d7e6f1c4b5a',
+    public: true,
+    category: QuestionCategory.character,
+    title: '最喜欢的角色投票',
+    start_at: new Date('2025-10-10'),
+    expires_at: new Date('2025-10-20'),
+    votes_per_user: 1,
+    options: getRandomVoteOptions(4),
+    voted_options: ['option-1'],
+    // 以下为meta信息
+    participants: 120,
+    total_votes: 300,
+    expired: false,
+    created_at: new Date('2025-10-01'),
+    created_by: '管理员A',
+  },
+  {
+    id: 'd1b7e3c9-6f2a-4e8b-9c3d-5a2f7b8c1d4e',
+    public: true,
+    title: '最强武器评选',
+    category: QuestionCategory.weapon,
+    start_at: new Date('2025-10-10'),
+    expires_at: new Date('2025-10-20'),
+    votes_per_user: 3,
+    options: getRandomVoteOptions(6),
+    voted_options: ['option-1', 'option-3', 'option-5'],
+    // 以下为meta信息
+    expired: false,
+    participants: 80,
+    total_votes: 200,
+    created_at: new Date('2025-10-01'),
+    created_by: '管理员B',
+  },
+  {
+    id: 'e2c3d4f5-a6b7-8c9d-0e1f-2a3b4c5d6e7f',
+    public: false,
+    title: '活动奖励选择',
+    category: QuestionCategory.weapon,
+    start_at: new Date('2025-10-15'),
+    expires_at: new Date('2025-10-25'),
+    participants: 50,
+    total_votes: 150,
+    votes_per_user: 1,
+    options: getRandomVoteOptions(3),
+    voted_options: [],
+    expired: false,
+    created_at: new Date('2025-10-05'),
+    created_by: '管理员C',
+  },
 ];
 
 // 随机挑选 mockVotes 中的若干项
@@ -176,46 +230,3 @@ export function getRandomVoteOptions(count: number): VoteOption[] {
   const shuffled = [...mockVoteOptions].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 }
-
-export const mockVotes: Vote[] = [
-  {
-    id: 'c8f2a7b4-3e1d-4c2f-8b9a-2d7e6f1c4b5a',
-    public: true,
-    title: '最喜欢的角色投票',
-    created_at: new Date('2025-10-01'),
-    created_by: '管理员A',
-    expires_at: new Date('2025-10-20'),
-    participants: 120,
-    total_votes: 300,
-    votes_per_user: 1,
-    options: getRandomVoteOptions(4),
-    // tags: ['角色', '人气'],
-    expired: false,
-  },
-  {
-    id: 'd1b7e3c9-6f2a-4e8b-9c3d-5a2f7b8c1d4e',
-    public: true,
-    title: '最强武器评选',
-    created_at: new Date('2025-10-01'),
-    created_by: '管理员B',
-    expires_at: new Date('2025-10-20'),
-    participants: 80,
-    total_votes: 200,
-    votes_per_user: 3,
-    options: getRandomVoteOptions(6),
-    expired: true,
-  },
-  {
-    id: 'e2c3d4f5-a6b7-8c9d-0e1f-2a3b4c5d6e7f',
-    public: false,
-    title: '活动奖励选择',
-    created_at: new Date('2025-10-05'),
-    created_by: '管理员C',
-    expires_at: new Date('2025-10-25'),
-    participants: 50,
-    total_votes: 150,
-    votes_per_user: 1,
-    options: getRandomVoteOptions(3),
-    expired: false,
-  },
-];

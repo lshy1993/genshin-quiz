@@ -5,6 +5,7 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+import type { QuestionCategory } from './questionCategory';
 import type { VoteOption } from './voteOption';
 
 export interface Vote {
@@ -12,12 +13,22 @@ export interface Vote {
   public: boolean;
   title: string;
   description?: string;
-  created_by: string;
-  created_at?: Date;
+  category: QuestionCategory;
+  tags?: string[];
+  start_at: Date;
   expires_at?: Date;
+  /** 投票是否已过期 */
   expired: boolean;
+  /** 当前用户已投票的选项ID列表 */
+  voted_options: string[];
+  /** 每个用户最多可投票数 */
   votes_per_user: number;
   options: VoteOption[];
+  /** 参与投票的用户数 */
   participants?: number;
+  /** 总投票数 */
   total_votes?: number;
+  created_by: string;
+  created_at: Date;
+  likes?: number;
 }
