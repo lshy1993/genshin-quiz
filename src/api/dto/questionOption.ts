@@ -15,6 +15,8 @@ export interface QuestionOption {
   text?: string;
   /** 选项图片URL */
   image?: string;
+  /** 是否为正确答案 */
+  is_answer?: boolean;
   /** 选中次数 */
   count?: number;
 }

@@ -20,6 +20,7 @@ export * from './getUsers200';
 export * from './getUsersParams';
 export * from './getVotes200';
 export * from './getVotesParams';
+export * from './getVotesType';
 export * from './internalServerErrorResponse';
 export * from './notFoundResponse';
 export * from './postForgotPasswordBody';

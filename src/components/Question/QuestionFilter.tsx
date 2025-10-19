@@ -10,7 +10,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
+import type { GetQuestionsParams, QuestionCategory, QuestionDifficulty } from '@/api/dto';
 import { allCategories, allDifficulties, allLanguages, allQuestionTypes } from '@/util/enum';
 import {
   getCategoryLabel,
@@ -20,39 +21,15 @@ import {
 } from '@/util/utils';
 
 interface QuestionFilterProps {
-  search: string;
-  setSearch: (value: string) => void;
-  selectedDifficulties: string[];
-  setSelectedDifficulties: (value: string[]) => void;
-  selectedCategory: string;
-  setSelectedCategory: (value: string) => void;
-  selectedQuestionTypes: string[];
-  setSelectedQuestionTypes: (value: string[]) => void;
-  selectedLanguages: string[];
-  setSelectedLanguages: (value: string[]) => void;
-  sortAsc: boolean;
-  setSortAsc: (value: boolean) => void;
+  params: GetQuestionsParams;
+  setSearchParams: Dispatch<SetStateAction<GetQuestionsParams>>;
 }
-export default function QuestionFilter({
-  search,
-  setSearch,
-  selectedCategory,
-  setSelectedCategory,
-  selectedDifficulties,
-  setSelectedDifficulties,
-  selectedQuestionTypes,
-  setSelectedQuestionTypes,
-  selectedLanguages,
-  setSelectedLanguages,
-  sortAsc,
-  setSortAsc,
-}: QuestionFilterProps) {
-  // 新增本地状态控制Collapse展开
+export default function QuestionFilter({ params, setSearchParams }: QuestionFilterProps) {
   const [filterOpen, setFilterOpen] = useState(false);
 
   const selectedValues = useMemo(
-    () => allLanguages.filter((v) => selectedLanguages.includes(v)),
-    [allLanguages, selectedLanguages],
+    () => allLanguages.filter((v) => params.language?.includes(v)),
+    [allLanguages, params.language],
   );
 
   const renderLanguageValue = (value: readonly string[]) => {
@@ -65,20 +42,51 @@ export default function QuestionFilter({
     return <li {...props}>{getLanguageLabel(option)}</li>;
   };
 
-  const handleQuestionTypeToggle = (type: string) => {
-    setSelectedQuestionTypes(
-      selectedQuestionTypes.includes(type)
-        ? selectedQuestionTypes.filter((t) => t !== type)
-        : [...selectedQuestionTypes, type],
-    );
+  const handleCategoryChange = (category: QuestionCategory | 'all') => {
+    setSearchParams((prev) => {
+      if (category === 'all') {
+        const { category, ...rest } = prev;
+        return rest;
+      }
+      return {
+        ...prev,
+        category: category,
+      };
+    });
   };
 
-  const handleQuestionDifficultyToggle = (diff: string) => {
-    setSelectedDifficulties(
-      selectedDifficulties.includes(diff)
-        ? selectedDifficulties.filter((t) => t !== diff)
-        : [...selectedDifficulties, diff],
-    );
+  const handleLanguageToggle = (lang: string[]) => {
+    setSearchParams((prev) => {
+      if (lang.length === 0) {
+        const { language, ...rest } = prev;
+        return rest;
+      }
+      return {
+        ...prev,
+        language: lang,
+      };
+    });
+  };
+
+  const handleQuestionTypeToggle = (type: string) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      questionTypes: type,
+    }));
+  };
+
+  const handleQuestionDifficultyToggle = (diff: QuestionDifficulty | 'all') => {
+    setSearchParams((prev) => {
+      if (diff === 'all') {
+        const { difficulty, ...rest } = prev;
+        return rest;
+      }
+      const current = prev.difficulty ?? [];
+      return {
+        ...prev,
+        difficulty: current.includes(diff) ? current.filter((t) => t !== diff) : [...current, diff],
+      };
+    });
   };
 
   return (
@@ -93,8 +101,8 @@ export default function QuestionFilter({
         <Chip
           sx={{ height: '40px', borderRadius: '9999px', fontSize: '16px' }}
           label="全部"
-          variant={selectedCategory === '' ? 'filled' : 'outlined'}
-          onClick={() => setSelectedCategory('')}
+          variant={params.category ? 'filled' : 'outlined'}
+          onClick={() => handleCategoryChange('all')}
           clickable
         />
         {allCategories.map((category) => (
@@ -102,8 +110,8 @@ export default function QuestionFilter({
             key={category}
             sx={{ height: '40px', borderRadius: '9999px', fontSize: '16px' }}
             label={getCategoryLabel(category)}
-            variant={selectedCategory === category ? 'filled' : 'outlined'}
-            onClick={() => setSelectedCategory(category)}
+            variant={params.category === category ? 'filled' : 'outlined'}
+            onClick={() => handleCategoryChange(category)}
             clickable
           />
         ))}
@@ -120,8 +128,8 @@ export default function QuestionFilter({
             fullWidth
             label="搜索题目"
             variant="outlined"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={params.query || ''}
+            onChange={(e) => setSearchParams((prev) => ({ ...prev, query: e.target.value }))}
             placeholder="输入题目内容进行搜索..."
             size="small"
           />
@@ -129,9 +137,9 @@ export default function QuestionFilter({
             variant="outlined"
             startIcon={<SortIcon />}
             sx={{ minWidth: 120 }}
-            onClick={() => setSortAsc(!sortAsc)}
+            onClick={() => setSearchParams((prev) => ({ ...prev, sortDesc: !prev.sortDesc }))}
           >
-            {sortAsc ? '升序' : '降序'}
+            {params.sortDesc ? '降序' : '升序'}
           </Button>
           <Button
             variant="outlined"
@@ -156,7 +164,7 @@ export default function QuestionFilter({
               renderOption={renderLanguageOption}
               value={selectedValues}
               renderValue={renderLanguageValue}
-              onChange={(_, newValue) => setSelectedLanguages(newValue)}
+              onChange={(_, newValue) => handleLanguageToggle(newValue)}
             />
             <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
               题目类型
@@ -166,7 +174,7 @@ export default function QuestionFilter({
                 <Chip
                   key={type}
                   label={getQuestionTypeLabel(type)}
-                  variant={selectedQuestionTypes.includes(type) ? 'filled' : 'outlined'}
+                  variant={params.language?.includes(type) ? 'filled' : 'outlined'}
                   onClick={() => handleQuestionTypeToggle(type)}
                   clickable
                 />
@@ -180,7 +188,7 @@ export default function QuestionFilter({
                 <Chip
                   key={diff}
                   label={getDifficultyLabel(diff)}
-                  variant={selectedDifficulties.includes(diff) ? 'filled' : 'outlined'}
+                  variant={params.difficulty?.includes(diff) ? 'filled' : 'outlined'}
                   onClick={() => handleQuestionDifficultyToggle(diff)}
                   clickable
                 />

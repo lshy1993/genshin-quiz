@@ -10,6 +10,4 @@ import type { Vote } from './vote';
 export type GetVotes200 = {
   votes?: Vote[];
   total?: number;
-  limit?: number;
-  offset?: number;
 };

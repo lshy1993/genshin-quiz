@@ -5,15 +5,20 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+import type { GetVotesType } from './getVotesType';
 
 export type GetVotesParams = {
+  /**
+   * @minimum 1
+   */
+  page?: number;
   /**
    * @minimum 1
    * @maximum 100
    */
   limit?: number;
-  /**
-   * @minimum 0
-   */
-  offset?: number;
+  type?: GetVotesType;
+  query?: string;
+  sortBy?: string;
+  sortDesc?: boolean;
 };

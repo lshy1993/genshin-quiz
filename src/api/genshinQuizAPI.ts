@@ -400,12 +400,12 @@ export const getGetQuestionsKey = (params?: GetQuestionsParams) =>
   [`/questions`, ...(params ? [params] : [])] as const;
 
 export type GetQuestionsQueryResult = NonNullable<Awaited<ReturnType<typeof getQuestions>>>;
-export type GetQuestionsQueryError = InternalServerErrorResponse;
+export type GetQuestionsQueryError = BadRequestResponse | InternalServerErrorResponse;
 
 /**
  * @summary Get all questions
  */
-export const useGetQuestions = <TError = InternalServerErrorResponse>(
+export const useGetQuestions = <TError = BadRequestResponse | InternalServerErrorResponse>(
   params?: GetQuestionsParams,
   options?: {
     swr?: SWRConfiguration<Awaited<ReturnType<typeof getQuestions>>, TError> & {
@@ -887,7 +887,46 @@ export const useDeleteExam = <
 };
 
 /**
- * @summary 创建投票
+ * @summary Get all votes
+ */
+export const getVotes = (params?: GetVotesParams) => {
+  return Fetcher<GetVotes200>({ url: `/votes`, method: 'GET', params });
+};
+
+export const getGetVotesKey = (params?: GetVotesParams) =>
+  [`/votes`, ...(params ? [params] : [])] as const;
+
+export type GetVotesQueryResult = NonNullable<Awaited<ReturnType<typeof getVotes>>>;
+export type GetVotesQueryError = InternalServerErrorResponse;
+
+/**
+ * @summary Get all votes
+ */
+export const useGetVotes = <TError = InternalServerErrorResponse>(
+  params?: GetVotesParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getVotes>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetVotesKey(params) : null));
+  const swrFn = () => getVotes(params);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Create new vote
  */
 export const postCreateVote = (vote: Vote) => {
   return Fetcher<Vote>({
@@ -912,7 +951,7 @@ export type PostCreateVoteMutationError =
   | InternalServerErrorResponse;
 
 /**
- * @summary 创建投票
+ * @summary Create new vote
  */
 export const usePostCreateVote = <
   TError = BadRequestResponse | UnauthorizedResponse | InternalServerErrorResponse,
@@ -931,45 +970,6 @@ export const usePostCreateVote = <
   const swrFn = getPostCreateVoteMutationFetcher();
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
-
-  return {
-    swrKey,
-    ...query,
-  };
-};
-
-/**
- * @summary 获取投票列表
- */
-export const getVotes = (params?: GetVotesParams) => {
-  return Fetcher<GetVotes200>({ url: `/votes`, method: 'GET', params });
-};
-
-export const getGetVotesKey = (params?: GetVotesParams) =>
-  [`/votes`, ...(params ? [params] : [])] as const;
-
-export type GetVotesQueryResult = NonNullable<Awaited<ReturnType<typeof getVotes>>>;
-export type GetVotesQueryError = InternalServerErrorResponse;
-
-/**
- * @summary 获取投票列表
- */
-export const useGetVotes = <TError = InternalServerErrorResponse>(
-  params?: GetVotesParams,
-  options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getVotes>>, TError> & {
-      swrKey?: Key;
-      enabled?: boolean;
-    };
-  },
-) => {
-  const { swr: swrOptions } = options ?? {};
-
-  const isEnabled = swrOptions?.enabled !== false;
-  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetVotesKey(params) : null));
-  const swrFn = () => getVotes(params);
-
-  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 
   return {
     swrKey,

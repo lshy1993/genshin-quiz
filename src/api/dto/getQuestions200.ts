@@ -8,8 +8,6 @@
 import type { Question } from './question';
 
 export type GetQuestions200 = {
-  questions?: Question[];
-  total?: number;
-  limit?: number;
-  offset?: number;
+  questions: Question[];
+  total: number;
 };

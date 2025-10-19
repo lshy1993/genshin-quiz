@@ -28,8 +28,6 @@ export interface Question {
   question_text: string;
   options: QuestionOption[];
   explanation?: string;
-  /** 正确选项ID */
-  answers?: string[];
   /** 总答题人数 */
   answer_count?: number;
   /** 总答对人数 */

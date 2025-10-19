@@ -9,16 +9,18 @@ import type { QuestionCategory } from './questionCategory';
 import type { QuestionDifficulty } from './questionDifficulty';
 
 export type GetExamsParams = {
-  ids?: string[];
+  /**
+   * @minimum 1
+   */
+  page?: number;
   /**
    * @minimum 1
    * @maximum 100
    */
   limit?: number;
-  /**
-   * @minimum 0
-   */
-  offset?: number;
   category?: QuestionCategory;
   difficulty?: QuestionDifficulty;
+  query?: string;
+  sortBy?: string;
+  sortDesc?: boolean;
 };

@@ -5,9 +5,10 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+import type { User } from './user';
 
 export interface AuthResponse {
   /** JWT token */
   token: string;
-  uuid: string;
+  user: User;
 }
