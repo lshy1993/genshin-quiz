@@ -1,8 +1,10 @@
 import { Box, Button, Container, Paper, Tab, Tabs, TextField, Typography } from '@mui/material';
 import type React from 'react';
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { postLoginUser, postRegisterUser } from '@/api/genshinQuizAPI';
+import { useUser } from '@/context/UserContext';
 
 const loginSchema = z.object({
   email: z.email({ message: '邮箱格式不正确' }).min(1, { message: '请输入邮箱' }),
@@ -18,13 +20,17 @@ const registerSchema = loginSchema
     path: ['confirmPassword'],
   });
 
-const AuthForm: React.FC = () => {
+export default function AuthForm() {
+  const navigate = useNavigate();
+  const { login } = useUser();
+
   const [tab, setTab] = useState(0);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [loading, setLoading] = useState(false);
 
   // validation errors
   const { emailError, passwordError, confirmPasswordError, isValid } = useMemo(() => {
@@ -50,23 +56,36 @@ const AuthForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValid) return;
+
+    setLoading(true);
     if (tab === 0) {
-      postLoginUser(formData)
+      // 登录
+      postLoginUser({ email: formData.email, password: formData.password })
         .then((res) => {
-          alert(`登录成功: ${res.token}`);
+          login(res.token, res.user);
+          navigate('/home'); // 登录成功后跳转到首页
         })
         .catch((err) => {
           console.error(err);
-          alert(`登录失败: ${JSON.stringify(err)}`);
+          alert(`登录失败: ${err.message || JSON.stringify(err)}`);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     } else {
+      // 注册
       postRegisterUser(formData)
         .then((res) => {
-          alert(`注册成功: ${res.token}`);
+          login(res.token, res.user);
+          navigate('/home'); // 注册成功后跳转到首页
         })
         .catch((err) => {
           console.error(err);
-          alert(`注册失败: ${JSON.stringify(err)}`);
+          alert(`注册失败: ${err.message || JSON.stringify(err)}`);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   };
@@ -121,13 +140,17 @@ const AuthForm: React.FC = () => {
               helperText={confirmPasswordError}
             />
           )}
-          <Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" disabled={!isValid}>
-            {tab === 0 ? '登录' : '注册'}
+          <Button
+            sx={{ mt: 2 }}
+            type="submit"
+            fullWidth
+            variant="contained"
+            disabled={!isValid || loading}
+          >
+            {loading ? '处理中...' : tab === 0 ? '登录' : '注册'}
           </Button>
         </Box>
       </Paper>
     </Container>
   );
-};
-
-export default AuthForm;
+}
