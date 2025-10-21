@@ -1,7 +1,7 @@
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
-import { Avatar, Box, Button, Popper, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Button, Popper, Typography } from '@mui/material';
 import { t } from 'i18next';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useUser } from '@/context/UserContext';
@@ -12,36 +12,11 @@ export const UserInfoBox = () => {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const textRef = useRef<HTMLElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-
-  // 检查文字是否溢出
-  useEffect(() => {
-    if (textRef.current && user?.nickname) {
-      const element = textRef.current;
-      const isOverflowing = element.scrollWidth > element.clientWidth;
-      setShowTooltip(isOverflowing);
-    }
-  }, [user?.nickname]);
-
-  // 点击外部关闭面板
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (open && anchorRef.current && !anchorRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [open]);
 
   return (
     <Box sx={{ width: '200px', display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -65,19 +40,16 @@ export const UserInfoBox = () => {
             }}
           >
             <Avatar src={user.avatar_url} alt={user.nickname} sx={{ width: 32, height: 32 }} />
-            <Tooltip title={showTooltip ? user.nickname : ''} arrow>
-              <Typography
-                ref={textRef}
-                sx={{
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
-                  flex: 1,
-                }}
-              >
-                {user.nickname}
-              </Typography>
-            </Tooltip>
+            <Typography
+              sx={{
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                flex: 1,
+              }}
+            >
+              {user.nickname}
+            </Typography>
             <ExpandMoreIcon
               sx={{
                 transform: open ? 'rotate(180deg)' : 'rotate(0deg)',

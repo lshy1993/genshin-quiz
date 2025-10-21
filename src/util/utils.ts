@@ -1,5 +1,6 @@
 import { t } from 'i18next';
-import type { Question } from '@/api/dto';
+import z from 'zod';
+import { type Question, QuestionCategory, QuestionDifficulty, QuestionType } from '@/api/dto';
 
 export function formatNumberShort(count: number): string {
   if (count >= 1_000_000_000_000)
@@ -69,3 +70,26 @@ export function areAnswersEqual(answer: string[], selected: string[]): boolean {
 
   return true;
 }
+
+// Zod 验证 schema
+export const createQuestionSchema = z.object({
+  question_text: z.string().min(1, '题目内容不能为空'),
+  category: z.nativeEnum(QuestionCategory, { message: '请选择题目分类' }),
+  difficulty: z.nativeEnum(QuestionDifficulty, { message: '请选择题目难度' }),
+  question_type: z.nativeEnum(QuestionType, { message: '请选择题目类型' }),
+  languages: z.array(z.string()).min(1, '至少选择一种语言'),
+  explanation: z.string().min(1, '请填写题目解析'),
+  options: z
+    .array(
+      z.object({
+        text: z.string().min(1, '选项内容不能为空'),
+        is_answer: z.boolean(),
+      }),
+    )
+    .min(2, '至少需要两个选项')
+    .refine((options) => options.some((opt) => opt.is_answer), {
+      message: '至少选择一个正确答案',
+    }),
+});
+
+export type CreateQuestionForm = z.infer<typeof createQuestionSchema>;

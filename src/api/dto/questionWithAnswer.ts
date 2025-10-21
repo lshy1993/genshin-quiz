@@ -5,9 +5,16 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { Question } from './question';
-import type { QuestionWithAnswerAllOf } from './questionWithAnswerAllOf';
 
-export type QuestionWithAnswer = Question &
-  QuestionWithAnswerAllOf &
-  Required<Pick<Question & QuestionWithAnswerAllOf, 'answers'>>;
+import type { QuestionCategory } from './questionCategory';
+import type { QuestionDifficulty } from './questionDifficulty';
+import type { QuestionType } from './questionType';
+import type { QuestionWithAnswerTranslationsItem } from './questionWithAnswerTranslationsItem';
+
+export interface QuestionWithAnswer {
+  public: boolean;
+  question_type: QuestionType;
+  category: QuestionCategory;
+  difficulty: QuestionDifficulty;
+  translations: QuestionWithAnswerTranslationsItem[];
+}
