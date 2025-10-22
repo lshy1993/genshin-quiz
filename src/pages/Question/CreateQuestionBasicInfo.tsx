@@ -1,4 +1,5 @@
 import { FormControl, FormControlLabel, InputLabel, MenuItem, Select, Stack } from '@mui/material';
+import type { $ZodIssue } from 'zod/v4/core';
 import type {
   QuestionCategory,
   QuestionDifficulty,
@@ -8,7 +9,7 @@ import type {
 import { allCategories, allDifficulties, allQuestionTypes } from '@/util/enum';
 
 interface Props {
-  errors: Record<string, string>;
+  errors: $ZodIssue[] | undefined;
   form: QuestionWithAnswer;
   setForm: React.Dispatch<React.SetStateAction<QuestionWithAnswer>>;
 }
@@ -26,7 +27,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm }: Props
         }
         label="是否公开"
       />
-      <FormControl error={!!errors.question_type}>
+      <FormControl error={!!errors?.find((err) => err.path.includes('question_type'))}>
         <InputLabel>题目类型</InputLabel>
         <Select
           value={form.question_type}
@@ -43,7 +44,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm }: Props
           ))}
         </Select>
       </FormControl>
-      <FormControl error={!!errors.category}>
+      <FormControl error={!!errors?.find((err) => err.path.includes('category'))}>
         <InputLabel>分类</InputLabel>
         <Select
           value={form.category}
@@ -61,7 +62,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm }: Props
         </Select>
       </FormControl>
 
-      <FormControl error={!!errors.difficulty}>
+      <FormControl error={!!errors?.find((err) => err.path.includes('difficulty'))}>
         <InputLabel>难度</InputLabel>
         <Select
           value={form.difficulty}

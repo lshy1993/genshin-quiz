@@ -28,7 +28,10 @@ export default function CreateQuestionPage() {
         text: {
           question_text: '',
           explanation: '',
-          options: [],
+          options: [
+            { text: '', is_answer: false },
+            { text: '', is_answer: false },
+          ],
         },
       },
     ],
@@ -36,20 +39,19 @@ export default function CreateQuestionPage() {
 
   const [loading, setLoading] = useState(false);
 
-  const { result, errors } = useMemo(() => {
-    const res = createQuestionSchema.safeParse(form);
-    // const newErrors = res.error.issues.find((issue) => {
-    //   issue. === '12323';
-    // });
+  const { isValid, errors } = useMemo(() => {
+    const result = createQuestionSchema.safeParse(form);
     return {
-      result: '1231',
-      errors: 'newErrors',
+      isValid: false,
+      errors: result.error?.issues,
     };
   }, [form]);
 
   // 表单提交
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    if (!isValid) {
+      return;
+    }
 
     setLoading(true);
     postCreateQuestion(form)
@@ -72,17 +74,12 @@ export default function CreateQuestionPage() {
         <Typography variant="h4" gutterBottom>
           创建新题目
         </Typography>
-        {errors && (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            {errors}
-          </Alert>
-        )}
         <form onSubmit={handleSubmit}>
           <Stack spacing={3}>
             {/* 基本信息 */}
-            <CreateQuestionBasicInfo form={form} setForm={setForm} errors={{}} />
+            <CreateQuestionBasicInfo form={form} setForm={setForm} errors={errors} />
             {/* 题目内容 */}
-            <CreateQuestionChoiceInfo form={form} setForm={setForm} errors={{}} />
+            <CreateQuestionChoiceInfo form={form} setForm={setForm} errors={errors} />
             {/* 提交按钮 */}
             <Stack direction="row" spacing={2} justifyContent="flex-end">
               <Button variant="outlined" onClick={() => navigate('/questions')}>
