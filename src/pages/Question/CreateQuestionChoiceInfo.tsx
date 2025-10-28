@@ -1,6 +1,5 @@
 import { Add as AddIcon } from '@mui/icons-material';
 import {
-  Alert,
   Box,
   Button,
   Card,
@@ -20,109 +19,103 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import type { $ZodIssue } from 'zod/v4/core';
-import {
-  QuestionType,
-  type QuestionWithAnswer,
-  type QuestionWithAnswerTranslationsItem,
-} from '@/api/dto';
+import { QuestionOptionType, QuestionType, type QuestionWithAnswer } from '@/api/dto';
 import { allLanguages } from '@/util/enum';
 import CreateQuestionChoice from './CreateQuestionChoice';
 
 interface Props {
-  errors: $ZodIssue[] | undefined;
+  errors: Record<string, string | undefined>;
   form: QuestionWithAnswer;
   setForm: React.Dispatch<React.SetStateAction<QuestionWithAnswer>>;
+  setTouchedField: (field: string) => void;
 }
 
-export default function CreateQuestionChoiceInfo({ form, setForm, errors }: Props) {
+export default function CreateQuestionChoiceInfo({
+  form,
+  setForm,
+  errors,
+  setTouchedField,
+}: Props) {
   const [currentLang, setCurrentLang] = useState<string>('zh');
   const [isAddLangDialogOpen, setIsAddLangDialogOpen] = useState(false);
   const [selectedNewLang, setSelectedNewLang] = useState<string>('');
 
-  const otherData = form.translations.filter((x) => x.language !== currentLang);
-  const languageData = form.translations?.find((x) => x.language === currentLang);
-  if (!languageData) {
-    return <Alert>Wrong Language</Alert>;
-  }
-  const options = languageData.text.options;
+  const options = form.options;
 
-  const handleQuestionTestChange = (newText: string) => {
-    const newData: QuestionWithAnswerTranslationsItem = {
-      language: currentLang,
-      text: { ...languageData.text, question_text: newText },
-    };
-    setForm((prev) => ({
-      ...prev,
-      translations: [...otherData, newData],
-    }));
+  const handleQuestionTextChange = (newText: string) => {
+    setTouchedField(`question_text.${currentLang}`);
+    setForm((prev) => {
+      // 修改该语言的数据
+      const new_question_text = { ...prev.question_text, [currentLang]: newText };
+      return {
+        ...prev,
+        question_text: new_question_text,
+      };
+    });
   };
 
-  const handleQuestionExplanation = (newText: string) => {
-    const newData: QuestionWithAnswerTranslationsItem = {
-      language: currentLang,
-      text: { ...languageData.text, explanation: newText },
-    };
-    setForm((prev) => ({
-      ...prev,
-      translations: [...otherData, newData],
-    }));
+  const handleQuestionExplanationChange = (newText: string) => {
+    setTouchedField(`explanation.${currentLang}`);
+    setForm((prev) => {
+      // 修改该语言的数据
+      const new_explanation = { ...prev.explanation, [currentLang]: newText };
+      return {
+        ...prev,
+        explanation: new_explanation,
+      };
+    });
   };
 
   // 添加选项
   const addOption = () => {
-    const new_options = [...options, { text: '', is_answer: false }];
-    const newData: QuestionWithAnswerTranslationsItem = {
-      language: currentLang,
-      text: { ...languageData.text, options: new_options },
-    };
-    setForm((prev) => ({
-      ...prev,
-      translations: [...otherData, newData],
-    }));
+    setForm((prev) => {
+      const new_option = { id: '', type: QuestionOptionType.text, text: {}, is_answer: false };
+      return {
+        ...prev,
+        options: [...prev.options, new_option],
+      };
+    });
   };
 
   // 删除选项
   const removeOption = (index: number) => {
     if (options.length <= 2) return; // 最少保留2个选项
-    const new_options = options.filter((_, i) => i !== index);
-    const newData: QuestionWithAnswerTranslationsItem = {
-      language: currentLang,
-      text: { ...languageData.text, options: new_options },
-    };
-    setForm((prev) => ({
-      ...prev,
-      translations: [...otherData, newData],
-    }));
+    setForm((prev) => {
+      const new_options = prev.options.filter((_, i) => i !== index);
+      return {
+        ...prev,
+        options: new_options,
+      };
+    });
   };
 
   // 更新选项内容
   const updateOption = (index: number, text: string) => {
-    const new_options = options.map((opt, i) => (i === index ? { ...opt, text } : opt));
-    const newData: QuestionWithAnswerTranslationsItem = {
-      language: currentLang,
-      text: { ...languageData.text, options: new_options },
-    };
-    setForm((prev) => ({
-      ...prev,
-      translations: [...otherData, newData],
-    }));
+    setTouchedField(`options.${index}.text.${currentLang}`);
+    setForm((prev) => {
+      const new_options = options.map((opt, i) =>
+        i === index ? { ...opt, text: { ...opt.text, [currentLang]: text } } : opt,
+      );
+      return {
+        ...prev,
+        options: new_options,
+      };
+    });
   };
 
   // 设置正确答案
   const setCorrectAnswer = (index: number) => {
-    const new_options = options.map((opt, i) => ({
-      ...opt,
-      is_answer: form.question_type === QuestionType.single_choice ? i === index : opt.is_answer,
-    }));
-    const newData: QuestionWithAnswerTranslationsItem = {
-      language: currentLang,
-      text: { ...languageData.text, options: new_options },
-    };
-    setForm((prev) => ({
-      ...prev,
-      translations: [...otherData, newData],
-    }));
+    setTouchedField(`options.${index}.text.${currentLang}`);
+    setForm((prev) => {
+      const new_options = prev.options.map((opt, i) => ({
+        ...opt,
+        is_answer: form.question_type === QuestionType.single_choice ? i === index : opt.is_answer,
+      }));
+      return {
+        ...prev,
+        options: new_options,
+      };
+    });
   };
 
   // 切换多选答案
@@ -130,13 +123,10 @@ export default function CreateQuestionChoiceInfo({ form, setForm, errors }: Prop
     const new_options = options.map((opt, i) =>
       i === index ? { ...opt, is_answer: !opt.is_answer } : opt,
     );
-    const newData: QuestionWithAnswerTranslationsItem = {
-      language: currentLang,
-      text: { ...languageData.text, options: new_options },
-    };
+    setTouchedField(`options.${index}.text.${currentLang}`);
     setForm((prev) => ({
       ...prev,
-      translations: [...otherData, newData],
+      options: new_options,
     }));
   };
 
@@ -147,37 +137,26 @@ export default function CreateQuestionChoiceInfo({ form, setForm, errors }: Prop
 
   // 获取可添加的语言列表
   const getAvailableLanguages = () => {
-    const existingLangs = form.translations.map((t) => t.language);
+    const existingLangs = Object.keys(form.question_text);
     return allLanguages.filter((lang) => !existingLangs.includes(lang));
   };
 
   // 添加新语言
   const addNewLanguage = () => {
     if (!selectedNewLang) return;
-
-    const newTranslation: QuestionWithAnswerTranslationsItem = {
-      language: selectedNewLang,
-      text: {
-        question_text: '',
-        explanation: '',
-        options:
-          form.question_type === QuestionType.true_false
-            ? [
-                { text: '是', is_answer: false },
-                { text: '否', is_answer: false },
-              ]
-            : [
-                { text: '', is_answer: false },
-                { text: '', is_answer: false },
-              ],
-      },
-    };
-
-    setForm((prev) => ({
-      ...prev,
-      translations: [...prev.translations, newTranslation],
-    }));
-
+    // 为每个文本部分添加新的
+    setForm((prev) => {
+      const new_options = prev.options.map((opt) => ({
+        ...opt,
+        text: { ...opt.text, [selectedNewLang]: '' },
+      }));
+      return {
+        ...prev,
+        question_text: { ...prev.question_text, [selectedNewLang]: '' },
+        explanation: { ...prev.explanation, [selectedNewLang]: '' },
+        options: new_options,
+      };
+    });
     setCurrentLang(selectedNewLang);
     setSelectedNewLang('');
     setIsAddLangDialogOpen(false);
@@ -187,12 +166,7 @@ export default function CreateQuestionChoiceInfo({ form, setForm, errors }: Prop
     return (
       <Box>
         <Typography variant="subtitle1" gutterBottom>
-          题目选项{' '}
-          {errors?.find((err) => err.path.includes('options')) && (
-            <span style={{ color: 'red' }}>
-              *{errors.find((err) => err.path.includes('options'))?.message}
-            </span>
-          )}
+          题目选项 {errors?.options && <span style={{ color: 'red' }}>*{errors.options}</span>}
         </Typography>
         <Card variant="outlined">
           <CardContent>
@@ -208,6 +182,7 @@ export default function CreateQuestionChoiceInfo({ form, setForm, errors }: Prop
                   updateOption={updateOption}
                   removeOption={removeOption}
                   showDeleteIcon={options.length > 2}
+                  error={errors[`options.${index}.text.${currentLang}`]}
                 />
               ))}
             </Stack>
@@ -222,18 +197,18 @@ export default function CreateQuestionChoiceInfo({ form, setForm, errors }: Prop
     );
   };
 
-  const renderTrueFalseOptions = () => {
-    // 设置正确答案
-    const setTrueFalseAnswer = (isTrue: boolean) => {
-      setForm((prev) => ({
-        ...prev,
-        options: [
-          { text: '是', is_answer: isTrue },
-          { text: '否', is_answer: !isTrue },
-        ],
-      }));
-    };
+  // 设置正确答案
+  const setTrueFalseAnswer = (isTrue: boolean) => {
+    setForm((prev) => ({
+      ...prev,
+      options: [
+        { id: '', type: QuestionOptionType.text, text: { zh: '是' }, is_answer: isTrue },
+        { id: '', type: QuestionOptionType.text, text: { zh: '否' }, is_answer: !isTrue },
+      ],
+    }));
+  };
 
+  const renderTrueFalseOptions = () => {
     const yesSelected = options.length > 0 && options[0]?.is_answer;
     const noSelected = options.length > 1 && options[1]?.is_answer;
 
@@ -281,13 +256,16 @@ export default function CreateQuestionChoiceInfo({ form, setForm, errors }: Prop
     );
   };
 
+  const questionTextError = errors?.[`question_text.${currentLang}`];
+  const explanationError = errors?.[`explanation.${currentLang}`];
+
   return (
     <>
       <Stack spacing={1}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Tabs value={currentLang} onChange={handleLanguageChange} sx={{ flexGrow: 1 }}>
-            {form.translations.map((trans) => {
-              return <Tab key={trans.language} label={trans.language} value={trans.language} />;
+            {Object.keys(form.question_text).map((lang) => {
+              return <Tab key={lang} label={lang} value={lang} />;
             })}
           </Tabs>
           {getAvailableLanguages().length > 0 && (
@@ -309,11 +287,10 @@ export default function CreateQuestionChoiceInfo({ form, setForm, errors }: Prop
           label="题目内容"
           multiline
           minRows={3}
-          value={languageData.text.question_text}
-          onChange={(e) => handleQuestionTestChange(e.target.value)}
-          error={!!errors?.find((err) => err.path.includes('question_text'))}
-          helperText={errors?.find((err) => err.path.includes('question_text'))?.message}
-          required
+          value={form.question_text[currentLang]}
+          onChange={(e) => handleQuestionTextChange(e.target.value)}
+          error={!!questionTextError}
+          helperText={questionTextError}
           fullWidth
         />
         {form.question_type === QuestionType.true_false
@@ -323,11 +300,10 @@ export default function CreateQuestionChoiceInfo({ form, setForm, errors }: Prop
           label="题目解析"
           multiline
           minRows={3}
-          value={languageData.text.explanation}
-          onChange={(e) => handleQuestionExplanation(e.target.value)}
-          error={!!errors?.find((err) => err.path.includes('explanation'))}
-          helperText={errors?.find((err) => err.path.includes('explanation'))?.message}
-          required
+          value={form.explanation?.[currentLang] ?? ''}
+          onChange={(e) => handleQuestionExplanationChange(e.target.value)}
+          error={!!explanationError}
+          helperText={explanationError}
           fullWidth
         />
       </Stack>

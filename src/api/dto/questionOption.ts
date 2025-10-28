@@ -5,6 +5,8 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+
+import type { QuestionOptionText } from './questionOptionText';
 import type { QuestionOptionType } from './questionOptionType';
 
 export interface QuestionOption {
@@ -12,7 +14,7 @@ export interface QuestionOption {
   /** 选项类型 */
   type: QuestionOptionType;
   /** 选项文本 */
-  text?: string;
+  text?: QuestionOptionText;
   /** 选项图片URL */
   image?: string;
   /** 是否为正确答案 */

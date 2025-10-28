@@ -1,6 +1,12 @@
 import { t } from 'i18next';
 import z from 'zod';
-import { type Question, QuestionCategory, QuestionDifficulty, QuestionType } from '@/api/dto';
+import {
+  type Question,
+  QuestionCategory,
+  QuestionDifficulty,
+  QuestionType,
+  type QuestionWithAnswer,
+} from '@/api/dto';
 
 export function formatNumberShort(count: number): string {
   if (count >= 1_000_000_000_000)
@@ -71,25 +77,45 @@ export function areAnswersEqual(answer: string[], selected: string[]): boolean {
   return true;
 }
 
-// Zod 验证 schema
-export const createQuestionSchema = z.object({
-  question_text: z.string().min(1, '题目内容不能为空'),
-  category: z.nativeEnum(QuestionCategory, { message: '请选择题目分类' }),
-  difficulty: z.nativeEnum(QuestionDifficulty, { message: '请选择题目难度' }),
-  question_type: z.nativeEnum(QuestionType, { message: '请选择题目类型' }),
-  languages: z.array(z.string()).min(1, '至少选择一种语言'),
-  explanation: z.string().min(1, '请填写题目解析'),
-  options: z
-    .array(
-      z.object({
-        text: z.string().min(1, '选项内容不能为空'),
-        is_answer: z.boolean(),
-      }),
-    )
-    .min(2, '至少需要两个选项')
-    .refine((options) => options.some((opt) => opt.is_answer), {
-      message: '至少选择一个正确答案',
-    }),
+export const createQuestionOptionSchema = z.object({
+  type: z.enum(['text', 'image'], { message: '请选择选项类型' }),
+  text: z.record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '选项内容不能为空')),
+  is_answer: z.boolean(),
 });
 
-export type CreateQuestionForm = z.infer<typeof createQuestionSchema>;
+// Zod 验证 schema
+export const createQuestionSchema = z.object({
+  public: z.boolean(),
+  question_type: z.enum(QuestionType, { message: '请选择题目类型' }),
+  category: z.enum(QuestionCategory, { message: '请选择题目分类' }),
+  difficulty: z.enum(QuestionDifficulty, { message: '请选择题目难度' }),
+  options: z
+    .array(createQuestionOptionSchema)
+    .min(2, '至少需要两个选项')
+    .refine((opts) => opts.some((opt) => opt.is_answer), {
+      message: '必须至少有一个正确答案',
+      path: ['options'],
+    }),
+  /** 多语言题干 */
+  question_text: z.record(
+    z.string().min(1, '语言代码不能为空'),
+    z.string().min(1, '题干内容不能为空'),
+  ),
+  /** 多语言解释 */
+  explanation: z.record(z.string().min(1, '语言代码不能为空'), z.string().optional()),
+});
+
+export function createEmptyQuestionForm(languageCode: string): QuestionWithAnswer {
+  return {
+    public: true,
+    category: QuestionCategory.character,
+    difficulty: QuestionDifficulty.easy,
+    question_type: QuestionType.single_choice,
+    question_text: { [languageCode]: '' },
+    explanation: { [languageCode]: '' },
+    options: [
+      { id: '', type: 'text', text: { [languageCode]: '' }, is_answer: true },
+      { id: '', type: 'text', text: { [languageCode]: '' }, is_answer: false },
+    ],
+  };
+}

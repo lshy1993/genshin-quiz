@@ -11,6 +11,7 @@ export interface User {
   nickname: string;
   avatar_url: string;
   country: string;
+  language?: string;
   ip: string;
   total_answers: number;
   correct_answers: number;

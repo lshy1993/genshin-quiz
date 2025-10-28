@@ -1,17 +1,18 @@
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { FormControlLabel, IconButton, Radio, RadioGroup, Stack, TextField } from '@mui/material';
 import { useState } from 'react';
-import { type QuestionTranslationOptionsItem, QuestionType } from '@/api/dto';
+import { type QuestionOption, QuestionType } from '@/api/dto';
 
 interface Props {
   questionType: QuestionType;
-  option: QuestionTranslationOptionsItem;
+  option: QuestionOption;
   index: number;
   setCorrectAnswer: (i: number) => void;
   toggleMultipleAnswer: (i: number) => void;
   updateOption: (i: number, str: string) => void;
   removeOption: (i: number) => void;
   showDeleteIcon: boolean;
+  error: string | undefined;
 }
 
 export default function CreateQuestionChoice({
@@ -23,8 +24,9 @@ export default function CreateQuestionChoice({
   updateOption,
   removeOption,
   showDeleteIcon,
+  error,
 }: Props) {
-  const [tmpInput, setTmpInput] = useState<string>(option.text);
+  const [tmpInput, setTmpInput] = useState<string>(option.text?.zh ?? '');
   return (
     <Stack direction="row" spacing={2} alignItems="center">
       {/* 单选 */}
@@ -60,6 +62,8 @@ export default function CreateQuestionChoice({
         fullWidth
         size="small"
         required
+        error={!!error}
+        helperText={error}
       />
       {showDeleteIcon && (
         <IconButton onClick={() => removeOption(index)} color="error">

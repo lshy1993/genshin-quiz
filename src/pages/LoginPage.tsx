@@ -1,6 +1,6 @@
 import { Box, Button, Container, Paper, Tab, Tabs, TextField, Typography } from '@mui/material';
 import type React from 'react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { postLoginUser, postRegisterUser } from '@/api/genshinQuizAPI';
@@ -22,7 +22,14 @@ const registerSchema = loginSchema
 
 export default function AuthForm() {
   const navigate = useNavigate();
-  const { login } = useUser();
+  const { login, user } = useUser();
+
+  // 已登录自动跳转
+  useEffect(() => {
+    if (user) {
+      navigate('/home', { replace: true });
+    }
+  }, [user, navigate]);
 
   const [tab, setTab] = useState(0);
   const [formData, setFormData] = useState({

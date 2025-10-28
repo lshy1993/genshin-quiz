@@ -8,13 +8,20 @@
 
 import type { QuestionCategory } from './questionCategory';
 import type { QuestionDifficulty } from './questionDifficulty';
+import type { QuestionOption } from './questionOption';
 import type { QuestionType } from './questionType';
-import type { QuestionWithAnswerTranslationsItem } from './questionWithAnswerTranslationsItem';
+import type { QuestionWithAnswerExplanation } from './questionWithAnswerExplanation';
+import type { QuestionWithAnswerQuestionText } from './questionWithAnswerQuestionText';
 
 export interface QuestionWithAnswer {
   public: boolean;
   question_type: QuestionType;
   category: QuestionCategory;
   difficulty: QuestionDifficulty;
-  translations: QuestionWithAnswerTranslationsItem[];
+  /** 问题的选项 */
+  options: QuestionOption[];
+  /** 多语言题干 */
+  question_text: QuestionWithAnswerQuestionText;
+  /** 多语言解释 */
+  explanation?: QuestionWithAnswerExplanation;
 }
