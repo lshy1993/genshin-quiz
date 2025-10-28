@@ -4,23 +4,14 @@ import {
   Button,
   Card,
   CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormControlLabel,
-  IconButton,
-  MenuItem,
-  Select,
   Stack,
-  Tab,
-  Tabs,
   TextField,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
 import { QuestionOptionType, QuestionType, type QuestionWithAnswer } from '@/api/dto';
-import { allLanguages } from '@/util/enum';
+import LanguageTabs from '@/components/LanguageTabs';
 import CreateQuestionChoice from './CreateQuestionChoice';
 
 interface Props {
@@ -28,6 +19,7 @@ interface Props {
   form: QuestionWithAnswer;
   setForm: React.Dispatch<React.SetStateAction<QuestionWithAnswer>>;
   setTouchedField: (field: string) => void;
+  removeTouchedField: (field: string) => void;
 }
 
 export default function CreateQuestionChoiceInfo({
@@ -35,11 +27,9 @@ export default function CreateQuestionChoiceInfo({
   setForm,
   errors,
   setTouchedField,
+  removeTouchedField,
 }: Props) {
   const [currentLang, setCurrentLang] = useState<string>('zh');
-  const [isAddLangDialogOpen, setIsAddLangDialogOpen] = useState(false);
-  const [selectedNewLang, setSelectedNewLang] = useState<string>('');
-
   const options = form.options;
 
   const handleQuestionTextChange = (newText: string) => {
@@ -68,8 +58,14 @@ export default function CreateQuestionChoiceInfo({
 
   // 添加选项
   const addOption = () => {
+    setTouchedField(`options.${options.length}.text.${currentLang}`);
     setForm((prev) => {
-      const new_option = { id: '', type: QuestionOptionType.text, text: {}, is_answer: false };
+      const new_option = {
+        id: '',
+        type: QuestionOptionType.text,
+        text: { [currentLang]: '' },
+        is_answer: false,
+      };
       return {
         ...prev,
         options: [...prev.options, new_option],
@@ -80,6 +76,7 @@ export default function CreateQuestionChoiceInfo({
   // 删除选项
   const removeOption = (index: number) => {
     if (options.length <= 2) return; // 最少保留2个选项
+    removeTouchedField(`options.${index}.text.${currentLang}`);
     setForm((prev) => {
       const new_options = prev.options.filter((_, i) => i !== index);
       return {
@@ -135,65 +132,78 @@ export default function CreateQuestionChoiceInfo({
     setCurrentLang(newValue);
   };
 
-  // 获取可添加的语言列表
-  const getAvailableLanguages = () => {
-    const existingLangs = Object.keys(form.question_text);
-    return allLanguages.filter((lang) => !existingLangs.includes(lang));
-  };
-
   // 添加新语言
-  const addNewLanguage = () => {
-    if (!selectedNewLang) return;
+  const handleAddLanguage = (lang: string) => {
+    if (!lang) return;
     // 为每个文本部分添加新的
     setForm((prev) => {
       const new_options = prev.options.map((opt) => ({
         ...opt,
-        text: { ...opt.text, [selectedNewLang]: '' },
+        text: { ...opt.text, [lang]: '' },
       }));
       return {
         ...prev,
-        question_text: { ...prev.question_text, [selectedNewLang]: '' },
-        explanation: { ...prev.explanation, [selectedNewLang]: '' },
+        question_text: { ...prev.question_text, [lang]: '' },
+        explanation: { ...prev.explanation, [lang]: '' },
         options: new_options,
       };
     });
-    setCurrentLang(selectedNewLang);
-    setSelectedNewLang('');
-    setIsAddLangDialogOpen(false);
+    setCurrentLang(lang);
+  };
+
+  const handleDeleteLanguage = (lang: string) => {
+    // 至少保留一个语言
+    if (Object.keys(form.question_text).length <= 1) return;
+
+    setForm((prev) => {
+      // 删除 question_text 和 explanation 的该语言
+      const { [lang]: _, ...new_question_text } = prev.question_text;
+      const { [lang]: __, ...new_explanation } = prev.explanation || {};
+
+      // 删除 options 里 text 的该语言
+      const new_options = prev.options.map((opt) => {
+        const { [lang]: ___, ...new_text } = opt.text || {};
+        return { ...opt, text: new_text };
+      });
+
+      // 计算剩余语言，如果当前语言被删，切换到第一个剩余语言
+      const langs = Object.keys(new_question_text);
+      if (currentLang === lang && langs.length > 0) {
+        setCurrentLang(langs[0]);
+      }
+
+      return {
+        ...prev,
+        question_text: new_question_text,
+        explanation: new_explanation,
+        options: new_options,
+      };
+    });
   };
 
   const renderChoiceOptions = () => {
     return (
-      <Box>
-        <Typography variant="subtitle1" gutterBottom>
-          题目选项 {errors?.options && <span style={{ color: 'red' }}>*{errors.options}</span>}
-        </Typography>
-        <Card variant="outlined">
-          <CardContent>
-            <Stack direction="column" spacing={2}>
-              {options.map((option, index) => (
-                <CreateQuestionChoice
-                  key={`${index}-${option.text}`}
-                  questionType={form.question_type}
-                  option={option}
-                  index={index}
-                  setCorrectAnswer={setCorrectAnswer}
-                  toggleMultipleAnswer={toggleMultipleAnswer}
-                  updateOption={updateOption}
-                  removeOption={removeOption}
-                  showDeleteIcon={options.length > 2}
-                  error={errors[`options.${index}.text.${currentLang}`]}
-                />
-              ))}
-            </Stack>
-            {form.question_type !== QuestionType.true_false && (
-              <Button variant="outlined" startIcon={<AddIcon />} onClick={addOption} sx={{ mt: 1 }}>
-                添加选项
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      </Box>
+      <Stack direction="column" spacing={3}>
+        {options.map((option, index) => (
+          <CreateQuestionChoice
+            key={`${index}-${option.text}`}
+            questionType={form.question_type}
+            option={option}
+            index={index}
+            setCorrectAnswer={setCorrectAnswer}
+            toggleMultipleAnswer={toggleMultipleAnswer}
+            updateOption={updateOption}
+            removeOption={removeOption}
+            showDeleteIcon={options.length > 2}
+            error={errors[`options.${index}.text.${currentLang}`]}
+          />
+        ))}
+        {form.question_type !== QuestionType.true_false && (
+          <Button variant="outlined" startIcon={<AddIcon />} onClick={addOption}>
+            添加选项
+          </Button>
+        )}
+      </Stack>
     );
   };
 
@@ -214,9 +224,7 @@ export default function CreateQuestionChoiceInfo({
 
     return (
       <Box>
-        <Typography variant="subtitle1" gutterBottom>
-          选择正确答案
-        </Typography>
+        <Typography>选择正确答案</Typography>
         <Stack direction="row" spacing={3} sx={{ mt: 2 }}>
           {/* 是 选项 */}
           <FormControlLabel
@@ -234,7 +242,6 @@ export default function CreateQuestionChoiceInfo({
               </Typography>
             }
           />
-
           {/* 否 选项 */}
           <FormControlLabel
             control={
@@ -260,86 +267,41 @@ export default function CreateQuestionChoiceInfo({
   const explanationError = errors?.[`explanation.${currentLang}`];
 
   return (
-    <>
-      <Stack spacing={1}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Tabs value={currentLang} onChange={handleLanguageChange} sx={{ flexGrow: 1 }}>
-            {Object.keys(form.question_text).map((lang) => {
-              return <Tab key={lang} label={lang} value={lang} />;
-            })}
-          </Tabs>
-          {getAvailableLanguages().length > 0 && (
-            <IconButton
-              onClick={() => setIsAddLangDialogOpen(true)}
-              size="small"
-              sx={{
-                border: '1px dashed #ccc',
-                borderRadius: 1,
-                minWidth: 40,
-                minHeight: 32,
-              }}
-            >
-              <AddIcon fontSize="small" />
-            </IconButton>
-          )}
-        </Box>
-        <TextField
-          label="题目内容"
-          multiline
-          minRows={3}
-          value={form.question_text[currentLang]}
-          onChange={(e) => handleQuestionTextChange(e.target.value)}
-          error={!!questionTextError}
-          helperText={questionTextError}
-          fullWidth
-        />
-        {form.question_type === QuestionType.true_false
-          ? renderTrueFalseOptions()
-          : renderChoiceOptions()}
-        <TextField
-          label="题目解析"
-          multiline
-          minRows={3}
-          value={form.explanation?.[currentLang] ?? ''}
-          onChange={(e) => handleQuestionExplanationChange(e.target.value)}
-          error={!!explanationError}
-          helperText={explanationError}
-          fullWidth
-        />
-      </Stack>
-      {/* 添加语言对话框 */}
-      <Dialog
-        open={isAddLangDialogOpen}
-        onClose={() => setIsAddLangDialogOpen(false)}
-        maxWidth="xs"
-        fullWidth
-      >
-        <DialogTitle>添加新语言</DialogTitle>
-        <DialogContent>
-          <Select
-            value={selectedNewLang}
-            onChange={(e) => setSelectedNewLang(e.target.value)}
+    <Card variant="outlined">
+      <LanguageTabs
+        currentLang={currentLang}
+        handleLanguageChange={handleLanguageChange}
+        selectedLanguages={Object.keys(form.question_text)}
+        handleDeleteLanguage={handleDeleteLanguage}
+        handleAddLanguage={handleAddLanguage}
+      />
+      <CardContent>
+        <Stack spacing={2}>
+          <TextField
+            label="题目内容"
+            multiline
+            minRows={3}
+            value={form.question_text[currentLang]}
+            onChange={(e) => handleQuestionTextChange(e.target.value)}
+            error={!!questionTextError}
+            helperText={questionTextError}
             fullWidth
-            displayEmpty
-            sx={{ mt: 1 }}
-          >
-            <MenuItem value="">
-              <em>请选择语言</em>
-            </MenuItem>
-            {getAvailableLanguages().map((lang) => (
-              <MenuItem key={lang} value={lang}>
-                {lang}
-              </MenuItem>
-            ))}
-          </Select>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsAddLangDialogOpen(false)}>取消</Button>
-          <Button onClick={addNewLanguage} variant="contained" disabled={!selectedNewLang}>
-            添加
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+          />
+          {form.question_type === QuestionType.true_false
+            ? renderTrueFalseOptions()
+            : renderChoiceOptions()}
+          <TextField
+            label="题目解析"
+            multiline
+            minRows={3}
+            value={form.explanation?.[currentLang] ?? ''}
+            onChange={(e) => handleQuestionExplanationChange(e.target.value)}
+            error={!!explanationError}
+            helperText={explanationError}
+            fullWidth
+          />
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,4 +1,5 @@
 import { FormControl, FormControlLabel, InputLabel, MenuItem, Select, Stack } from '@mui/material';
+import { t } from 'i18next';
 import type {
   QuestionCategory,
   QuestionDifficulty,
@@ -17,7 +18,7 @@ interface Props {
 export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouchedField }: Props) {
   return (
     <Stack spacing={1} direction="row">
-      <FormControlLabel
+      {/* <FormControlLabel
         control={
           <input
             type="checkbox"
@@ -29,7 +30,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
           />
         }
         label="是否公开"
-      />
+      /> */}
       <FormControl error={!!errors?.question_type}>
         <InputLabel>题目类型</InputLabel>
         <Select
@@ -45,8 +46,8 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
                 options:
                   newType === 'true_false'
                     ? [
-                        { id: '', type: 'text', text: {}, is_answer: true },
-                        { id: '', type: 'text', text: {}, is_answer: false },
+                        { id: '', type: 'text', text: { zh: 'yes' }, is_answer: true },
+                        { id: '', type: 'text', text: { zh: 'no' }, is_answer: false },
                       ]
                     : options,
               };
@@ -57,7 +58,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
         >
           {allQuestionTypes.map((type) => (
             <MenuItem key={type} value={type}>
-              {type}
+              {t(`question.type.${type}`)}
             </MenuItem>
           ))}
         </Select>
@@ -75,12 +76,11 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
         >
           {allCategories.map((cat) => (
             <MenuItem key={cat} value={cat}>
-              {cat}
+              {t(`question.category.${cat}`)}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-
       <FormControl error={!!errors?.difficulty}>
         <InputLabel>难度</InputLabel>
         <Select
@@ -97,7 +97,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
         >
           {allDifficulties.map((diff) => (
             <MenuItem key={diff} value={diff}>
-              {diff}
+              {t(`question.difficulty.${diff}`)}
             </MenuItem>
           ))}
         </Select>

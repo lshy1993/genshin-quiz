@@ -79,7 +79,9 @@ export function areAnswersEqual(answer: string[], selected: string[]): boolean {
 
 export const createQuestionOptionSchema = z.object({
   type: z.enum(['text', 'image'], { message: '请选择选项类型' }),
-  text: z.record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '选项内容不能为空')),
+  text: z
+    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '选项内容不能为空'))
+    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
   is_answer: z.boolean(),
 });
 
@@ -97,12 +99,11 @@ export const createQuestionSchema = z.object({
       path: ['options'],
     }),
   /** 多语言题干 */
-  question_text: z.record(
-    z.string().min(1, '语言代码不能为空'),
-    z.string().min(1, '题干内容不能为空'),
-  ),
+  question_text: z
+    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '题干内容不能为空'))
+    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
   /** 多语言解释 */
-  explanation: z.record(z.string().min(1, '语言代码不能为空'), z.string().optional()),
+  explanation: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
 });
 
 export function createEmptyQuestionForm(languageCode: string): QuestionWithAnswer {

@@ -22,14 +22,8 @@ export default function CreateQuestionPage() {
 
   const { errors, isValid } = useMemo(() => {
     const result = createQuestionSchema.safeParse(form);
-    if (result.success) {
-      return {
-        errors: {},
-        isValid: true,
-      };
-    }
     const allFieldErrors: Record<string, string> = {};
-    result.error.issues.forEach((issue) => {
+    result?.error?.issues.forEach((issue) => {
       const fieldPath = issue.path.join('.');
       allFieldErrors[fieldPath] = issue.message;
     });
@@ -66,11 +60,11 @@ export default function CreateQuestionPage() {
   return (
     <PageContainer>
       <Paper sx={{ p: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          创建新题目
-        </Typography>
         <form onSubmit={handleSubmit}>
           <Stack spacing={3}>
+            <Typography variant="h3" gutterBottom>
+              创建新题目
+            </Typography>
             {/* 基本信息 */}
             <CreateQuestionBasicInfo
               form={form}
@@ -87,6 +81,13 @@ export default function CreateQuestionPage() {
               setTouchedField={(changedField) => {
                 setTouchedFields((prev) => new Set([...prev, changedField]));
               }}
+              removeTouchedField={(removedField) => {
+                setTouchedFields((prev) => {
+                  const newSet = new Set(prev);
+                  newSet.delete(removedField);
+                  return newSet;
+                });
+              }}
               errors={visibleErrors}
             />
             {/* 显示验证错误 */}
@@ -101,7 +102,7 @@ export default function CreateQuestionPage() {
               </Alert>
             )}
             {/* 提交按钮 */}
-            <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <Stack direction="row" spacing={3} justifyContent="flex-end">
               <Button variant="outlined" onClick={() => navigate('/questions')}>
                 取消
               </Button>

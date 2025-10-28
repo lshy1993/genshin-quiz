@@ -1,5 +1,13 @@
 import { Delete as DeleteIcon } from '@mui/icons-material';
-import { FormControlLabel, IconButton, Radio, RadioGroup, Stack, TextField } from '@mui/material';
+import {
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+} from '@mui/material';
 import { useState } from 'react';
 import { type QuestionOption, QuestionType } from '@/api/dto';
 
@@ -43,11 +51,7 @@ export default function CreateQuestionChoice({
       {questionType === QuestionType.multiple_choice && (
         <FormControlLabel
           control={
-            <input
-              type="checkbox"
-              checked={option.is_answer}
-              onChange={() => toggleMultipleAnswer(index)}
-            />
+            <Checkbox checked={option.is_answer} onChange={() => toggleMultipleAnswer(index)} />
           }
           label=""
           sx={{ margin: 0 }}

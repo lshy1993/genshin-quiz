@@ -4,11 +4,10 @@ import type { User } from '@/api/dto';
 interface UserContextType {
   user: User | null;
   token: string | null;
-  setUser: (user: User | null) => void;
-  setToken: (token: string | null) => void;
   login: (token: string, user: User) => void;
   logout: () => void;
   isAuthenticated: boolean;
+  isLoading: boolean; // 新增
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -19,6 +18,7 @@ const USER_STORAGE_KEY = 'genshin_quiz_user';
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // 新增
 
   // 从 localStorage 恢复认证状态
   useEffect(() => {
@@ -35,6 +35,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       // 清理无效数据
       localStorage.removeItem(TOKEN_STORAGE_KEY);
       localStorage.removeItem(USER_STORAGE_KEY);
+    } finally {
+      setIsLoading(false); // 恢复完成后设置为 false
     }
   }, []);
 
@@ -59,11 +61,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const value: UserContextType = {
     user,
     token,
-    setUser,
-    setToken,
     login,
     logout,
     isAuthenticated: !!user && !!token,
+    isLoading,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
