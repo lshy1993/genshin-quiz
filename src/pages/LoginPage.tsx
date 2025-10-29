@@ -1,4 +1,15 @@
-import { Box, Button, Container, Paper, Tab, Tabs, TextField, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  Paper,
+  Snackbar,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+} from '@mui/material';
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -38,6 +49,19 @@ export default function AuthForm() {
     confirmPassword: '',
   });
   const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'error' as 'error' | 'success',
+  });
+
+  const showSnackbar = (message: string, severity: 'error' | 'success' = 'error') => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
 
   // validation errors
   const { emailError, passwordError, confirmPasswordError, isValid } = useMemo(() => {
@@ -74,8 +98,8 @@ export default function AuthForm() {
           navigate('/home'); // 登录成功后跳转到首页
         })
         .catch((err) => {
-          console.error(err);
-          alert(`登录失败: ${err.message || JSON.stringify(err)}`);
+          console.error('登录失败:', err);
+          showSnackbar('登录失败，请检查邮箱和密码');
         })
         .finally(() => {
           setLoading(false);
@@ -88,8 +112,8 @@ export default function AuthForm() {
           navigate('/home'); // 注册成功后跳转到首页
         })
         .catch((err) => {
-          console.error(err);
-          alert(`注册失败: ${err.message || JSON.stringify(err)}`);
+          console.error('注册失败:', err);
+          showSnackbar('注册失败，请检查输入信息');
         })
         .finally(() => {
           setLoading(false);
@@ -98,66 +122,78 @@ export default function AuthForm() {
   };
 
   return (
-    <Container maxWidth="xs">
-      <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
-        <Tabs value={tab} onChange={handleTabChange} variant="fullWidth">
-          <Tab label="登录" />
-          <Tab label="注册" />
-        </Tabs>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-          <Typography variant="h5" align="center" gutterBottom>
-            {tab === 0 ? '邮箱登录' : '邮箱注册'}
-          </Typography>
-          <TextField
-            margin="normal"
-            fullWidth
-            label="邮箱"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            autoFocus
-            required
-            error={!!emailError}
-            helperText={emailError}
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            label="密码"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            error={!!passwordError}
-            helperText={passwordError}
-          />
-          {tab === 1 && (
+    <>
+      <Container maxWidth="xs">
+        <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
+          <Tabs value={tab} onChange={handleTabChange} variant="fullWidth">
+            <Tab label="登录" />
+            <Tab label="注册" />
+          </Tabs>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+            <Typography variant="h5" align="center" gutterBottom>
+              {tab === 0 ? '邮箱登录' : '邮箱注册'}
+            </Typography>
             <TextField
               margin="normal"
               fullWidth
-              label="确认密码"
-              name="confirmPassword"
+              label="邮箱"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              autoFocus
+              required
+              error={!!emailError}
+              helperText={emailError}
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              label="密码"
+              name="password"
               type="password"
-              value={formData.confirmPassword}
+              value={formData.password}
               onChange={handleChange}
               required
-              error={!!confirmPasswordError}
-              helperText={confirmPasswordError}
+              error={!!passwordError}
+              helperText={passwordError}
             />
-          )}
-          <Button
-            sx={{ mt: 2 }}
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={!isValid || loading}
-          >
-            {loading ? '处理中...' : tab === 0 ? '登录' : '注册'}
-          </Button>
-        </Box>
-      </Paper>
-    </Container>
+            {tab === 1 && (
+              <TextField
+                margin="normal"
+                fullWidth
+                label="确认密码"
+                name="confirmPassword"
+                type="password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                error={!!confirmPasswordError}
+                helperText={confirmPasswordError}
+              />
+            )}
+            <Button
+              sx={{ mt: 2 }}
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={!isValid || loading}
+            >
+              {loading ? '处理中...' : tab === 0 ? '登录' : '注册'}
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
