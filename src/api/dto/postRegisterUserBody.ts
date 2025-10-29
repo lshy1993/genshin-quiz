@@ -9,4 +9,6 @@
 export type PostRegisterUserBody = {
   email: string;
   password: string;
+  /** Preferred language code (e.g., "en", "zh") */
+  language?: string;
 };

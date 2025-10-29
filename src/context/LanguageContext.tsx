@@ -48,6 +48,7 @@ export function LanguageProvider({
   };
 
   const preferredLanguage = getPreferredLanguage(userLanguage);
+  console.log('Preferred Language:', preferredLanguage);
   const [currentLanguage, setCurrentLanguage] = useState<string>(preferredLanguage);
 
   // 初始化时同步 i18n 语言

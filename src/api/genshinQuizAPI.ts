@@ -193,6 +193,46 @@ export const usePostForgotPassword = <
 };
 
 /**
+ * @summary 获取当前用户信息
+ */
+export const getCurrentUser = () => {
+  return Fetcher<User>({ url: `/auth/me`, method: 'GET' });
+};
+
+export const getGetCurrentUserKey = () => [`/auth/me`] as const;
+
+export type GetCurrentUserQueryResult = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;
+export type GetCurrentUserQueryError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary 获取当前用户信息
+ */
+export const useGetCurrentUser = <
+  TError = BadRequestResponse | UnauthorizedResponse | InternalServerErrorResponse,
+>(options?: {
+  swr?: SWRConfiguration<Awaited<ReturnType<typeof getCurrentUser>>, TError> & {
+    swrKey?: Key;
+    enabled?: boolean;
+  };
+}) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetCurrentUserKey() : null));
+  const swrFn = () => getCurrentUser();
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
  * @summary Get all users
  */
 export const getUsers = (params?: GetUsersParams) => {

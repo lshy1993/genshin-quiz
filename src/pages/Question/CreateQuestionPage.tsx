@@ -4,18 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import type { QuestionWithAnswer } from '@/api/dto';
 import { postCreateQuestion } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
-import { useUser } from '@/context/UserContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { createEmptyQuestionForm, createQuestionSchema } from '@/util/utils';
 import CreateQuestionBasicInfo from './CreateQuestionBasicInfo';
 import CreateQuestionChoiceInfo from './CreateQuestionChoiceInfo';
 
 export default function CreateQuestionPage() {
-  const { user } = useUser();
+  const { currentLanguage } = useLanguage();
   const navigate = useNavigate();
   // 表单状态
-  const [form, setForm] = useState<QuestionWithAnswer>(
-    createEmptyQuestionForm(user?.language ?? 'zh'),
-  );
+  const [form, setForm] = useState<QuestionWithAnswer>(createEmptyQuestionForm(currentLanguage));
   const [loading, setLoading] = useState(false);
   // 已触摸字段集合
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());

@@ -1,6 +1,7 @@
 import Axios, { type AxiosRequestConfig, type AxiosRequestHeaders } from 'axios';
 import { DateTime } from 'luxon';
 import qs from 'qs';
+import { z } from 'zod';
 
 const axiosClient = Axios.create({
   baseURL: '/api/',
@@ -47,7 +48,7 @@ export const setGlobalLogoutCallback = (callback: () => void) => {
 
 axiosClient.interceptors.response.use(
   (originalResponse) => {
-    handleDates(originalResponse.data);
+    originalResponse.data = transformDatesWithZod(originalResponse.data);
     return originalResponse;
   },
   (error) => {
@@ -91,22 +92,30 @@ export const setJWT = (token: string) => {
   }
 };
 
-const isoDateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?$/;
+// Recursively transform date strings in objects
+function transformDatesWithZod(obj: unknown): unknown {
+  if (obj === null || obj === undefined) return obj;
 
-function isIsoDateString(value: unknown): value is string {
-  return typeof value === 'string' && isoDateFormat.test(value);
-}
-
-function handleDates(body: unknown): void {
-  if (body === null || body === undefined || typeof body !== 'object') return;
-
-  for (const key of Object.keys(body as Record<string, unknown>)) {
-    const value = (body as Record<string, unknown>)[key];
-    if (isIsoDateString(value)) {
-      // body[key] = new Date(value); // default JS conversion
-      (body as Record<string, unknown>)[key] = DateTime.fromISO(value); // Luxon conversion
-    } else if (typeof value === 'object') {
-      handleDates(value);
+  if (typeof obj === 'string') {
+    // Try to parse as datetime, if successful return DateTime, otherwise return original string
+    const result = z.date().safeParse(obj);
+    if (result.success) {
+      return DateTime.fromISO(obj);
     }
+    return obj;
   }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => transformDatesWithZod(item));
+  }
+
+  if (typeof obj === 'object') {
+    const transformed: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
+      transformed[key] = transformDatesWithZod(value);
+    }
+    return transformed;
+  }
+
+  return obj;
 }

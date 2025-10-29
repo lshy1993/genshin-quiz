@@ -17,21 +17,19 @@ import {
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import type { Question } from '@/api/dto';
+import { useGetQuestion } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
 import QuestionChoices from '@/components/Question/QuestionChoices';
 import QuestionMetaFooter from '@/components/Question/QuestionMetaFooter';
 import QuestionMetaHeader from '@/components/Question/QuestionMetaHeader';
 import QuestionMySubmission from '@/components/Question/QuestionMySubmission';
-import { mockQuestionAnswers, mockQuestionData, type QuestionSubmission } from '@/util/mock';
+import { mockQuestionAnswers, type QuestionSubmission } from '@/util/mock';
 import { areAnswersEqual } from '@/util/utils';
 
 export default function QuestionDetailPage() {
   const { id } = useParams<{ id: string }>();
   // 这里用 mock 数据，实际可用 useGetQuestion(id)
-  const [question, setQuestion] = useState<Question>(
-    mockQuestionData.find((q) => q.id === id) ?? mockQuestionData[0],
-  );
+  const { data: question } = useGetQuestion(id ?? '');
   const [currentTab, setCurrentTab] = useState(0);
   const [submissionList, setSubmissionList] = useState<QuestionSubmission[]>([]);
 
@@ -53,13 +51,13 @@ export default function QuestionDetailPage() {
     // 三种题型直接比对set是否一致
     const isCorrect = areAnswersEqual(answers, selectedOptions);
     // mock 返回数据更新
-    setQuestion((q) => {
-      return {
-        ...q,
-        solved: isCorrect,
-        answers: answers,
-      };
-    });
+    // setQuestion((q) => {
+    //   return {
+    //     ...q,
+    //     solved: isCorrect,
+    //     answers: answers,
+    //   };
+    // });
     setSubmissionList((list) => [
       ...list,
       {
@@ -71,14 +69,14 @@ export default function QuestionDetailPage() {
     ]);
   };
 
-  const handleLike = (likeStatus: 1 | 0 | -1) => {
+  const handleLike = (_likeStatus: 1 | 0 | -1) => {
     // mock 更新数据，实际应调用接口
-    setQuestion((q) => {
-      return {
-        ...q,
-        likeStatus: likeStatus,
-      };
-    });
+    // setQuestion((q) => {
+    //   return {
+    //     ...q,
+    //     likeStatus: likeStatus,
+    //   };
+    // });
   };
 
   return (

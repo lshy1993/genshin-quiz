@@ -1,71 +1,81 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '@/api/dto';
-import { setGlobalLogoutCallback } from '@/api/fetcher/fetcher';
+import { setGlobalLogoutCallback, setJWT } from '@/api/fetcher/fetcher';
+import { useGetCurrentUser } from '@/api/genshinQuizAPI';
 import { navigateTo } from '@/util/navigation';
 import { LanguageProvider } from './LanguageContext';
 
 interface UserContextType {
   user: User | null;
   token: string | null;
-  login: (token: string, user: User) => void;
+  login: (token: string) => void;
   logout: () => void;
-  forceLogout: () => void; // 新增：用于服务器强制登出
+  forceLogout: () => void;
   isAuthenticated: boolean;
-  isLoading: boolean; // 新增
+  isLoading: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 const TOKEN_STORAGE_KEY = 'genshin_quiz_token';
-const USER_STORAGE_KEY = 'genshin_quiz_user';
 
-export function UserProvider({ children }: React.PropsWithChildren) {
-  const [user, setUser] = useState<User | null>(null);
+export function UserProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // 新增
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // 从 localStorage 恢复认证状态
+  // 从 localStorage 恢复 token 并设置到 axios 请求头
   useEffect(() => {
     try {
       const storedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
-      const storedUser = localStorage.getItem(USER_STORAGE_KEY);
-
-      if (storedToken && storedUser) {
+      if (storedToken) {
         setToken(storedToken);
-        setUser(JSON.parse(storedUser));
+        setJWT(storedToken); // 设置到 axios 请求头
       }
     } catch (error) {
-      console.error('Failed to restore auth state:', error);
-      // 清理无效数据
+      console.error('Failed to restore token:', error);
       localStorage.removeItem(TOKEN_STORAGE_KEY);
-      localStorage.removeItem(USER_STORAGE_KEY);
     } finally {
-      setIsLoading(false); // 恢复完成后设置为 false
+      setIsInitialized(true);
     }
   }, []);
 
-  const login = (newToken: string, newUser: User) => {
-    setToken(newToken);
-    setUser(newUser);
+  // 使用 API 获取用户信息
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    error: userError,
+    mutate: refreshUser,
+  } = useGetCurrentUser({
+    swr: {
+      enabled: !!token && isInitialized, // 只有当有token且已初始化时才请求
+      shouldRetryOnError: false, // 避免无限重试
+    },
+  });
 
-    // 持久化到 localStorage
+  // 如果token存在但获取用户信息失败，说明token可能过期
+  useEffect(() => {
+    if (token && isInitialized && !isUserLoading && userError) {
+      console.warn('Token may be expired, logging out:', userError);
+      logout();
+    }
+  }, [token, isInitialized, isUserLoading, userError]);
+
+  const login = (newToken: string) => {
+    setToken(newToken);
+    setJWT(newToken); // 设置到 axios 请求头
     localStorage.setItem(TOKEN_STORAGE_KEY, newToken);
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newUser));
+    // 立即刷新用户信息以获取最新数据
+    refreshUser();
   };
 
   const logout = () => {
     setToken(null);
-    setUser(null);
-
-    // 清理 localStorage
+    setJWT(''); // 清除 axios 请求头
     localStorage.removeItem(TOKEN_STORAGE_KEY);
-    localStorage.removeItem(USER_STORAGE_KEY);
   };
 
   const forceLogout = () => {
-    // 强制登出：清理状态并跳转到登录页
     logout();
-    // 使用路由导航而不是直接修改 window.location
     navigateTo('/login', { replace: true });
   };
 
@@ -75,13 +85,13 @@ export function UserProvider({ children }: React.PropsWithChildren) {
   }, []);
 
   const value: UserContextType = {
-    user,
+    user: user || null,
     token,
     login,
     logout,
     forceLogout,
     isAuthenticated: !!user && !!token,
-    isLoading,
+    isLoading: !isInitialized || (!!token && isUserLoading),
   };
 
   return (

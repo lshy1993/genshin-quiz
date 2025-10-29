@@ -51,6 +51,15 @@ export default function AuthForm() {
     confirmPassword: '',
     language: currentLanguage, // 注册时选择最合适的语言
   });
+
+  // 监听语言变化，自动更新表单语言设置
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      language: currentLanguage,
+    }));
+  }, [currentLanguage]);
+
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -97,7 +106,7 @@ export default function AuthForm() {
       // 登录
       postLoginUser({ email: formData.email, password: formData.password })
         .then((res) => {
-          login(res.token, res.user);
+          login(res.token); // 只传递token，用户信息从API获取
           navigate('/home'); // 登录成功后跳转到首页
         })
         .catch((err) => {
@@ -111,7 +120,7 @@ export default function AuthForm() {
       // 注册
       postRegisterUser(formData)
         .then((res) => {
-          login(res.token, res.user);
+          login(res.token); // 只传递token，用户信息从API获取
           navigate('/home'); // 注册成功后跳转到首页
         })
         .catch((err) => {
