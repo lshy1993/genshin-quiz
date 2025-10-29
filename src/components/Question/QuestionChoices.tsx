@@ -74,8 +74,9 @@ export default function QuestionChoices({ question, handleSubmit }: Props) {
             <Alert severity={'success'}>
               <Typography variant="body2" color="text.secondary">
                 {'回答正确！答案：'}
-                {question.answers
-                  ?.map((id) => question.options.find((opt) => opt.id === id)?.text || '')
+                {question.options
+                  .filter((opt) => opt.is_answer)
+                  .map((opt) => opt.text)
                   .join('，')}
               </Typography>
             </Alert>

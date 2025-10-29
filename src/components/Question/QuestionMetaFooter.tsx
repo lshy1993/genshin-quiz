@@ -68,9 +68,9 @@ export default function QuestionMetaFooter({ question, handleLike }: Props) {
         <Typography variant="body2" color="text.secondary">
           作者: {question.created_by}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        {/* <Typography variant="body2" color="text.secondary">
           创建日期: {question.created_at.toFormat('yyyy-MM-dd HH:mm:ss')}
-        </Typography>{' '}
+        </Typography> */}
       </Stack>
     </Box>
   );

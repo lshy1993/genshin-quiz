@@ -28,8 +28,8 @@ import { areAnswersEqual } from '@/util/utils';
 
 export default function QuestionDetailPage() {
   const { id } = useParams<{ id: string }>();
-  // 这里用 mock 数据，实际可用 useGetQuestion(id)
   const { data: question } = useGetQuestion(id ?? '');
+
   const [currentTab, setCurrentTab] = useState(0);
   const [submissionList, setSubmissionList] = useState<QuestionSubmission[]>([]);
 

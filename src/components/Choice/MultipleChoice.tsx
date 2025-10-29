@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import type { QuestionOption } from '@/api/dto';
+import { useLanguage } from '@/context/LanguageContext';
 import { formatNumberShort } from '@/util/utils';
 
 interface Props {
@@ -25,9 +26,11 @@ export default function renderMultiple({
   setSelected,
   submitted,
 }: Props) {
+  const { currentLanguage } = useLanguage();
   const maxCount = Math.max(...options.map((opt) => opt.count ?? 0), 1);
 
   const renderOption = (opt: QuestionOption) => {
+    if (!opt.id) return null;
     const percent = maxCount > 0 ? Math.round(((opt.count ?? 0) / maxCount) * 100) : 0;
     return (
       <Box key={opt.id}>
@@ -36,13 +39,13 @@ export default function renderMultiple({
             <Checkbox
               checked={selected.includes(opt.id)}
               onChange={(e) => {
-                if (e.target.checked) setSelected([...selected, opt.id]);
+                if (e.target.checked && opt.id) setSelected([...selected, opt.id]);
                 else setSelected(selected.filter((v) => v !== opt.id));
               }}
               disabled={submitted}
             />
           }
-          label={opt.text || opt.image || ''}
+          label={opt.text?.[currentLanguage] ?? ''}
         />
         {solved && (
           <Box sx={{ minWidth: 120, flex: 2, display: 'flex', alignItems: 'center', gap: 1 }}>

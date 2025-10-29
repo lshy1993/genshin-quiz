@@ -1,3 +1,4 @@
+import { Skeleton } from '@mui/material';
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '@/api/dto';
 import { setGlobalLogoutCallback, setJWT } from '@/api/fetcher/fetcher';
@@ -28,8 +29,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     try {
       const storedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
       if (storedToken) {
+        console.log('token found and fetching user info...');
         setToken(storedToken);
         setJWT(storedToken); // 设置到 axios 请求头
+        // ✅ 可选：延迟一帧确保 SWR 已经开始请求
+        requestAnimationFrame(() => {
+          refreshUser();
+        });
       }
     } catch (error) {
       console.error('Failed to restore token:', error);
@@ -49,8 +55,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     swr: {
       enabled: !!token && isInitialized, // 只有当有token且已初始化时才请求
       shouldRetryOnError: false, // 避免无限重试
+      revalidateOnReconnect: true, // 网络重连时重新请求
     },
   });
+
+  // // 监听 token 变化，确保在 token 设置后立即获取用户信息
+  // useEffect(() => {
+  //   if (token && isInitialized) {
+  //     console.log('Token available, fetching user info...');
+  //     refreshUser();
+  //   }
+  // }, [token, isInitialized, refreshUser]);
 
   // 如果token存在但获取用户信息失败，说明token可能过期
   useEffect(() => {
@@ -64,8 +79,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setToken(newToken);
     setJWT(newToken); // 设置到 axios 请求头
     localStorage.setItem(TOKEN_STORAGE_KEY, newToken);
-    // 立即刷新用户信息以获取最新数据
-    refreshUser();
   };
 
   const logout = () => {
@@ -83,6 +96,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setGlobalLogoutCallback(forceLogout);
   }, []);
+
+  // 如果还在初始化或加载用户信息，显示骨架屏
+  if (!isInitialized || (token && isUserLoading)) {
+    return <Skeleton />;
+  }
 
   const value: UserContextType = {
     user: user || null,

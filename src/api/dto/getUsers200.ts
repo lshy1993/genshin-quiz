@@ -8,8 +8,6 @@
 import type { User } from './user';
 
 export type GetUsers200 = {
-  users?: User[];
-  total?: number;
-  limit?: number;
-  offset?: number;
+  users: User[];
+  total: number;
 };

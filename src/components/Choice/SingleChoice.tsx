@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import type { QuestionOption } from '@/api/dto';
+import { useLanguage } from '@/context/LanguageContext';
 import { formatNumberShort } from '@/util/utils';
 
 interface Props {
@@ -18,7 +19,8 @@ interface Props {
   submitted: boolean;
 }
 
-export default function renderSingle({ options, solved, selected, setSelected, submitted }: Props) {
+export default function SingleChoice({ options, solved, selected, setSelected, submitted }: Props) {
+  const { currentLanguage } = useLanguage();
   const total = options.reduce((sum, opt) => sum + (opt.count ?? 0), 0);
 
   const renderOption = (opt: QuestionOption) => {
@@ -30,7 +32,7 @@ export default function renderSingle({ options, solved, selected, setSelected, s
           key={opt.id}
           value={opt.id}
           control={<Radio />}
-          label={opt.text || opt.image || ''}
+          label={opt.text?.[currentLanguage] ?? ''}
           disabled={submitted}
         />
         {solved && (

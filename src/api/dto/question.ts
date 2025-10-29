@@ -6,7 +6,6 @@
  * OpenAPI spec version: 1.0.0
  */
 
-import type { DateTime } from 'luxon';
 import type { QuestionCategory } from './questionCategory';
 import type { QuestionDifficulty } from './questionDifficulty';
 import type { QuestionLikeStatus } from './questionLikeStatus';
@@ -36,5 +35,5 @@ export interface Question {
   /** 点赞数 */
   likes?: number;
   created_by: string;
-  created_at: DateTime;
+  created_at: Date;
 }

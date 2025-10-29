@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n'; // 直接导入 i18n 实例
 import { allLanguages } from '@/util/enum';
 
 interface LanguageContextType {
@@ -16,8 +16,6 @@ export function LanguageProvider({
   userLanguage,
   children,
 }: React.PropsWithChildren<{ userLanguage?: string }>) {
-  const { i18n } = useTranslation();
-
   // 获取首选语言的辅助函数
   const getPreferredLanguage = (userLanguage?: string): string => {
     // 1. 优先使用用户设置的语言
@@ -50,19 +48,31 @@ export function LanguageProvider({
   const preferredLanguage = getPreferredLanguage(userLanguage);
   console.log('Preferred Language:', preferredLanguage);
   const [currentLanguage, setCurrentLanguage] = useState<string>(preferredLanguage);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // 初始化时同步 i18n 语言
+  // 初始化 i18n 语言 - 考虑用户语言变化
   useEffect(() => {
-    if (i18n.language !== currentLanguage) {
-      i18n.changeLanguage(currentLanguage);
+    const newLanguage = getPreferredLanguage(userLanguage);
+
+    // 只有当语言确实改变时才更新
+    if (newLanguage !== currentLanguage) {
+      setCurrentLanguage(newLanguage);
     }
-  }, [currentLanguage, i18n]);
+
+    // 确保 i18n 初始化
+    if (!isInitialized || newLanguage !== i18n.language) {
+      console.log('Initializing i18n with language:', newLanguage);
+      i18n
+        .changeLanguage(newLanguage)
+        .then(() => setIsInitialized(true))
+        .catch(console.error);
+    }
+  }, [userLanguage, currentLanguage, isInitialized]);
 
   // 包装 setCurrentLanguage 来同步 i18n
   const handleSetCurrentLanguage = (lang: string) => {
     if (allLanguages.includes(lang)) {
       setCurrentLanguage(lang);
-      i18n.changeLanguage(lang);
     }
   };
 
