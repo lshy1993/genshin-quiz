@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '@/api/dto';
 import { setGlobalLogoutCallback } from '@/api/fetcher/fetcher';
 import { navigateTo } from '@/util/navigation';
+import { LanguageProvider } from './LanguageContext';
 
 interface UserContextType {
   user: User | null;
@@ -18,7 +19,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 const TOKEN_STORAGE_KEY = 'genshin_quiz_token';
 const USER_STORAGE_KEY = 'genshin_quiz_user';
 
-export function UserProvider({ children }: { children: React.ReactNode }) {
+export function UserProvider({ children }: React.PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true); // 新增
@@ -83,9 +84,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     isLoading,
   };
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={value}>
+      <LanguageProvider userLanguage={user?.language}>{children}</LanguageProvider>
+    </UserContext.Provider>
+  );
 }
 
+// hook
 export function useUser() {
   const ctx = useContext(UserContext);
   if (!ctx) throw new Error('useUser must be used within UserProvider');

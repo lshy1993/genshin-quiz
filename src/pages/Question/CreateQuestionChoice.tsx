@@ -8,12 +8,13 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
-import { type QuestionOption, QuestionType } from '@/api/dto';
+import { useEffect, useState } from 'react';
+import { QuestionType } from '@/api/dto';
 
 interface Props {
   questionType: QuestionType;
-  option: QuestionOption;
+  optionText: string;
+  isAnswer: boolean;
   index: number;
   setCorrectAnswer: (i: number) => void;
   toggleMultipleAnswer: (i: number) => void;
@@ -25,7 +26,8 @@ interface Props {
 
 export default function CreateQuestionChoice({
   questionType,
-  option,
+  optionText,
+  isAnswer,
   index,
   setCorrectAnswer,
   toggleMultipleAnswer,
@@ -34,13 +36,18 @@ export default function CreateQuestionChoice({
   showDeleteIcon,
   error,
 }: Props) {
-  const [tmpInput, setTmpInput] = useState<string>(option.text?.zh ?? '');
+  const [tmpInput, setTmpInput] = useState<string>(optionText);
+
+  useEffect(() => {
+    setTmpInput(optionText);
+  }, [optionText]);
+
   return (
     <Stack direction="row" spacing={2} alignItems="center">
       {/* 单选 */}
       {questionType === QuestionType.single_choice && (
         <RadioGroup
-          value={option.is_answer ? index : -1}
+          value={isAnswer ? index : -1}
           onChange={(e) => setCorrectAnswer(Number(e.target.value))}
         >
           <FormControlLabel value={index} control={<Radio />} label="" sx={{ margin: 0 }} />
@@ -50,9 +57,7 @@ export default function CreateQuestionChoice({
       {/* 多选 */}
       {questionType === QuestionType.multiple_choice && (
         <FormControlLabel
-          control={
-            <Checkbox checked={option.is_answer} onChange={() => toggleMultipleAnswer(index)} />
-          }
+          control={<Checkbox checked={isAnswer} onChange={() => toggleMultipleAnswer(index)} />}
           label=""
           sx={{ margin: 0 }}
         />

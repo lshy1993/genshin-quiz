@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import { QuestionOptionType, QuestionType, type QuestionWithAnswer } from '@/api/dto';
 import LanguageTabs from '@/components/LanguageTabs';
+import { useLanguage } from '@/context/LanguageContext';
 import CreateQuestionChoice from './CreateQuestionChoice';
 
 interface Props {
@@ -29,8 +30,9 @@ export default function CreateQuestionChoiceInfo({
   setTouchedField,
   removeTouchedField,
 }: Props) {
-  const [currentLang, setCurrentLang] = useState<string>('zh');
-  const options = form.options;
+  // 默认第一个创建的使用智能语言
+  const { currentLanguage } = useLanguage();
+  const [currentLang, setCurrentLang] = useState<string>(currentLanguage);
 
   const handleQuestionTextChange = (newText: string) => {
     setTouchedField(`question_text.${currentLang}`);
@@ -58,10 +60,9 @@ export default function CreateQuestionChoiceInfo({
 
   // 添加选项
   const addOption = () => {
-    setTouchedField(`options.${options.length}.text.${currentLang}`);
+    setTouchedField(`options.${form.options.length}.text.${currentLang}`);
     setForm((prev) => {
       const new_option = {
-        id: '',
         type: QuestionOptionType.text,
         text: { [currentLang]: '' },
         is_answer: false,
@@ -75,7 +76,7 @@ export default function CreateQuestionChoiceInfo({
 
   // 删除选项
   const removeOption = (index: number) => {
-    if (options.length <= 2) return; // 最少保留2个选项
+    if (form.options.length <= 2) return; // 最少保留2个选项
     removeTouchedField(`options.${index}.text.${currentLang}`);
     setForm((prev) => {
       const new_options = prev.options.filter((_, i) => i !== index);
@@ -90,7 +91,7 @@ export default function CreateQuestionChoiceInfo({
   const updateOption = (index: number, text: string) => {
     setTouchedField(`options.${index}.text.${currentLang}`);
     setForm((prev) => {
-      const new_options = options.map((opt, i) =>
+      const new_options = form.options.map((opt, i) =>
         i === index ? { ...opt, text: { ...opt.text, [currentLang]: text } } : opt,
       );
       return {
@@ -117,7 +118,7 @@ export default function CreateQuestionChoiceInfo({
 
   // 切换多选答案
   const toggleMultipleAnswer = (index: number) => {
-    const new_options = options.map((opt, i) =>
+    const new_options = form.options.map((opt, i) =>
       i === index ? { ...opt, is_answer: !opt.is_answer } : opt,
     );
     setTouchedField(`options.${index}.text.${currentLang}`);
@@ -155,6 +156,12 @@ export default function CreateQuestionChoiceInfo({
     // 至少保留一个语言
     if (Object.keys(form.question_text).length <= 1) return;
 
+    // 如果删除的是当前语言，则切换到下一个
+    if (currentLang === lang) {
+      const remainingLangs = Object.keys(form.question_text).filter((l) => l !== lang);
+      setCurrentLang(remainingLangs[0]);
+    }
+
     setForm((prev) => {
       // 删除 question_text 和 explanation 的该语言
       const { [lang]: _, ...new_question_text } = prev.question_text;
@@ -165,12 +172,6 @@ export default function CreateQuestionChoiceInfo({
         const { [lang]: ___, ...new_text } = opt.text || {};
         return { ...opt, text: new_text };
       });
-
-      // 计算剩余语言，如果当前语言被删，切换到第一个剩余语言
-      const langs = Object.keys(new_question_text);
-      if (currentLang === lang && langs.length > 0) {
-        setCurrentLang(langs[0]);
-      }
 
       return {
         ...prev,
@@ -184,17 +185,18 @@ export default function CreateQuestionChoiceInfo({
   const renderChoiceOptions = () => {
     return (
       <Stack direction="column" spacing={3}>
-        {options.map((option, index) => (
+        {form.options.map((option, index) => (
           <CreateQuestionChoice
             key={`${index}-${option.text}`}
-            questionType={form.question_type}
-            option={option}
             index={index}
+            questionType={form.question_type}
+            optionText={option.text?.[currentLang] || ''}
+            isAnswer={option.is_answer ?? false}
             setCorrectAnswer={setCorrectAnswer}
             toggleMultipleAnswer={toggleMultipleAnswer}
             updateOption={updateOption}
             removeOption={removeOption}
-            showDeleteIcon={options.length > 2}
+            showDeleteIcon={form.options.length > 2}
             error={errors[`options.${index}.text.${currentLang}`]}
           />
         ))}
@@ -219,8 +221,8 @@ export default function CreateQuestionChoiceInfo({
   };
 
   const renderTrueFalseOptions = () => {
-    const yesSelected = options.length > 0 && options[0]?.is_answer;
-    const noSelected = options.length > 1 && options[1]?.is_answer;
+    const yesSelected = form.options.length > 0 && form.options[0]?.is_answer;
+    const noSelected = form.options.length > 1 && form.options[1]?.is_answer;
 
     return (
       <Box>
