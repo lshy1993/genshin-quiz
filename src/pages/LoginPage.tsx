@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { postLoginUser, postRegisterUser } from '@/api/genshinQuizAPI';
+import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
 
 const loginSchema = z.object({
@@ -34,6 +35,7 @@ const registerSchema = loginSchema
 export default function AuthForm() {
   const navigate = useNavigate();
   const { login, user } = useUser();
+  const { currentLanguage } = useLanguage();
 
   // 已登录自动跳转
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function AuthForm() {
     email: '',
     password: '',
     confirmPassword: '',
+    language: currentLanguage, // 注册时选择最合适的语言
   });
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
