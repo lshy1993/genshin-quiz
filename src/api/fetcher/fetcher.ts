@@ -38,15 +38,30 @@ axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
-axiosClient.interceptors.response.use((originalResponse) => {
-  handleDates(originalResponse.data);
-  return originalResponse;
-});
+// 声明全局的登出回调函数，将在应用初始化时设置
+let globalLogoutCallback: (() => void) | null = null;
+
+export const setGlobalLogoutCallback = (callback: () => void) => {
+  globalLogoutCallback = callback;
+};
+
+axiosClient.interceptors.response.use(
+  (originalResponse) => {
+    handleDates(originalResponse.data);
+    return originalResponse;
+  },
+  (error) => {
+    if (error.response?.status === 401 && error.response?.data?.force_logout === true) {
+      // 强制登出，调用全局登出回调来正确清理状态
+      if (globalLogoutCallback) {
+        globalLogoutCallback();
+      }
+    }
+    return Promise.reject(error);
+  },
+);
 
 export const Fetcher = async <T>(config: AxiosRequestConfig): Promise<T> => {
-  // if (getJWT() === '') {
-  //     return Promise.reject('No JWT token set');
-  // }
   const promise = await axiosClient
     .request<T>(config)
     .then((res) => res.data)
@@ -54,7 +69,7 @@ export const Fetcher = async <T>(config: AxiosRequestConfig): Promise<T> => {
       if (err.response) {
         if (err.response.status === 401) {
           // 401 Unauthorized
-          // setJWT('');
+          setJWT(''); // 清空本地 JWT
         }
         return Promise.reject(err.response.data);
       }
@@ -78,18 +93,18 @@ export const setJWT = (token: string) => {
 
 const isoDateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?$/;
 
-function isIsoDateString(value: any): boolean {
-  return value && typeof value === 'string' && isoDateFormat.test(value);
+function isIsoDateString(value: unknown): value is string {
+  return typeof value === 'string' && isoDateFormat.test(value);
 }
 
-function handleDates(body: any) {
-  if (body === null || body === undefined || typeof body !== 'object') return body;
+function handleDates(body: unknown): void {
+  if (body === null || body === undefined || typeof body !== 'object') return;
 
-  for (const key of Object.keys(body)) {
-    const value = body[key];
+  for (const key of Object.keys(body as Record<string, unknown>)) {
+    const value = (body as Record<string, unknown>)[key];
     if (isIsoDateString(value)) {
       // body[key] = new Date(value); // default JS conversion
-      body[key] = DateTime.fromISO(value); // Luxon conversion
+      (body as Record<string, unknown>)[key] = DateTime.fromISO(value); // Luxon conversion
     } else if (typeof value === 'object') {
       handleDates(value);
     }

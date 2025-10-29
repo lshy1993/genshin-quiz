@@ -115,8 +115,8 @@ export function createEmptyQuestionForm(languageCode: string): QuestionWithAnswe
     question_text: { [languageCode]: '' },
     explanation: { [languageCode]: '' },
     options: [
-      { id: '', type: 'text', text: { [languageCode]: '' }, is_answer: true },
-      { id: '', type: 'text', text: { [languageCode]: '' }, is_answer: false },
+      { type: 'text', text: { [languageCode]: '' }, is_answer: true },
+      { type: 'text', text: { [languageCode]: '' }, is_answer: false },
     ],
   };
 }

@@ -1,11 +1,11 @@
 import { Box } from '@mui/material';
-import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Navigate, Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
 
 import AdminRouteComponent from './admin/AdminRouteComponent';
 import { RequireAuth } from './components/RequiredAuth';
 import TopBarComponent from './components/TopBarComponent';
 import { useAuthManager } from './hooks/useAuthManager';
-
 import AboutPage from './pages/AboutPage';
 import ExamDetailPage from './pages/Exam/ExamDetailPage';
 import ExamListPage from './pages/Exam/ExamListPage';
@@ -17,13 +17,25 @@ import QuestionDetailPage from './pages/Question/QuestionDetailPage';
 import QuestionListPage from './pages/Question/QuestionListPage';
 import VoteDetailPage from './pages/Vote/VoteDetailPage';
 import VoteListPage from './pages/Vote/VoteListPage';
+import { setGlobalNavigate } from './util/navigation';
+
+// 设置全局导航的组件
+function NavigationSetup() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setGlobalNavigate(navigate);
+  }, [navigate]);
+
+  return null;
+}
 
 function App() {
-  // 自动管理 JWT token 和 API 认证头
-  useAuthManager();
+  function AppContent() {
+    // 自动管理 JWT token 和 API 认证头
+    useAuthManager();
 
-  return (
-    <Router>
+    return (
       <Box
         sx={{
           display: 'flex',
@@ -32,6 +44,7 @@ function App() {
           bgcolor: 'background.default',
         }}
       >
+        <NavigationSetup />
         <TopBarComponent />
         <Box
           sx={{
@@ -66,6 +79,12 @@ function App() {
           </Routes>
         </Box>
       </Box>
+    );
+  }
+
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

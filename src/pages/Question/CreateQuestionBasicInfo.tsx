@@ -1,4 +1,4 @@
-import { FormControl, FormControlLabel, InputLabel, MenuItem, Select, Stack } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material';
 import { t } from 'i18next';
 import type {
   QuestionCategory,
@@ -46,8 +46,8 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
                 options:
                   newType === 'true_false'
                     ? [
-                        { id: '', type: 'text', text: { zh: 'yes' }, is_answer: true },
-                        { id: '', type: 'text', text: { zh: 'no' }, is_answer: false },
+                        { type: 'text', text: { zh: 'yes' }, is_answer: true },
+                        { type: 'text', text: { zh: 'no' }, is_answer: false },
                       ]
                     : options,
               };

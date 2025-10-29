@@ -10,7 +10,7 @@ import type { QuestionOptionText } from './questionOptionText';
 import type { QuestionOptionType } from './questionOptionType';
 
 export interface QuestionOption {
-  id: string;
+  id?: string;
   /** 选项类型 */
   type: QuestionOptionType;
   /** 选项文本 */

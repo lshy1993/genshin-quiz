@@ -1,11 +1,14 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '@/api/dto';
+import { setGlobalLogoutCallback } from '@/api/fetcher/fetcher';
+import { navigateTo } from '@/util/navigation';
 
 interface UserContextType {
   user: User | null;
   token: string | null;
   login: (token: string, user: User) => void;
   logout: () => void;
+  forceLogout: () => void; // 新增：用于服务器强制登出
   isAuthenticated: boolean;
   isLoading: boolean; // 新增
 }
@@ -58,11 +61,24 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(USER_STORAGE_KEY);
   };
 
+  const forceLogout = () => {
+    // 强制登出：清理状态并跳转到登录页
+    logout();
+    // 使用路由导航而不是直接修改 window.location
+    navigateTo('/login', { replace: true });
+  };
+
+  // 设置全局登出回调
+  useEffect(() => {
+    setGlobalLogoutCallback(forceLogout);
+  }, []);
+
   const value: UserContextType = {
     user,
     token,
     login,
     logout,
+    forceLogout,
     isAuthenticated: !!user && !!token,
     isLoading,
   };
