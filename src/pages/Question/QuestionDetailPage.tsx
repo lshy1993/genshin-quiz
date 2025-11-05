@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { postSubmitAnswer, useGetQuestion, useGetQuestionSubmissions } from '@/api/genshinQuizAPI';
+import { postLikeQuestion, useGetQuestion, useGetQuestionSubmissions } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
 import QuestionChoices from '@/components/Question/QuestionChoices';
 import QuestionMetaFooter from '@/components/Question/QuestionMetaFooter';
@@ -27,11 +27,12 @@ import QuestionMySubmission from '@/components/Question/QuestionMySubmission';
 
 export default function QuestionDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { data: question, isLoading, error } = useGetQuestion(id ?? '');
+  const { data: question, isLoading, error, mutate } = useGetQuestion(id ?? '');
   const {
     data: submissionList,
     isLoading: isSubmissionsLoading,
     error: submissionsErr,
+    mutate: mutateSubmissions,
   } = useGetQuestionSubmissions(id ?? '');
 
   const [currentTab, setCurrentTab] = useState(0);
@@ -57,29 +58,15 @@ export default function QuestionDetailPage() {
     );
   }
 
-  // mock 提交处理 （实际应调用提交接口）
-  const handleSubmit = (selectedOptions: string[]) => {
-    postSubmitAnswer(question.id, {
-      selected_option_ids: selectedOptions,
-      time_spent: 0,
-    })
-      .then((res) => {
-        // 提交后可以刷新提交记录等
-        console.log('Submission result:', res.correct);
+  const handleLike = (likeStatus: 1 | 0 | -1) => {
+    postLikeQuestion(question.id, { like: likeStatus })
+      .then((_res) => {
+        // 点赞后可以刷新题目数据等
+        mutate();
       })
       .catch((err) => {
-        console.error('Failed to submit answer:', err);
+        console.error('Failed to update like status:', err);
       });
-  };
-
-  const handleLike = (_likeStatus: 1 | 0 | -1) => {
-    // mock 更新数据，实际应调用接口
-    // setQuestion((q) => {
-    //   return {
-    //     ...q,
-    //     likeStatus: likeStatus,
-    //   };
-    // });
   };
 
   return (
@@ -113,7 +100,13 @@ export default function QuestionDetailPage() {
           <CardContent>
             <Stack spacing={2} divider={<Divider flexItem />}>
               <QuestionMetaHeader question={question} />
-              <QuestionChoices question={question} handleSubmit={handleSubmit} />
+              <QuestionChoices
+                question={question}
+                mutate={() => {
+                  mutate();
+                  mutateSubmissions();
+                }}
+              />
               <QuestionMetaFooter question={question} handleLike={handleLike} />
             </Stack>
           </CardContent>

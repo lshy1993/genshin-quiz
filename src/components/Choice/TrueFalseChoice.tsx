@@ -20,8 +20,8 @@ export default function renderTrueFalse({
   disabled = false,
 }: Props) {
   const { currentLanguage } = useLanguage();
-  const yesOption = options.find((opt) => opt.text?.[currentLanguage] === 'true');
-  const noOption = options.find((opt) => opt.text?.[currentLanguage] === 'false');
+  const yesOption = options.find((opt) => opt.text?.[currentLanguage] === 'yes');
+  const noOption = options.find((opt) => opt.text?.[currentLanguage] === 'no');
 
   if (!yesOption || !noOption) {
     return <Alert severity="error">{t('question.error.options_invalid')}</Alert>;

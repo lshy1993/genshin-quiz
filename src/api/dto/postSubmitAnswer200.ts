@@ -7,5 +7,5 @@
  */
 
 export type PostSubmitAnswer200 = {
-  correct?: boolean;
+  correct: boolean;
 };

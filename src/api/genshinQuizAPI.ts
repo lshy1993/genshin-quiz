@@ -26,6 +26,7 @@ import type {
   InternalServerErrorResponse,
   NotFoundResponse,
   PostForgotPasswordBody,
+  PostLikeQuestionBody,
   PostLoginUserBody,
   PostRegisterUserBody,
   PostSubmitAnswer200,
@@ -737,6 +738,69 @@ export const usePostSubmitAnswer = <
 
   const swrKey = swrOptions?.swrKey ?? getPostSubmitAnswerMutationKey(id);
   const swrFn = getPostSubmitAnswerMutationFetcher(id);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * Submit user's answer for a specific question and get result
+ * @summary Like or dislike a question
+ */
+export const postLikeQuestion = (id: string, postLikeQuestionBody: PostLikeQuestionBody) => {
+  return Fetcher<void>({
+    url: `/questions/${id}/like`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: postLikeQuestionBody,
+  });
+};
+
+export const getPostLikeQuestionMutationFetcher = (id: string) => {
+  return (_: Key, { arg }: { arg: PostLikeQuestionBody }) => {
+    return postLikeQuestion(id, arg);
+  };
+};
+export const getPostLikeQuestionMutationKey = (id: string) => [`/questions/${id}/like`] as const;
+
+export type PostLikeQuestionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postLikeQuestion>>
+>;
+export type PostLikeQuestionMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | NotFoundResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary Like or dislike a question
+ */
+export const usePostLikeQuestion = <
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+>(
+  id: string,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof postLikeQuestion>>,
+      TError,
+      Key,
+      PostLikeQuestionBody,
+      Awaited<ReturnType<typeof postLikeQuestion>>
+    > & { swrKey?: string };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostLikeQuestionMutationKey(id);
+  const swrFn = getPostLikeQuestionMutationFetcher(id);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 

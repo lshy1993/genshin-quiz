@@ -214,8 +214,8 @@ export default function CreateQuestionChoiceInfo({
     setForm((prev) => ({
       ...prev,
       options: [
-        { type: QuestionOptionType.text, text: { zh: '是' }, is_answer: isTrue },
-        { type: QuestionOptionType.text, text: { zh: '否' }, is_answer: !isTrue },
+        { type: QuestionOptionType.text, text: { [currentLang]: 'yes' }, is_answer: isTrue },
+        { type: QuestionOptionType.text, text: { [currentLang]: 'no' }, is_answer: !isTrue },
       ],
     }));
   };

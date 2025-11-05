@@ -39,7 +39,6 @@ export default function CreateQuestionPage() {
     postCreateQuestion(form)
       .then((res) => {
         // 创建成功，跳转到题目列表
-        console.log(res);
         navigate('/questions');
       })
       .catch((err) => {

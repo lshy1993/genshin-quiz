@@ -24,6 +24,8 @@ export * from './getVotesType';
 export * from './internalServerErrorResponse';
 export * from './notFoundResponse';
 export * from './postForgotPasswordBody';
+export * from './postLikeQuestionBody';
+export * from './postLikeQuestionBodyLike';
 export * from './postLoginUserBody';
 export * from './postRegisterUserBody';
 export * from './postSubmitAnswer200';
