@@ -1,6 +1,7 @@
 import { Alert, Button, Stack } from '@mui/material';
 import { t } from 'i18next';
 import type { QuestionOption } from '@/api/dto';
+import { useLanguage } from '@/context/LanguageContext';
 import DualProgressBar from '../DualProgressBar';
 
 interface Props {
@@ -8,7 +9,7 @@ interface Props {
   solved?: boolean;
   selected: string[];
   setSelected: (selected: string[]) => void;
-  submitted: boolean;
+  disabled?: boolean;
 }
 
 export default function renderTrueFalse({
@@ -16,10 +17,11 @@ export default function renderTrueFalse({
   solved,
   selected,
   setSelected,
-  submitted,
+  disabled = false,
 }: Props) {
-  const yesOption = options.find((opt) => opt.text === 'true');
-  const noOption = options.find((opt) => opt.text === 'false');
+  const { currentLanguage } = useLanguage();
+  const yesOption = options.find((opt) => opt.text?.[currentLanguage] === 'true');
+  const noOption = options.find((opt) => opt.text?.[currentLanguage] === 'false');
 
   if (!yesOption || !noOption) {
     return <Alert severity="error">{t('question.error.options_invalid')}</Alert>;
@@ -36,8 +38,8 @@ export default function renderTrueFalse({
           variant={selected[0] === yesOption.id ? 'contained' : 'outlined'}
           color={'success'}
           sx={{ flex: 1, height: 56, fontSize: 20, borderRadius: 2 }}
-          onClick={() => !submitted && setSelected([yesOption.id])}
-          disabled={submitted}
+          onClick={() => !disabled && yesOption.id && setSelected([yesOption.id])}
+          disabled={disabled}
         >
           {'正确'}
         </Button>
@@ -46,8 +48,8 @@ export default function renderTrueFalse({
           variant={selected[0] === noOption.id ? 'contained' : 'outlined'}
           color={'error'}
           sx={{ flex: 1, height: 56, fontSize: 20, borderRadius: 2 }}
-          onClick={() => !submitted && setSelected([noOption.id])}
-          disabled={submitted}
+          onClick={() => !disabled && noOption.id && setSelected([noOption.id])}
+          disabled={disabled}
         >
           {'错误'}
         </Button>

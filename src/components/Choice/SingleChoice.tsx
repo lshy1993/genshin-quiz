@@ -16,10 +16,10 @@ interface Props {
   solved?: boolean;
   selected: string[];
   setSelected: (selected: string[]) => void;
-  submitted: boolean;
+  disabled: boolean;
 }
 
-export default function SingleChoice({ options, solved, selected, setSelected, submitted }: Props) {
+export default function SingleChoice({ options, solved, selected, setSelected, disabled }: Props) {
   const { currentLanguage } = useLanguage();
   const total = options.reduce((sum, opt) => sum + (opt.count ?? 0), 0);
 
@@ -33,7 +33,7 @@ export default function SingleChoice({ options, solved, selected, setSelected, s
           value={opt.id}
           control={<Radio />}
           label={opt.text?.[currentLanguage] ?? ''}
-          disabled={submitted}
+          disabled={disabled}
         />
         {solved && (
           <Box sx={{ minWidth: 120, display: 'flex', alignItems: 'center', gap: 1 }}>

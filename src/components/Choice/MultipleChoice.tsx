@@ -16,7 +16,7 @@ interface Props {
   solved?: boolean;
   selected: string[];
   setSelected: (selected: string[]) => void;
-  submitted: boolean;
+  disabled: boolean;
 }
 
 export default function renderMultiple({
@@ -24,7 +24,7 @@ export default function renderMultiple({
   solved,
   selected,
   setSelected,
-  submitted,
+  disabled,
 }: Props) {
   const { currentLanguage } = useLanguage();
   const maxCount = Math.max(...options.map((opt) => opt.count ?? 0), 1);
@@ -42,7 +42,7 @@ export default function renderMultiple({
                 if (e.target.checked && opt.id) setSelected([...selected, opt.id]);
                 else setSelected(selected.filter((v) => v !== opt.id));
               }}
-              disabled={submitted}
+              disabled={disabled}
             />
           }
           label={opt.text?.[currentLanguage] ?? ''}

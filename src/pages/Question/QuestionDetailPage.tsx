@@ -2,10 +2,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import {
+  Alert,
   Box,
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Divider,
   IconButton,
   Stack,
@@ -14,24 +16,35 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useGetQuestion } from '@/api/genshinQuizAPI';
+import { postSubmitAnswer, useGetQuestion, useGetQuestionSubmissions } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
 import QuestionChoices from '@/components/Question/QuestionChoices';
 import QuestionMetaFooter from '@/components/Question/QuestionMetaFooter';
 import QuestionMetaHeader from '@/components/Question/QuestionMetaHeader';
 import QuestionMySubmission from '@/components/Question/QuestionMySubmission';
-import { mockQuestionAnswers, type QuestionSubmission } from '@/util/mock';
-import { areAnswersEqual } from '@/util/utils';
 
 export default function QuestionDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { data: question } = useGetQuestion(id ?? '');
+  const { data: question, isLoading, error } = useGetQuestion(id ?? '');
+  const {
+    data: submissionList,
+    isLoading: isSubmissionsLoading,
+    error: submissionsErr,
+  } = useGetQuestionSubmissions(id ?? '');
 
   const [currentTab, setCurrentTab] = useState(0);
-  const [submissionList, setSubmissionList] = useState<QuestionSubmission[]>([]);
+
+  if (isLoading || isSubmissionsLoading) {
+    return <CircularProgress />;
+  }
+
+  if (error || submissionsErr) {
+    if (error) console.error('Failed to load question:', error);
+    if (submissionsErr) console.error('Failed to load submissions:', submissionsErr);
+    return <Alert severity="error">加载题目失败</Alert>;
+  }
 
   if (!question) {
     return (
@@ -46,27 +59,17 @@ export default function QuestionDetailPage() {
 
   // mock 提交处理 （实际应调用提交接口）
   const handleSubmit = (selectedOptions: string[]) => {
-    // 正确答案（假设用 options 的 id，实际应从 question.answers 获取）
-    const answers = mockQuestionAnswers.find((a) => a.question_id === question.id)?.answers ?? [];
-    // 三种题型直接比对set是否一致
-    const isCorrect = areAnswersEqual(answers, selectedOptions);
-    // mock 返回数据更新
-    // setQuestion((q) => {
-    //   return {
-    //     ...q,
-    //     solved: isCorrect,
-    //     answers: answers,
-    //   };
-    // });
-    setSubmissionList((list) => [
-      ...list,
-      {
-        user_name: '',
-        selected: [...selectedOptions],
-        correct: isCorrect,
-        submitted_at: DateTime.now(),
-      },
-    ]);
+    postSubmitAnswer(question.id, {
+      selected_option_ids: selectedOptions,
+      time_spent: 0,
+    })
+      .then((res) => {
+        // 提交后可以刷新提交记录等
+        console.log('Submission result:', res.correct);
+      })
+      .catch((err) => {
+        console.error('Failed to submit answer:', err);
+      });
   };
 
   const handleLike = (_likeStatus: 1 | 0 | -1) => {
@@ -117,7 +120,10 @@ export default function QuestionDetailPage() {
         )}
         {currentTab === 1 && (
           <CardContent>
-            <QuestionMySubmission submissionList={submissionList} options={question.options} />
+            <QuestionMySubmission
+              submissionList={submissionList ?? []}
+              options={question.options}
+            />
           </CardContent>
         )}
       </Card>

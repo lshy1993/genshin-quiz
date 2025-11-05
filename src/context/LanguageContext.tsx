@@ -46,7 +46,6 @@ export function LanguageProvider({
   };
 
   const preferredLanguage = getPreferredLanguage(userLanguage);
-  console.log('Preferred Language:', preferredLanguage);
   const [currentLanguage, setCurrentLanguage] = useState<string>(preferredLanguage);
   const [isInitialized, setIsInitialized] = useState(false);
 

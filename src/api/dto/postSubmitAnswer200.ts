@@ -5,9 +5,7 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { Exam } from './exam';
 
-export type GetExams200 = {
-  exams?: Exam[];
-  total?: number;
+export type PostSubmitAnswer200 = {
+  correct?: boolean;
 };

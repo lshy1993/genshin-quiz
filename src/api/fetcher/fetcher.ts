@@ -1,7 +1,6 @@
 import Axios, { type AxiosRequestConfig, type AxiosRequestHeaders } from 'axios';
 import { DateTime } from 'luxon';
 import qs from 'qs';
-import { z } from 'zod';
 
 const axiosClient = Axios.create({
   baseURL: '/api/',
@@ -97,10 +96,18 @@ function transformDatesWithZod(obj: unknown): unknown {
   if (obj === null || obj === undefined) return obj;
 
   if (typeof obj === 'string') {
-    // Try to parse as datetime, if successful return DateTime, otherwise return original string
-    const result = z.date().safeParse(obj);
-    if (result.success) {
-      return DateTime.fromISO(obj);
+    // Try to parse as ISO datetime string
+    const dateTimeRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?$/;
+    if (dateTimeRegex.test(obj)) {
+      try {
+        const dateTime = DateTime.fromISO(obj);
+        if (dateTime.isValid) {
+          return dateTime.toJSDate(); // 直接返回 Date 对象
+        }
+      } catch {
+        // 如果解析失败，返回原字符串
+        console.warn(`Failed to parse date string: ${obj}`);
+      }
     }
     return obj;
   }

@@ -2,7 +2,9 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Question } from '@/api/dto';
+import { useUser } from '@/context/UserContext';
 import MultipleChoice from '../Choice/MultipleChoice';
 import SingleChoice from '../Choice/SingleChoice';
 import TrueFalseChoice from '../Choice/TrueFalseChoice';
@@ -13,12 +15,29 @@ interface Props {
 }
 
 export default function QuestionChoices({ question, handleSubmit }: Props) {
+  const { isAuthenticated } = useUser();
+  const navigate = useNavigate();
+
   // 记录用户选择的选项
   const [selected, setSelected] = useState<string[]>([]);
   // 记录是否已经提交
   const [submitted, setSubmitted] = useState(false && question.solved);
 
+  const handleSubmitClick = () => {
+    if (!isAuthenticated) {
+      // 如果用户未登录，跳转到登录页面
+      navigate('/login');
+      return;
+    }
+
+    // 用户已登录，正常提交答案
+    setSubmitted(true);
+    handleSubmit(selected);
+  };
+
   const renderChoices = () => {
+    const isDisabled = submitted || !isAuthenticated;
+
     switch (question.question_type) {
       case 'true_false':
         return (
@@ -27,7 +46,7 @@ export default function QuestionChoices({ question, handleSubmit }: Props) {
             solved={question.solved}
             selected={selected}
             setSelected={setSelected}
-            submitted={submitted}
+            disabled={isDisabled}
           />
         );
       case 'multiple_choice':
@@ -37,7 +56,7 @@ export default function QuestionChoices({ question, handleSubmit }: Props) {
             solved={question.solved}
             selected={selected}
             setSelected={setSelected}
-            submitted={submitted}
+            disabled={isDisabled}
           />
         );
       default: // single_choice
@@ -47,7 +66,7 @@ export default function QuestionChoices({ question, handleSubmit }: Props) {
             solved={question.solved}
             selected={selected}
             setSelected={setSelected}
-            submitted={submitted}
+            disabled={isDisabled}
           />
         );
     }
@@ -108,13 +127,10 @@ export default function QuestionChoices({ question, handleSubmit }: Props) {
       {!submitted ? (
         <Button
           variant="contained"
-          disabled={selected.length === 0}
-          onClick={() => {
-            setSubmitted(true);
-            handleSubmit(selected);
-          }}
+          disabled={isAuthenticated && selected.length === 0}
+          onClick={handleSubmitClick}
         >
-          提交答案
+          {isAuthenticated ? '提交答案' : '登录后答题'}
         </Button>
       ) : (
         renderSubmitContent()
