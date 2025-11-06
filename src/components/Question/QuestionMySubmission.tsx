@@ -1,4 +1,6 @@
 import {
+  Alert,
+  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -7,17 +9,41 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import type { QuestionOption, Submission } from '@/api/dto';
+import type { QuestionOption } from '@/api/dto';
+import { useGetQuestionMySubmissions } from '@/api/genshinQuizAPI';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Props {
-  submissionList: Submission[];
+  questionId: string;
   options: QuestionOption[];
 }
 
-export default function QuestionMySubmission({ submissionList, options }: Props) {
-  const sortedList = [...submissionList].sort(
-    (a, b) => b.submitted_at.getTime() - a.submitted_at.getTime(),
-  );
+export default function QuestionMySubmission({ questionId, options }: Props) {
+  const { currentLanguage } = useLanguage();
+  const {
+    data: submissionList,
+    isLoading: isSubmissionsLoading,
+    error: submissionsErr,
+  } = useGetQuestionMySubmissions(questionId);
+
+  if (isSubmissionsLoading) {
+    return <CircularProgress />;
+  }
+  if (submissionsErr || !submissionList) {
+    console.error('Failed to load submissions:', submissionsErr);
+    return <Alert severity="error">加载题目失败</Alert>;
+  }
+
+  const optionMap = new Map<string, string>();
+  options.forEach((opt) => {
+    if (opt.id) {
+      optionMap.set(opt.id, opt.text?.[currentLanguage] ?? '');
+    }
+  });
+
+  const renderOptionText = (options: string[]) => {
+    return options.map((id) => optionMap.get(id) ?? '').join(' ');
+  };
 
   return (
     <TableContainer>
@@ -33,22 +59,18 @@ export default function QuestionMySubmission({ submissionList, options }: Props)
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortedList.map((sub, idx) => (
+          {submissionList.map((sub, idx) => (
             <TableRow
               key={sub.submitted_at.toISOString()}
               sx={{ backgroundColor: idx % 2 === 0 ? 'action.hover' : 'background.paper' }}
             >
-              <TableCell>{sortedList.length - idx}</TableCell>
+              <TableCell>{submissionList.length - idx}</TableCell>
               <TableCell>
                 <Typography color={sub.is_correct ? 'success.main' : 'error.main'}>
                   {sub.is_correct ? '正确' : '错误'}
                 </Typography>
               </TableCell>
-              <TableCell>
-                {sub.selected_option_ids
-                  ?.map((id) => options.find((opt) => opt.id === id)?.text || '')
-                  .join('，')}
-              </TableCell>
+              <TableCell>{renderOptionText(sub.selected_option_ids)}</TableCell>
               <TableCell align="right">{sub.submitted_at.toLocaleString()}</TableCell>
             </TableRow>
           ))}

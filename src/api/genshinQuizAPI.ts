@@ -24,6 +24,7 @@ import type {
   GetVotes200,
   GetVotesParams,
   InternalServerErrorResponse,
+  MySubmission,
   NotFoundResponse,
   PostForgotPasswordBody,
   PostLikeQuestionBody,
@@ -34,7 +35,7 @@ import type {
   PostVoteBody,
   Question,
   QuestionWithAnswer,
-  Submission,
+  RecentSubmission,
   UnauthorizedResponse,
   User,
   Vote,
@@ -811,29 +812,29 @@ export const usePostLikeQuestion = <
 };
 
 /**
- * Get recent submission records for a specific question (up to 100 records)
- * @summary Get submissions for a question
+ * Get current user's submission records for a specific question (up to 100 records)
+ * @summary Get my submissions for a question
  */
-export const getQuestionSubmissions = (id: string) => {
-  return Fetcher<Submission[]>({ url: `/questions/${id}/submissions`, method: 'GET' });
+export const getQuestionMySubmissions = (id: string) => {
+  return Fetcher<MySubmission[]>({ url: `/questions/${id}/my-answers`, method: 'GET' });
 };
 
-export const getGetQuestionSubmissionsKey = (id: string) =>
-  [`/questions/${id}/submissions`] as const;
+export const getGetQuestionMySubmissionsKey = (id: string) =>
+  [`/questions/${id}/my-answers`] as const;
 
-export type GetQuestionSubmissionsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getQuestionSubmissions>>
+export type GetQuestionMySubmissionsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getQuestionMySubmissions>>
 >;
-export type GetQuestionSubmissionsQueryError =
+export type GetQuestionMySubmissionsQueryError =
   | BadRequestResponse
   | UnauthorizedResponse
   | NotFoundResponse
   | InternalServerErrorResponse;
 
 /**
- * @summary Get submissions for a question
+ * @summary Get my submissions for a question
  */
-export const useGetQuestionSubmissions = <
+export const useGetQuestionMySubmissions = <
   TError =
     | BadRequestResponse
     | UnauthorizedResponse
@@ -842,7 +843,7 @@ export const useGetQuestionSubmissions = <
 >(
   id: string,
   options?: {
-    swr?: SWRConfiguration<Awaited<ReturnType<typeof getQuestionSubmissions>>, TError> & {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getQuestionMySubmissions>>, TError> & {
       swrKey?: Key;
       enabled?: boolean;
     };
@@ -852,8 +853,61 @@ export const useGetQuestionSubmissions = <
 
   const isEnabled = swrOptions?.enabled !== false && !!id;
   const swrKey =
-    swrOptions?.swrKey ?? (() => (isEnabled ? getGetQuestionSubmissionsKey(id) : null));
-  const swrFn = () => getQuestionSubmissions(id);
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetQuestionMySubmissionsKey(id) : null));
+  const swrFn = () => getQuestionMySubmissions(id);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * Get recent submission records from other users for a specific question (up to 100 records)
+ * @summary Get recent submissions from other users
+ */
+export const getQuestionRecentSubmissions = (id: string) => {
+  return Fetcher<RecentSubmission[]>({ url: `/questions/${id}/recent`, method: 'GET' });
+};
+
+export const getGetQuestionRecentSubmissionsKey = (id: string) =>
+  [`/questions/${id}/recent`] as const;
+
+export type GetQuestionRecentSubmissionsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getQuestionRecentSubmissions>>
+>;
+export type GetQuestionRecentSubmissionsQueryError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | NotFoundResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary Get recent submissions from other users
+ */
+export const useGetQuestionRecentSubmissions = <
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+>(
+  id: string,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getQuestionRecentSubmissions>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!id;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetQuestionRecentSubmissionsKey(id) : null));
+  const swrFn = () => getQuestionRecentSubmissions(id);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 

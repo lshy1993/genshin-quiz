@@ -18,32 +18,25 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { postLikeQuestion, useGetQuestion, useGetQuestionSubmissions } from '@/api/genshinQuizAPI';
+import { postLikeQuestion, useGetQuestion } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
 import QuestionChoices from '@/components/Question/QuestionChoices';
 import QuestionMetaFooter from '@/components/Question/QuestionMetaFooter';
 import QuestionMetaHeader from '@/components/Question/QuestionMetaHeader';
 import QuestionMySubmission from '@/components/Question/QuestionMySubmission';
+import QuestionRecentSubmission from '@/components/Question/QuestionRecentSubmission';
 
 export default function QuestionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { data: question, isLoading, error, mutate } = useGetQuestion(id ?? '');
-  const {
-    data: submissionList,
-    isLoading: isSubmissionsLoading,
-    error: submissionsErr,
-    mutate: mutateSubmissions,
-  } = useGetQuestionSubmissions(id ?? '');
-
   const [currentTab, setCurrentTab] = useState(0);
 
-  if (isLoading || isSubmissionsLoading) {
+  if (isLoading) {
     return <CircularProgress />;
   }
 
-  if (error || submissionsErr) {
-    if (error) console.error('Failed to load question:', error);
-    if (submissionsErr) console.error('Failed to load submissions:', submissionsErr);
+  if (error) {
+    console.error('Failed to load question:', error);
     return <Alert severity="error">加载题目失败</Alert>;
   }
 
@@ -100,23 +93,15 @@ export default function QuestionDetailPage() {
           <CardContent>
             <Stack spacing={2} divider={<Divider flexItem />}>
               <QuestionMetaHeader question={question} />
-              <QuestionChoices
-                question={question}
-                mutate={() => {
-                  mutate();
-                  mutateSubmissions();
-                }}
-              />
+              <QuestionChoices question={question} mutate={mutate} />
               <QuestionMetaFooter question={question} handleLike={handleLike} />
             </Stack>
           </CardContent>
         )}
         {currentTab === 1 && (
           <CardContent>
-            <QuestionMySubmission
-              submissionList={submissionList ?? []}
-              options={question.options}
-            />
+            <QuestionMySubmission questionId={question.id} options={question.options} />
+            <QuestionRecentSubmission questionId={question.id} />
           </CardContent>
         )}
       </Card>

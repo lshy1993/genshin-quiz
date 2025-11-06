@@ -37,7 +37,7 @@ export default function CreateQuestionPage() {
     if (!isValid) return; // 防止无效提交
     setLoading(true);
     postCreateQuestion(form)
-      .then((res) => {
+      .then((_res) => {
         // 创建成功，跳转到题目列表
         navigate('/questions');
       })
