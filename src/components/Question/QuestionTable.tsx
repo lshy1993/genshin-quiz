@@ -59,6 +59,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
       <Table size="small">
         <TableHead>
           <TableRow>
+            <TableCell sx={{ width: 10 }}></TableCell>
             <TableCell sx={{ width: 80 }}>分类</TableCell>
             <TableCell sx={{ minWidth: 200 }}>题目内容</TableCell>
             <TableCell align="right" sx={{ width: 60 }}>
@@ -89,6 +90,13 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                 navigate(`/questions/${question.id}`);
               }}
             >
+              <TableCell>
+                {question.solved && (
+                  <Typography color="success.main" sx={{ mr: 1 }}>
+                    ✅
+                  </Typography>
+                )}
+              </TableCell>
               <TableCell>
                 <Typography variant="body2">{getCategoryLabel(question.category)}</Typography>
               </TableCell>

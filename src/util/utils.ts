@@ -6,6 +6,7 @@ import {
   QuestionDifficulty,
   QuestionType,
   type QuestionWithAnswer,
+  type VoteWithOption,
 } from '@/api/dto';
 
 export function formatNumberShort(count: number): string {
@@ -118,5 +119,39 @@ export function createEmptyQuestionForm(languageCode: string): QuestionWithAnswe
       { type: 'text', text: { [languageCode]: '' }, is_answer: true },
       { type: 'text', text: { [languageCode]: '' }, is_answer: false },
     ],
+  };
+}
+
+// Zod 验证 schema
+export const createVoteSchema = z.object({
+  public: z.boolean(),
+  options: z
+    .array(createQuestionOptionSchema)
+    .min(2, '至少需要两个选项')
+    .refine((opts) => opts.some((opt) => opt.is_answer), {
+      message: '必须至少有一个正确答案',
+      path: ['options'],
+    }),
+  /** 多语言题干 */
+  question_text: z
+    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '题干内容不能为空'))
+    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
+  /** 多语言解释 */
+  explanation: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
+});
+
+export function createEmptyVoteForm(): VoteWithOption {
+  return {
+    public: true,
+    title: '',
+    description: '',
+    category: QuestionCategory.character,
+    tags: [],
+    start_at: new Date(),
+    /** 每个用户最多可投票数 */
+    votes_per_user: 1,
+    /** 每个选项的最大可投票数，0表示无限制 */
+    votes_per_option: 0,
+    options: [],
   };
 }

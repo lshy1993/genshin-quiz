@@ -35,7 +35,6 @@ export default function QuestionChoices({ question, mutate }: Props) {
     })
       .then((res) => {
         // 提交后可以刷新提交记录等
-        console.log('Submission result:', res.correct);
         setIsCorrect(res.correct);
         mutate();
         setSubmitted(true);

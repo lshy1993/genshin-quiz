@@ -1,11 +1,11 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { VoteType } from '@/util/enum';
+import { GetVotesType } from '@/api/dto';
 
 interface VoteFilterProps {
   search: string;
   setSearch: (value: string) => void;
-  typeFilter: VoteType;
-  setTypeFilter: (value: VoteType) => void;
+  typeFilter: GetVotesType;
+  setTypeFilter: (value: GetVotesType) => void;
 }
 
 export default function VoteFilter({
@@ -27,9 +27,9 @@ export default function VoteFilter({
       <FormControl size="small" sx={{ minWidth: 120 }}>
         <InputLabel>类型</InputLabel>
         <Select label="类型" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-          <MenuItem value={VoteType.ALL}>全部</MenuItem>
-          <MenuItem value={VoteType.EXPIRED}>已经结束</MenuItem>
-          <MenuItem value={VoteType.ONGOING}>进行中</MenuItem>
+          <MenuItem value={GetVotesType.all}>全部</MenuItem>
+          <MenuItem value={GetVotesType.expired}>已经结束</MenuItem>
+          <MenuItem value={GetVotesType.available}>进行中</MenuItem>
         </Select>
       </FormControl>
     </Box>

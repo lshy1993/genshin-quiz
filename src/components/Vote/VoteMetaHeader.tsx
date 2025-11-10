@@ -92,7 +92,7 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
       <Box sx={{ display: 'flex', gap: 1, justifyContent: 'space-between' }}>
         <Stack direction="row" spacing={1}>
           <Chip size="small" label={getCategoryLabel(voteInfo.category)} />
-          {voteInfo.expires_at && renderCountdown(voteInfo.start_at, voteInfo.expires_at)}
+          {voteInfo.expire_at && renderCountdown(voteInfo.start_at, voteInfo.expire_at)}
         </Stack>
         <Stack direction="row" spacing={1} divider={<Divider orientation="vertical" flexItem />}>
           {renderParticipants()}

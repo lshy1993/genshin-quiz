@@ -5,14 +5,16 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+
+import type { VoteOptionText } from './voteOptionText';
 import type { VoteOptionType } from './voteOptionType';
 
 export interface VoteOption {
-  id: string;
+  id?: string;
   /** 选项类型（文本、图片、音乐） */
   type: VoteOptionType;
   /** 选项文本 */
-  text?: string;
+  text?: VoteOptionText;
   /** 选项图片URL */
   image_url?: string;
   /** 选项音乐URL */

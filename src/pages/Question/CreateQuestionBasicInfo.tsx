@@ -31,7 +31,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
         }
         label="是否公开"
       /> */}
-      <FormControl error={!!errors?.question_type}>
+      <FormControl sx={{ width: 120 }} error={!!errors?.question_type}>
         <InputLabel>题目类型</InputLabel>
         <Select
           value={form.question_type}
@@ -63,7 +63,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
           ))}
         </Select>
       </FormControl>
-      <FormControl error={!!errors?.category}>
+      <FormControl sx={{ width: 120 }} error={!!errors?.category}>
         <InputLabel>分类</InputLabel>
         <Select
           value={form.category}
@@ -81,7 +81,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
           ))}
         </Select>
       </FormControl>
-      <FormControl error={!!errors?.difficulty}>
+      <FormControl sx={{ width: 120 }} error={!!errors?.difficulty}>
         <InputLabel>难度</InputLabel>
         <Select
           value={form.difficulty}

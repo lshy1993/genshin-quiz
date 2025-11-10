@@ -16,14 +16,6 @@ export default function QuestionListPage() {
   const { user } = useUser();
   const { currentLanguage } = useLanguage();
 
-  // const [search, setSearch] = useState('');
-  // const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([]);
-  // const [selectedCategory, setSelectedCategory] = useState<string>('');
-  // const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<string[]>([]);
-  // const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  // const [sortBy, setSortBy] = useState<QuestionSortType>(QuestionSortType.DEFAULT);
-  // const [sortAsc, setSortAsc] = useState<boolean>(true);
-
   const [searchParams, setSearchParams] = useState<GetQuestionsParams>({
     page: 1,
     limit: 25,

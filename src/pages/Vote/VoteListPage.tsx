@@ -1,71 +1,78 @@
-import { Box, Card, CardActionArea, CardContent, Grid, Typography } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Alert, Box, Button, CircularProgress } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { type GetVotesParams, GetVotesType } from '@/api/dto';
+import { useGetVotes } from '@/api/genshinQuizAPI';
 import BannerBox from '@/components/BannerBox';
 import PageContainer from '@/components/PageContainer';
 import VoteFilter from '@/components/Vote/VoteFilter';
-import { VoteType } from '@/util/enum';
+import VoteTable from '@/components/Vote/VoteTable';
+import { useLanguage } from '@/context/LanguageContext';
+import { useUser } from '@/context/UserContext';
 import { mockVotes } from '@/util/mock';
-
-// import { useGetVotes } from '@/api/vote';
 
 export default function VoteListPage() {
   const navigate = useNavigate();
-  // const { data: votes = [] } = useGetVotes({ status: 'ongoing' });
-  const [search, setSearch] = useState<string>('');
-  const [typeFilter, setTypeFilter] = useState<VoteType>(VoteType.ONGOING);
+  const { user } = useUser();
+  const { currentLanguage } = useLanguage();
 
-  // 过滤和搜索
-  const filteredVotes = mockVotes.filter(
-    (vote) => vote.expired === false && vote.title.includes(search),
-  );
+  const [searchParams, setSearchParams] = useState<GetVotesParams>({
+    page: 1,
+    limit: 25,
+    query: '',
+    language: [currentLanguage],
+    type: GetVotesType.available,
+    sortBy: '',
+    sortDesc: false,
+  });
+
+  const { data: votes, isLoading, error } = useGetVotes(searchParams);
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+
+  if (error || !votes) {
+    console.error(error);
+    return <Alert severity="error">加载投票出错</Alert>;
+  }
+
+  const voteList = votes?.votes || mockVotes;
 
   return (
     <PageContainer>
       <BannerBox title={'投票列表'} subtitle={'参与投票吧！谁是真正的人气王！'} />
+      {user && (
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => navigate('/votes/create')}
+          >
+            创建投票
+          </Button>
+        </Box>
+      )}
       <VoteFilter
-        search={search}
-        setSearch={setSearch}
-        typeFilter={typeFilter}
-        setTypeFilter={setTypeFilter}
+        search={searchParams.query || ''}
+        setSearch={(value) =>
+          setSearchParams((prev) => ({
+            ...prev,
+            query: value,
+            page: 1,
+          }))
+        }
+        typeFilter={searchParams.type || GetVotesType.available}
+        setTypeFilter={(value) =>
+          setSearchParams((prev) => ({
+            ...prev,
+            type: value,
+            page: 1,
+          }))
+        }
       />
-      <Grid container direction="column" spacing={2}>
-        {filteredVotes.map((vote) => (
-          <Card key={vote.id}>
-            <CardActionArea onClick={() => navigate(`/votes/${vote.id}`)}>
-              <CardContent>
-                <Typography variant="h6" fontWeight="bold">
-                  {vote.title}
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 2, mt: 1, flexWrap: 'wrap' }}>
-                  <Typography variant="body2" color="text.secondary">
-                    时间：{vote.created_at?.toDateString()} ~ {vote.expires_at?.toDateString()}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    参与人数：{vote.participants ?? '-'}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    总票数：{vote.total_votes ?? '-'}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    作者：{vote.created_by}
-                  </Typography>
-                </Box>
-                {/* <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {vote.tags.map((tag) => (
-                      <Chip key={tag} label={tag} size="small" />
-                    ))}
-                  </Box> */}
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        ))}
-        {filteredVotes.length === 0 && (
-          <Box sx={{ textAlign: 'center', color: 'text.secondary', mt: 4 }}>
-            暂无正在进行中的投票
-          </Box>
-        )}
-      </Grid>
+      <VoteTable votes={voteList} />
     </PageContainer>
   );
 }

@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import DevHelperWrapper from './components/DevHelperWrapper.tsx';
 import { UserProvider } from './context/UserContext.tsx';
 
@@ -23,15 +25,17 @@ if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
       <ThemeProvider theme={theme}>
-        <UserProvider>
-          {isDev ? (
-            <DevHelperWrapper>
+        <LocalizationProvider dateAdapter={AdapterLuxon}>
+          <UserProvider>
+            {isDev ? (
+              <DevHelperWrapper>
+                <App />
+              </DevHelperWrapper>
+            ) : (
               <App />
-            </DevHelperWrapper>
-          ) : (
-            <App />
-          )}
-        </UserProvider>
+            )}
+          </UserProvider>
+        </LocalizationProvider>
       </ThemeProvider>
     </StrictMode>,
   );

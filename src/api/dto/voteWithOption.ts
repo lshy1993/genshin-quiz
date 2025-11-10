@@ -5,33 +5,28 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+
 import type { QuestionCategory } from './questionCategory';
 import type { VoteOption } from './voteOption';
-import type { VoteVotedOptions } from './voteVotedOptions';
+import type { VoteWithOptionDescription } from './voteWithOptionDescription';
+import type { VoteWithOptionTitle } from './voteWithOptionTitle';
 
-export interface Vote {
-  id: string;
+export interface VoteWithOption {
+  /** 是否公开可见(需要密码才能参与投票) */
   public: boolean;
-  title: string;
-  description?: string;
+  /** 投票密码 */
+  password?: string;
+  /** 多语言标题 */
+  title: VoteWithOptionTitle;
+  /** 多语言描述 */
+  description?: VoteWithOptionDescription;
   category: QuestionCategory;
   tags?: string[];
   start_at: Date;
   expire_at?: Date;
-  /** 投票是否已过期 */
-  expired: boolean;
-  /** 当前用户已投票的选项及票数，key为选项ID */
-  voted_options: VoteVotedOptions;
   /** 每个用户最多可投票数 */
   votes_per_user: number;
   /** 每个选项的最大可投票数，0表示无限制 */
   votes_per_option?: number;
   options: VoteOption[];
-  /** 参与投票的用户数 */
-  participants?: number;
-  /** 总投票数 */
-  total_votes?: number;
-  created_by: string;
-  created_at: Date;
-  likes?: number;
 }

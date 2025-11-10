@@ -10,7 +10,7 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
     <Box>
       <Typography variant="body2" color="text.secondary">
         开始：{voteInfo.start_at.toLocaleString()}
-        截止：{voteInfo.expires_at?.toLocaleString() || '无限期'}
+        截止：{voteInfo.expire_at?.toLocaleString() || '无限期'}
       </Typography>
       <Typography variant="body2" color="text.secondary">
         作者：{voteInfo.created_by}

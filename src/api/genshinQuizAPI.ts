@@ -39,6 +39,7 @@ import type {
   UnauthorizedResponse,
   User,
   Vote,
+  VoteWithOption,
 } from './dto';
 
 import { Fetcher } from './fetcher/fetcher';
@@ -1205,17 +1206,17 @@ export const useGetVotes = <TError = InternalServerErrorResponse>(
 /**
  * @summary Create new vote
  */
-export const postCreateVote = (vote: Vote) => {
+export const postCreateVote = (voteWithOption: VoteWithOption) => {
   return Fetcher<Vote>({
     url: `/votes`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    data: vote,
+    data: voteWithOption,
   });
 };
 
 export const getPostCreateVoteMutationFetcher = () => {
-  return (_: Key, { arg }: { arg: Vote }) => {
+  return (_: Key, { arg }: { arg: VoteWithOption }) => {
     return postCreateVote(arg);
   };
 };
@@ -1237,7 +1238,7 @@ export const usePostCreateVote = <
     Awaited<ReturnType<typeof postCreateVote>>,
     TError,
     Key,
-    Vote,
+    VoteWithOption,
     Awaited<ReturnType<typeof postCreateVote>>
   > & { swrKey?: string };
 }) => {

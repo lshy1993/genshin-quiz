@@ -19,6 +19,7 @@ export type GetVotesParams = {
   limit?: number;
   type?: GetVotesType;
   query?: string;
+  language?: string[];
   sortBy?: string;
   sortDesc?: boolean;
 };
