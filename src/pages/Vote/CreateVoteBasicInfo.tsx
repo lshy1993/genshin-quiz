@@ -104,30 +104,37 @@ export default function CreateVoteBasicInfo({ errors, form, setForm, setTouchedF
         type="number"
         size="small"
         label="每用户可投票数"
-        value={form.votes_per_user || 1}
+        value={form.votes_per_user ?? 1}
         onChange={(e) => {
-          const value = parseInt(e.target.value, 10) || 1;
+          const value = parseInt(e.target.value, 10);
           setTouchedField('votes_per_user');
-          setForm((prev) => ({ ...prev, votes_per_user: value }));
+          setForm((prev) => ({
+            ...prev,
+            votes_per_user: Number.isNaN(value) || value < 1 ? 1 : value,
+          }));
         }}
         error={!!errors?.votes_per_user}
         helperText={errors?.votes_per_user}
-        inputProps={{ min: 1 }}
+        slotProps={{
+          htmlInput: { min: 1 },
+        }}
         required
       />
       <TextField
         type="number"
         size="small"
         label="每选项最大票数"
-        value={form.votes_per_option || 1}
+        value={form.votes_per_option ?? 1}
         onChange={(e) => {
-          const value = parseInt(e.target.value, 10) || 1;
+          const value = parseInt(e.target.value, 10);
           setTouchedField('votes_per_option');
-          setForm((prev) => ({ ...prev, votes_per_option: value }));
+          setForm((prev) => ({ ...prev, votes_per_option: Number.isNaN(value) ? 0 : value }));
         }}
         error={!!errors?.votes_per_option}
         helperText={errors?.votes_per_option || '0表示无限制'}
-        inputProps={{ min: 0 }}
+        slotProps={{
+          htmlInput: { min: 0 },
+        }}
       />
     </Stack>
   );

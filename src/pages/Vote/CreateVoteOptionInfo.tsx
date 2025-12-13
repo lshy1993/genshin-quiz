@@ -111,7 +111,7 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
             rows={3}
             size="small"
             label="投票描述"
-            value={form.description || ''}
+            value={form.description?.[currentLanguage] || ''}
             onChange={(e) => {
               setTouchedField('description');
               setForm((prev) => ({
@@ -140,7 +140,7 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
                 const newOptions = form.options.filter((_, idx) => idx !== i);
                 setForm({ ...form, options: newOptions });
               }}
-              showDeleteIcon={form.options.length > 2}
+              showDeleteIcon={form.options.length > 1}
               error={errors[`options.${index}.text.${currentLanguage}`]}
             />
           ))}

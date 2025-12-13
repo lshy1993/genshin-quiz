@@ -122,29 +122,33 @@ export function createEmptyQuestionForm(languageCode: string): QuestionWithAnswe
   };
 }
 
+export const createVoteOptionSchema = z.object({
+  type: z.enum(['text', 'image', 'url'], { message: '请选择选项类型' }),
+  text: z
+    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '选项内容不能为空'))
+    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
+});
+
 // Zod 验证 schema
 export const createVoteSchema = z.object({
   public: z.boolean(),
-  options: z
-    .array(createQuestionOptionSchema)
-    .min(2, '至少需要两个选项')
-    .refine((opts) => opts.some((opt) => opt.is_answer), {
-      message: '必须至少有一个正确答案',
-      path: ['options'],
-    }),
-  /** 多语言题干 */
-  question_text: z
-    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '题干内容不能为空'))
-    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
-  /** 多语言解释 */
-  explanation: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
+  password: z.string().optional(),
+  title: z.record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '投票标题不能为空')),
+  description: z.record(z.string().min(1, '语言代码不能为空'), z.string().optional()),
+  options: z.array(createVoteOptionSchema).min(1, '至少需要1个投票项'),
+  tags: z.array(z.string().min(1, '标签不能为空')).optional(),
+  start_at: z.date().optional(),
+  expire_at: z.date().min(new Date(), '截止时间必须在当前时间之后').optional(),
+  /** 每个用户最多可投票数 */
+  votes_per_user: z.number().int().min(1, '每个用户最多可投票数必须至少为1'),
+  votes_per_option: z.number().int().min(0, '每个选项的最大可投票数不能为负数'),
 });
 
 export function createEmptyVoteForm(): VoteWithOption {
   return {
     public: true,
-    title: '',
-    description: '',
+    title: { zh: '' },
+    description: { zh: '' },
     category: QuestionCategory.character,
     tags: [],
     start_at: new Date(),

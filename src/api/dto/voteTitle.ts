@@ -5,9 +5,8 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { Vote } from './vote';
 
-export type GetVotes200 = {
-  votes: Vote[];
-  total: number;
-};
+/**
+ * 多语言标题
+ */
+export type VoteTitle = { [key: string]: string };
