@@ -9,8 +9,8 @@
 import type { QuestionCategory } from './questionCategory';
 import type { VoteDescription } from './voteDescription';
 import type { VoteOption } from './voteOption';
+import type { VoteSubmissionOption } from './voteSubmissionOption';
 import type { VoteTitle } from './voteTitle';
-import type { VoteVotedOptions } from './voteVotedOptions';
 
 export interface Vote {
   id: string;
@@ -25,8 +25,8 @@ export interface Vote {
   expire_at?: Date;
   /** 投票是否已过期 */
   expired: boolean;
-  /** 当前用户已投票的选项及票数，key为选项ID */
-  voted_options: VoteVotedOptions;
+  /** 当前用户已投票的选项及票数 */
+  voted_options: VoteSubmissionOption[];
   /** 每个用户最多可投票数 */
   votes_per_user: number;
   /** 每个选项的最大可投票数，0表示无限制 */

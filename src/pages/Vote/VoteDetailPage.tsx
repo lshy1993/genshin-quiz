@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import type { Vote, VoteVotedOptions } from '@/api/dto';
-import { useGetVote } from '@/api/genshinQuizAPI';
+import type { VoteSubmissionOption } from '@/api/dto';
+import { postVote, useGetVote } from '@/api/genshinQuizAPI';
 import RandomButton from '@/components/Button/RandomButton';
 import PageContainer from '@/components/PageContainer';
 import VoteChoices from '@/components/Vote/VoteChoices';
@@ -27,7 +27,7 @@ export default function VoteDetailPage() {
   const { currentLanguage } = useLanguage();
   const { isAuthenticated } = useUser();
   const { id } = useParams<{ id: string }>();
-  const { data: voteInfo, isLoading, error } = useGetVote(id ?? '');
+  const { data: voteInfo, isLoading, error, mutate } = useGetVote(id ?? '');
 
   const [currentTab, setCurrentTab] = useState<number>(0);
 
@@ -40,9 +40,19 @@ export default function VoteDetailPage() {
     return <Alert severity="error">加载题目失败</Alert>;
   }
 
-  // 这里应调用接口提交投票结果
-  const handleSubmit = (_selected: VoteVotedOptions) => {
-    // mock 提交成功，更新本地状态
+  // 提交投票结果
+  const handleSubmit = (options: VoteSubmissionOption[]) => {
+    if (options.length === 0) {
+      return;
+    }
+
+    postVote(voteInfo.id, { options, anonymous: false })
+      .then(() => {
+        mutate();
+      })
+      .catch((err) => {
+        console.error('投票失败:', err);
+      });
   };
 
   return (
@@ -64,7 +74,7 @@ export default function VoteDetailPage() {
             {currentTab === 0 && (
               <VoteChoices
                 options={voteInfo.options}
-                voted={voteInfo.voted_options}
+                voted={voteInfo.voted_options ?? []}
                 maxVotes={voteInfo.votes_per_user}
                 votesPerOption={voteInfo.votes_per_option ?? 1}
                 handleSubmit={handleSubmit}

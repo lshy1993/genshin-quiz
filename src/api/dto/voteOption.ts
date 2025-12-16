@@ -21,5 +21,6 @@ export interface VoteOption {
   music_url?: string;
   /** 选项描述 */
   description?: string;
+  /** 获得的累计票数 */
   votes?: number;
 }

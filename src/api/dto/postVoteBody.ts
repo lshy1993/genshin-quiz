@@ -5,9 +5,11 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+import type { VoteSubmissionOption } from './voteSubmissionOption';
 
 export type PostVoteBody = {
-  option_ids: string[];
+  /** 投票选项列表，每个选项可以投不同数量的票 */
+  options: VoteSubmissionOption[];
   /** 是否匿名投票 */
   anonymous?: boolean;
 };

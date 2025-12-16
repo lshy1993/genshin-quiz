@@ -45,9 +45,6 @@ export default function VoteTable({ votes }: VoteTableProps) {
                 <Typography variant="body2" color="text.secondary">
                   总票数：{vote.total_votes ?? '-'}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  作者：{vote.created_by}
-                </Typography>
               </Box>
               {/* <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     {vote.tags.map((tag) => (

@@ -1,8 +1,9 @@
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import { Box, Button, ButtonGroup, Stack, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Stack } from '@mui/material';
 import type { Question } from '@/api/dto';
+import AuthorLink from '@/components/AuthorLink';
 import { formatNumberShort } from '@/util/utils';
 
 interface Props {
@@ -64,10 +65,8 @@ export default function QuestionMetaFooter({ question, handleLike }: Props) {
       >
         {question.likes ?? 0}
       </Button>
-      <Stack spacing={0.5} sx={{ flex: 1, textAlign: 'right' }}>
-        <Typography variant="body2" color="text.secondary">
-          作者: {question.created_by}
-        </Typography>
+      <Stack spacing={0.5} sx={{ flex: 1, alignItems: 'flex-end' }}>
+        <AuthorLink userId={question.created_by} showAvatar />
         {/* <Typography variant="body2" color="text.secondary">
           创建日期: {question.created_at.toFormat('yyyy-MM-dd HH:mm:ss')}
         </Typography> */}

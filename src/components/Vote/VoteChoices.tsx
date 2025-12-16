@@ -16,21 +16,21 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import type { VoteOption, VoteVotedOptions } from '@/api/dto';
+import type { VoteOption, VoteSubmissionOption } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
 
 interface Props {
   options: VoteOption[];
-  voted: VoteVotedOptions;
+  voted: VoteSubmissionOption[];
   maxVotes: number;
   votesPerOption: number; // 每个选项最大可投票数
-  handleSubmit: (selected: VoteVotedOptions) => void;
+  handleSubmit: (selected: VoteSubmissionOption[]) => void;
 }
 
 export default function VoteChoices({
   options,
-  voted,
+  voted = [],
   maxVotes,
   votesPerOption,
   handleSubmit,
@@ -38,8 +38,10 @@ export default function VoteChoices({
   const { currentLanguage } = useLanguage();
   const { isAuthenticated } = useUser();
 
-  const submitted = Object.values(voted).some((count) => count > 0);
-  const [selected, setSelected] = useState<VoteVotedOptions>(voted);
+  // 将数组格式转换为对象格式方便使用
+  const submitted = voted.length > 0;
+  console.log(submitted, 'voted:', voted);
+  const [selected, setSelected] = useState<{ [key: string]: number }>({});
 
   const [filter, setFilter] = useState<string>('');
   const [sortByVotes, setSortByVotes] = useState<'' | 'asc' | 'desc'>('');
@@ -86,7 +88,12 @@ export default function VoteChoices({
 
   const handleConfirm = () => {
     setConfirmOpen(false);
-    handleSubmit(selected);
+    // 将对象格式转换为 VoteSubmissionOption[]
+    const options: VoteSubmissionOption[] = Object.entries(selected).map(([option_id, votes]) => ({
+      option_id,
+      votes,
+    }));
+    handleSubmit(options);
   };
 
   const renderVoting = () => {
@@ -115,7 +122,7 @@ export default function VoteChoices({
 
   const renderResult = (option: VoteOption) => {
     if (!option.id) return null;
-    const votesForThisOption = voted[option.id] || 0;
+    const votesForThisOption = voted.find((v) => v.option_id === option.id)?.votes || 0;
     if (votesForThisOption > 0) {
       return (
         <Chip
@@ -257,7 +264,7 @@ export default function VoteChoices({
           <Button
             variant="contained"
             color="primary"
-            disabled={!isAuthenticated || selected.length === 0}
+            disabled={!isAuthenticated || selectedCount === 0}
             onClick={handleClickSubmit}
           >
             {!isAuthenticated ? '请先登录' : `提交投票 (${selectedCount}/${maxVotes})`}
