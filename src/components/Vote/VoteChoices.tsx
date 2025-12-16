@@ -17,6 +17,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import type { VoteOption, VoteVotedOptions } from '@/api/dto';
+import { useLanguage } from '@/context/LanguageContext';
+import { useUser } from '@/context/UserContext';
 
 interface Props {
   options: VoteOption[];
@@ -33,28 +35,35 @@ export default function VoteChoices({
   votesPerOption,
   handleSubmit,
 }: Props) {
+  const { currentLanguage } = useLanguage();
+  const { isAuthenticated } = useUser();
+
   const submitted = Object.values(voted).some((count) => count > 0);
   const [selected, setSelected] = useState<VoteVotedOptions>(voted);
+
   const [filter, setFilter] = useState<string>('');
   const [sortByVotes, setSortByVotes] = useState<'' | 'asc' | 'desc'>('');
   const [showSelectedOnly, setShowSelectedOnly] = useState<boolean>(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const handleAdd = (id: string) => {
+  const handleAdd = (id: string | undefined) => {
+    if (!id) return;
     setSelected((prev) => ({
       ...prev,
       [id]: (prev[id] || 0) + 1,
     }));
   };
 
-  const handleRemove = (id: string) => {
+  const handleRemove = (id: string | undefined) => {
+    if (!id) return;
     setSelected((prev) => ({
       ...prev,
       [id]: prev[id] - 1,
     }));
   };
 
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: string | undefined) => {
+    if (!id) return;
     // 单选
     if (submitted) return;
     if (selected[id]) {
@@ -105,6 +114,7 @@ export default function VoteChoices({
   };
 
   const renderResult = (option: VoteOption) => {
+    if (!option.id) return null;
     const votesForThisOption = voted[option.id] || 0;
     if (votesForThisOption > 0) {
       return (
@@ -119,6 +129,7 @@ export default function VoteChoices({
   };
 
   const renderAction = (option: VoteOption) => {
+    if (!option.id) return null;
     if (votesPerOption === 1) {
       const isVoted = option.id in selected && selected[option.id] > 0;
       return (
@@ -126,7 +137,7 @@ export default function VoteChoices({
           size="small"
           value={option.id}
           selected={isVoted}
-          disabled={!isVoted && selectedCount >= maxVotes}
+          disabled={!isAuthenticated || (!isVoted && selectedCount >= maxVotes)}
           onClick={() => handleSelect(option.id)}
         >
           {isVoted ? '取消' : '选择'}
@@ -143,7 +154,7 @@ export default function VoteChoices({
             size="small"
             variant="outlined"
             onClick={() => handleRemove(option.id)}
-            disabled={votesForThisOption < 1}
+            disabled={!isAuthenticated || votesForThisOption < 1}
             sx={{ minWidth: 32 }}
           >
             -
@@ -153,7 +164,7 @@ export default function VoteChoices({
             size="small"
             variant="outlined"
             onClick={() => handleAdd(option.id)}
-            disabled={overOptionMax || overUserMax}
+            disabled={!isAuthenticated || overOptionMax || overUserMax}
             sx={{ minWidth: 32 }}
           >
             +
@@ -163,9 +174,11 @@ export default function VoteChoices({
     }
   };
 
-  const filteredItems = options.filter(
-    (option) => option.text?.includes(filter) || option.description?.includes(filter),
-  );
+  const filteredItems = options.filter((option) => {
+    const text = option.text?.[currentLanguage] || '';
+    const desc = option.description || '';
+    return text.includes(filter) || desc.includes(filter);
+  });
   if (sortByVotes !== '') {
     filteredItems.sort((a, b) =>
       sortByVotes === 'asc' ? (a.votes ?? 0) - (b.votes ?? 0) : (b.votes ?? 0) - (a.votes ?? 0),
@@ -175,7 +188,7 @@ export default function VoteChoices({
     filteredItems.splice(
       0,
       filteredItems.length,
-      ...filteredItems.filter((o) => selected[o.id] > 0),
+      ...filteredItems.filter((o) => o.id && selected[o.id] > 0),
     );
   }
 
@@ -207,7 +220,7 @@ export default function VoteChoices({
               <TableCell>选项</TableCell>
               <TableCell>简介</TableCell>
               <TableCell align="right">投票</TableCell>
-              {submitted && (
+              {submitted && isAuthenticated && (
                 <TableCell align="right" sortDirection={sortByVotes === '' ? false : sortByVotes}>
                   <TableSortLabel
                     active={sortByVotes !== ''}
@@ -222,14 +235,18 @@ export default function VoteChoices({
           </TableHead>
           <TableBody>
             {filteredItems.map((item, index) => (
-              <TableRow key={item.id} hover selected={selected[item.id] > 0}>
+              <TableRow
+                key={item.id || index}
+                hover
+                selected={item.id ? selected[item.id] > 0 : false}
+              >
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.text}</TableCell>
+                <TableCell>{item.text?.[currentLanguage] || ''}</TableCell>
                 <TableCell>{item.description}</TableCell>
                 <TableCell align="right">
                   {submitted ? renderResult(item) : renderAction(item)}
                 </TableCell>
-                {submitted && <TableCell align="right">{item.votes}</TableCell>}
+                {submitted && isAuthenticated && <TableCell align="right">{item.votes}</TableCell>}
               </TableRow>
             ))}
           </TableBody>
@@ -240,10 +257,10 @@ export default function VoteChoices({
           <Button
             variant="contained"
             color="primary"
-            disabled={selected.length === 0}
+            disabled={!isAuthenticated || selected.length === 0}
             onClick={handleClickSubmit}
           >
-            {`提交投票 (${selectedCount}/${maxVotes})`}
+            {!isAuthenticated ? '请先登录' : `提交投票 (${selectedCount}/${maxVotes})`}
           </Button>
         </Box>
       )}

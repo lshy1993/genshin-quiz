@@ -1,6 +1,7 @@
 import { Box, Card, CardActionArea, CardContent, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { Vote } from '@/api/dto';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface VoteTableProps {
   votes: Vote[];
@@ -8,6 +9,7 @@ interface VoteTableProps {
 
 export default function VoteTable({ votes }: VoteTableProps) {
   const navigate = useNavigate();
+  const { currentLanguage } = useLanguage();
 
   if (votes.length === 0) {
     return (
@@ -19,6 +21,11 @@ export default function VoteTable({ votes }: VoteTableProps) {
     );
   }
 
+  const getVoteTitle = (vote: Vote) => {
+    const defaultLang = Object.keys(vote.title)[0];
+    return vote.title[currentLanguage] || vote.title[defaultLang];
+  };
+
   return (
     <Grid container direction="column" spacing={2}>
       {votes.map((vote) => (
@@ -26,7 +33,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
           <CardActionArea onClick={() => navigate(`/votes/${vote.id}`)}>
             <CardContent>
               <Typography variant="h6" fontWeight="bold">
-                {vote.title}
+                {getVoteTitle(vote)}
               </Typography>
               <Box sx={{ display: 'flex', gap: 2, mt: 1, flexWrap: 'wrap' }}>
                 <Typography variant="body2" color="text.secondary">

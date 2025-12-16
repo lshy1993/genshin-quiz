@@ -10,7 +10,6 @@ import VoteFilter from '@/components/Vote/VoteFilter';
 import VoteTable from '@/components/Vote/VoteTable';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
-import { mockVotes } from '@/util/mock';
 
 export default function VoteListPage() {
   const navigate = useNavigate();
@@ -27,18 +26,16 @@ export default function VoteListPage() {
     sortDesc: false,
   });
 
-  const { data: votes, isLoading, error } = useGetVotes(searchParams);
+  const { data: votesRes, isLoading, error } = useGetVotes(searchParams);
 
   if (isLoading) {
     return <CircularProgress />;
   }
 
-  if (error || !votes) {
+  if (error || !votesRes) {
     console.error(error);
     return <Alert severity="error">加载投票出错</Alert>;
   }
-
-  const voteList = votes?.votes || mockVotes;
 
   return (
     <PageContainer>
@@ -72,7 +69,7 @@ export default function VoteListPage() {
           }))
         }
       />
-      <VoteTable votes={voteList} />
+      <VoteTable votes={votesRes.votes} />
     </PageContainer>
   );
 }

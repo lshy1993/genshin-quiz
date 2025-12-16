@@ -1,6 +1,3 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ShuffleIcon from '@mui/icons-material/Shuffle';
 import {
   Alert,
   Box,
@@ -9,16 +6,17 @@ import {
   CardContent,
   CircularProgress,
   Divider,
-  IconButton,
   Stack,
   Tab,
   Tabs,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { postLikeQuestion, useGetQuestion } from '@/api/genshinQuizAPI';
+import NextButton from '@/components/Button/NextButton';
+import PrevButton from '@/components/Button/PrevButton';
+import RandomButton from '@/components/Button/RandomButton';
 import PageContainer from '@/components/PageContainer';
 import QuestionChoices from '@/components/Question/QuestionChoices';
 import QuestionMetaFooter from '@/components/Question/QuestionMetaFooter';
@@ -68,21 +66,9 @@ export default function QuestionDetailPage() {
         <Button size="small" component={Link} to="/questions">
           ← 返回题目列表
         </Button>
-        <Tooltip title="上一题">
-          <IconButton>
-            <ArrowBackIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="下一题">
-          <IconButton>
-            <ArrowForwardIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="随机一题">
-          <IconButton>
-            <ShuffleIcon />
-          </IconButton>
-        </Tooltip>
+        <PrevButton tooltip="上一题" onClick={() => {}} />
+        <NextButton tooltip="下一题" onClick={() => {}} />
+        <RandomButton tooltip="随机一题" onClick={() => {}} />
       </Box>
       <Card>
         <Tabs value={currentTab} onChange={(_, v) => setCurrentTab(v)}>

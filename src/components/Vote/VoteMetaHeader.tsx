@@ -4,6 +4,7 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Box, Chip, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import type { Vote } from '@/api/dto';
+import { useLanguage } from '@/context/LanguageContext';
 import { formatNumberShort, getCategoryLabel } from '@/util/utils';
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export default function VoteMetaHeader({ voteInfo }: Props) {
+  const { currentLanguage } = useLanguage();
+
   function getCountdownText(start: Date, end?: Date) {
     const now = DateTime.now();
     const startDt = DateTime.fromJSDate(start);
@@ -80,7 +83,7 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
     <Stack spacing={1}>
       <Stack direction="row" spacing={1}>
         <Typography variant="h4" fontWeight="bold">
-          {voteInfo.title}
+          {voteInfo.title[currentLanguage]}
         </Typography>
         {/* 预留给自定义tag */}
         {/* <Box mt={1} display="flex" gap={1} flexWrap="wrap">
