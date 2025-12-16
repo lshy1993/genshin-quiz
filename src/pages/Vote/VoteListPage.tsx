@@ -1,10 +1,9 @@
-import { Add as AddIcon } from '@mui/icons-material';
-import { Alert, Box, Button, CircularProgress } from '@mui/material';
+import { Alert, CircularProgress } from '@mui/material';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { type GetVotesParams, GetVotesType } from '@/api/dto';
 import { useGetVotes } from '@/api/genshinQuizAPI';
 import BannerBox from '@/components/BannerBox';
+import FloatingAddButton from '@/components/FloatingAddButton';
 import PageContainer from '@/components/PageContainer';
 import VoteFilter from '@/components/Vote/VoteFilter';
 import VoteTable from '@/components/Vote/VoteTable';
@@ -12,7 +11,6 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
 
 export default function VoteListPage() {
-  const navigate = useNavigate();
   const { user } = useUser();
   const { currentLanguage } = useLanguage();
 
@@ -40,17 +38,6 @@ export default function VoteListPage() {
   return (
     <PageContainer>
       <BannerBox title={'投票列表'} subtitle={'参与投票吧！谁是真正的人气王！'} />
-      {user && (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => navigate('/votes/create')}
-          >
-            创建投票
-          </Button>
-        </Box>
-      )}
       <VoteFilter
         search={searchParams.query || ''}
         setSearch={(value) =>
@@ -70,6 +57,7 @@ export default function VoteListPage() {
         }
       />
       <VoteTable votes={votesRes.votes} />
+      {user && <FloatingAddButton to="/votes/create" label="创建投票" />}
     </PageContainer>
   );
 }

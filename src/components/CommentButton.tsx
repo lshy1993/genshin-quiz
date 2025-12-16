@@ -8,7 +8,7 @@ interface CommentButtonProps {
   disabled?: boolean;
 }
 
-export default function CommentButton({ count, onClick, disabled = true }: CommentButtonProps) {
+export default function CommentButton({ count, onClick, disabled }: CommentButtonProps) {
   return (
     <Button
       size="small"

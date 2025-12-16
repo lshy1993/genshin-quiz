@@ -14,6 +14,7 @@ import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
 import type { GetQuestionsParams, QuestionCategory, QuestionDifficulty } from '@/api/dto';
 import { allCategories, allDifficulties, allLanguages, allQuestionTypes } from '@/util/enum';
 import {
+  getCategoryColor,
   getCategoryLabel,
   getDifficultyLabel,
   getLanguageLabel,
@@ -110,6 +111,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
             key={category}
             sx={{ height: '40px', borderRadius: '9999px', fontSize: '16px' }}
             label={getCategoryLabel(category)}
+            color={getCategoryColor(category)}
             variant={params.category === category ? 'filled' : 'outlined'}
             onClick={() => handleCategoryChange(category)}
             clickable

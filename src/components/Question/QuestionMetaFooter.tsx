@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import type { Question } from '@/api/dto';
 import AuthorLink from '@/components/AuthorLink';
 import CommentButton from '@/components/CommentButton';
@@ -24,12 +24,12 @@ export default function QuestionMetaFooter({ question, handleLike }: Props) {
         likeStatus={question.likeStatus}
         onLike={handleLike}
       />
-      <CommentButton count={question.comment_count ?? 0} />
+      <CommentButton count={0} disabled />
       <Stack spacing={0.5} sx={{ flex: 1, alignItems: 'flex-end' }}>
-        <AuthorLink userId={question.created_by} showAvatar />
-        {/* <Typography variant="body2" color="text.secondary">
-          创建日期: {question.created_at.toFormat('yyyy-MM-dd HH:mm:ss')}
-        </Typography> */}
+        <AuthorLink userId={question.created_by} />
+        <Typography variant="body2" color="text.secondary">
+          创建日期: {question.created_at.toLocaleString()}
+        </Typography>
       </Stack>
     </Box>
   );

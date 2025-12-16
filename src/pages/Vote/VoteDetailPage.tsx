@@ -75,7 +75,7 @@ export default function VoteDetailPage() {
           <Tab label="统计结果" disabled={!isAuthenticated} />
         </Tabs>
         <CardContent>
-          <Stack spacing={1} divider={<Divider flexItem />}>
+          <Stack spacing={2} divider={<Divider flexItem />}>
             <VoteMetaHeader voteInfo={voteInfo} />
             {currentTab === 0 && (
               <VoteChoices

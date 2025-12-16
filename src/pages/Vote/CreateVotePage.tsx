@@ -1,6 +1,6 @@
-import { Alert, Button, Paper, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, Paper, Stack, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { VoteWithOption } from '@/api/dto';
 import { postCreateVote } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
@@ -53,6 +53,11 @@ export default function CreateVotePage() {
 
   return (
     <PageContainer>
+      <Box>
+        <Button size="small" component={Link} to="/votes">
+          ← 返回投票列表
+        </Button>
+      </Box>
       <Paper sx={{ p: 4 }}>
         <form onSubmit={handleSubmit}>
           <Stack spacing={3}>

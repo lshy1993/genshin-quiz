@@ -22,7 +22,7 @@ export default function AuthorLink({ userId, showAvatar = false }: Props) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
       <Typography variant="body2" color="text.secondary">
-        作者：
+        作者:
       </Typography>
       <Link
         component={RouterLink}
@@ -36,7 +36,9 @@ export default function AuthorLink({ userId, showAvatar = false }: Props) {
           },
         }}
       >
-        <Typography color="inherit">{author.nickname}</Typography>
+        <Typography variant="body2" color="inherit">
+          {author.nickname}
+        </Typography>
       </Link>
       {showAvatar && (
         <Box
