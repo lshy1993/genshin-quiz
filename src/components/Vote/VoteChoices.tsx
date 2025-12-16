@@ -39,9 +39,9 @@ export default function VoteChoices({
   const { isAuthenticated } = useUser();
 
   // 将数组格式转换为对象格式方便使用
+  const votedMap = Object.fromEntries(voted.map((v) => [v.option_id, v.votes]));
   const submitted = voted.length > 0;
-  console.log(submitted, 'voted:', voted);
-  const [selected, setSelected] = useState<{ [key: string]: number }>({});
+  const [selected, setSelected] = useState<{ [key: string]: number }>(votedMap);
 
   const [filter, setFilter] = useState<string>('');
   const [sortByVotes, setSortByVotes] = useState<'' | 'asc' | 'desc'>('');
@@ -104,17 +104,16 @@ export default function VoteChoices({
           {` ${selectedCount}/${maxVotes}`}
         </Typography>
         <Chip
-          label={'仅看已选'}
-          color={showSelectedOnly ? 'primary' : 'default'}
-          variant={showSelectedOnly ? 'filled' : 'outlined'}
-          clickable
-          onClick={() => setShowSelectedOnly((prev) => !prev)}
-          sx={{
-            height: 32,
-            fontSize: 14,
-            borderStyle: showSelectedOnly ? 'solid' : 'dashed',
-          }}
-          onDelete={showSelectedOnly ? () => setShowSelectedOnly(false) : undefined}
+          label={
+            votesPerOption === 0
+              ? '每项无限票'
+              : votesPerOption === 1
+                ? '每项限1票'
+                : `每项限${votesPerOption}票`
+          }
+          color="info"
+          variant="outlined"
+          size="small"
         />
       </Stack>
     );
@@ -122,15 +121,9 @@ export default function VoteChoices({
 
   const renderResult = (option: VoteOption) => {
     if (!option.id) return null;
-    const votesForThisOption = voted.find((v) => v.option_id === option.id)?.votes || 0;
+    const votesForThisOption = selected[option.id] || 0;
     if (votesForThisOption > 0) {
-      return (
-        <Chip
-          label={votesPerOption === 1 ? '已投' : `${votesForThisOption}票`}
-          color="success"
-          size="small"
-        />
-      );
+      return <Chip label={`已投${votesForThisOption}票`} color="success" size="small" />;
     }
     return null;
   };
@@ -155,6 +148,8 @@ export default function VoteChoices({
       const votesForThisOption = selected[option.id] || 0;
       const overOptionMax = votesPerOption > 0 && votesForThisOption >= votesPerOption;
       const overUserMax = selectedCount >= maxVotes;
+      const displayText =
+        votesPerOption > 0 ? `${votesForThisOption}/${votesPerOption}` : votesForThisOption;
       return (
         <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
           <Button
@@ -166,7 +161,7 @@ export default function VoteChoices({
           >
             -
           </Button>
-          <Typography sx={{ minWidth: 24, textAlign: 'center' }}>{votesForThisOption}</Typography>
+          <Typography sx={{ minWidth: 40, textAlign: 'center' }}>{displayText}</Typography>
           <Button
             size="small"
             variant="outlined"
@@ -209,14 +204,28 @@ export default function VoteChoices({
           justifyContent: 'space-between',
           alignItems: 'center',
           alignContent: 'center',
+          gap: 2,
         }}
       >
-        <TextField
-          size="small"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder="搜索选项，简介"
-        />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Chip
+            label={'仅看已选'}
+            color={showSelectedOnly ? 'primary' : 'default'}
+            variant={showSelectedOnly ? 'filled' : 'outlined'}
+            clickable
+            onClick={() => setShowSelectedOnly((prev) => !prev)}
+            sx={{
+              borderStyle: showSelectedOnly ? 'solid' : 'dashed',
+            }}
+            onDelete={showSelectedOnly ? () => setShowSelectedOnly(false) : undefined}
+          />
+          <TextField
+            size="small"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            placeholder="搜索选项，简介"
+          />
+        </Box>
         {renderVoting()}
       </Box>
       <TableContainer>
@@ -234,7 +243,7 @@ export default function VoteChoices({
                     direction={sortByVotes === '' ? 'asc' : sortByVotes}
                     onClick={() => setSortByVotes((v) => (v === 'asc' ? 'desc' : 'asc'))}
                   >
-                    票数
+                    总票数
                   </TableSortLabel>
                 </TableCell>
               )}

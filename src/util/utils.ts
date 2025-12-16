@@ -52,6 +52,35 @@ export function getLanguageLabel(lang: string): string {
   }
 }
 
+export function getCategoryColor(
+  category: string,
+): 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info' | 'default' {
+  switch (category) {
+    case 'character':
+      return 'primary';
+    case 'weapon':
+      return 'secondary';
+    case 'artifact':
+      return 'error';
+    case 'lore':
+      return 'info';
+    case 'gameplay':
+      return 'success';
+    case 'world':
+      return 'warning';
+    case 'combat':
+      return 'error';
+    case 'music':
+      return 'secondary';
+    case 'statistics':
+      return 'info';
+    case 'fun':
+      return 'success';
+    default:
+      return 'default';
+  }
+}
+
 export function getDifficultyColor(diff: string): 'success' | 'warning' | 'error' | 'default' {
   switch (diff) {
     case 'easy':

@@ -1,10 +1,8 @@
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
-import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import { Box, Button, ButtonGroup, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import type { Question } from '@/api/dto';
 import AuthorLink from '@/components/AuthorLink';
-import { formatNumberShort } from '@/util/utils';
+import CommentButton from '@/components/CommentButton';
+import LikeButtons from '@/components/LikeButtons';
 
 interface Props {
   question: Question;
@@ -21,50 +19,12 @@ export default function QuestionMetaFooter({ question, handleLike }: Props) {
         alignItems: 'center',
       }}
     >
-      <ButtonGroup size="small" sx={{ height: 32 }}>
-        <Button
-          size="small"
-          color="inherit"
-          variant="text"
-          startIcon={<ThumbUpAltOutlinedIcon fontSize="small" />}
-          onClick={() => handleLike(question.likeStatus === 1 ? 0 : 1)}
-          sx={{
-            px: 1.5,
-            bgcolor: question.likeStatus === 1 ? 'primary.main' : undefined,
-            color: question.likeStatus === 1 ? '#fff' : undefined,
-            '&:hover': {
-              bgcolor: question.likeStatus === 1 ? 'primary.dark' : 'action.hover',
-            },
-          }}
-        >
-          {formatNumberShort(question.likes ?? 0)}
-        </Button>
-        <Button
-          size="small"
-          color="inherit"
-          variant="text"
-          onClick={() => handleLike(question.likeStatus === -1 ? 0 : -1)}
-          sx={{
-            px: 1.5,
-            bgcolor: question.likeStatus === -1 ? 'grey.700' : undefined,
-            color: question.likeStatus === -1 ? '#fff' : undefined,
-            '&:hover': {
-              bgcolor: question.likeStatus === -1 ? 'grey.800' : 'action.hover',
-            },
-          }}
-        >
-          <ThumbDownAltOutlinedIcon fontSize="small" />
-        </Button>
-      </ButtonGroup>
-      <Button
-        size="small"
-        color="primary"
-        variant={'text'}
-        startIcon={<ChatBubbleOutlineIcon fontSize="small" />}
-        disabled
-      >
-        {question.likes ?? 0}
-      </Button>
+      <LikeButtons
+        likes={question.likes ?? 0}
+        likeStatus={question.likeStatus}
+        onLike={handleLike}
+      />
+      <CommentButton count={question.comment_count ?? 0} />
       <Stack spacing={0.5} sx={{ flex: 1, alignItems: 'flex-end' }}>
         <AuthorLink userId={question.created_by} showAvatar />
         {/* <Typography variant="body2" color="text.secondary">

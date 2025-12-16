@@ -13,9 +13,9 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { Question } from '@/api/dto';
+import CategoryChip from '@/components/CategoryChip';
 import {
   formatNumberShort,
-  getCategoryLabel,
   getCorrectRate,
   getDifficultyColor,
   getDifficultyLabel,
@@ -98,7 +98,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                 )}
               </TableCell>
               <TableCell>
-                <Typography variant="body2">{getCategoryLabel(question.category)}</Typography>
+                <CategoryChip category={question.category} />
               </TableCell>
               <TableCell>
                 <Typography variant="body2">

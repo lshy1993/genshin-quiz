@@ -128,7 +128,7 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
           </Typography>
           {form.options.map((option, index) => (
             <CreateVoteOption
-              key={`${index}-${option.text?.[currentLanguage]}`}
+              key={index}
               index={index}
               optionText={option.text?.[currentLanguage] ?? ''}
               updateOption={(i, str) => {

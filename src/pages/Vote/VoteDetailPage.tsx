@@ -55,6 +55,12 @@ export default function VoteDetailPage() {
       });
   };
 
+  // 处理点赞
+  const handleLike = (likeStatus: 1 | 0 | -1) => {
+    // TODO: 实现点赞 API 调用
+    console.log('Like status:', likeStatus);
+  };
+
   return (
     <PageContainer>
       <Box>
@@ -108,7 +114,7 @@ export default function VoteDetailPage() {
                 </Box>
               </Box>
             )}
-            <VoteMetaFooter voteInfo={voteInfo} />
+            <VoteMetaFooter voteInfo={voteInfo} handleLike={handleLike} />
           </Stack>
         </CardContent>
       </Card>

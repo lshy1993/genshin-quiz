@@ -1,11 +1,12 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import { Box, Chip, Divider, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import type { Vote } from '@/api/dto';
+import CategoryChip from '@/components/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
-import { formatNumberShort, getCategoryLabel } from '@/util/utils';
+import { formatNumberShort } from '@/util/utils';
 
 interface Props {
   voteInfo: Vote;
@@ -94,7 +95,7 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
       </Stack>
       <Box sx={{ display: 'flex', gap: 1, justifyContent: 'space-between' }}>
         <Stack direction="row" spacing={1}>
-          <Chip size="small" label={getCategoryLabel(voteInfo.category)} />
+          <CategoryChip category={voteInfo.category} />
           {voteInfo.expire_at && renderCountdown(voteInfo.start_at, voteInfo.expire_at)}
         </Stack>
         <Stack direction="row" spacing={1} divider={<Divider orientation="vertical" flexItem />}>
