@@ -8,6 +8,7 @@
 
 import type { QuestionCategory } from './questionCategory';
 import type { VoteDescription } from './voteDescription';
+import type { VoteLikeStatus } from './voteLikeStatus';
 import type { VoteOption } from './voteOption';
 import type { VoteSubmissionOption } from './voteSubmissionOption';
 import type { VoteTitle } from './voteTitle';
@@ -25,6 +26,8 @@ export interface Vote {
   expire_at?: Date;
   /** 投票是否已过期 */
   expired: boolean;
+  /** 当前用户是否已参与投票 */
+  voted: boolean;
   /** 当前用户已投票的选项及票数 */
   voted_options: VoteSubmissionOption[];
   /** 每个用户最多可投票数 */
@@ -39,4 +42,6 @@ export interface Vote {
   created_by: string;
   created_at: Date;
   likes?: number;
+  /** 点赞状态：-1踩, 0未操作, 1赞 */
+  likeStatus?: VoteLikeStatus;
 }

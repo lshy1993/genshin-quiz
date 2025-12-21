@@ -54,6 +54,7 @@ export * from './unauthorizedResponse';
 export * from './user';
 export * from './vote';
 export * from './voteDescription';
+export * from './voteLikeStatus';
 export * from './voteOption';
 export * from './voteOptionText';
 export * from './voteOptionType';
