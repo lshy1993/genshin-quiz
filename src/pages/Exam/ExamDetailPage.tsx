@@ -1,9 +1,11 @@
 import {
+  Alert,
   Box,
   Button,
   Card,
   CardContent,
   Chip,
+  CircularProgress,
   List,
   ListItem,
   ListItemText,
@@ -14,7 +16,7 @@ import { useGetExam } from '../../api/genshinQuizAPI';
 
 export default function ExamDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { data: exam, error } = useGetExam(id as string);
+  const { data: exam, isLoading, error } = useGetExam(id as string);
 
   if (error) {
     return (
@@ -27,12 +29,13 @@ export default function ExamDetailPage() {
     );
   }
 
-  if (!exam) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Typography>加载中...</Typography>
-      </Box>
-    );
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+
+  if (error || !exam) {
+    console.error('Failed to load quiz:', error);
+    return <Alert severity="error">加载测试失败</Alert>;
   }
 
   return (
