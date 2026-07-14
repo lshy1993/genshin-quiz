@@ -32,7 +32,12 @@ export default function DualProgressBar({ yesCount, noCount }: Props) {
             textAlign: 'center',
           }}
         >
-          <Typography variant="caption" color="#fff">
+          <Typography
+            variant="caption"
+            sx={{
+              color: '#fff',
+            }}
+          >
             {`${formatNumberShort(yesCount)} (${yesPercent}%)`}
           </Typography>
         </Box>
@@ -47,7 +52,12 @@ export default function DualProgressBar({ yesCount, noCount }: Props) {
             textAlign: 'center',
           }}
         >
-          <Typography variant="caption" color="#fff">
+          <Typography
+            variant="caption"
+            sx={{
+              color: '#fff',
+            }}
+          >
             {`${formatNumberShort(noCount)} (${noPercent}%)`}
           </Typography>
         </Box>

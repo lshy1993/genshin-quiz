@@ -57,8 +57,11 @@ export default function renderMultiple({
             <Tooltip title={opt.count ?? 0} placement="bottom" arrow>
               <Typography
                 variant="caption"
-                color="text.secondary"
-                sx={{ textAlign: 'right', minWidth: 40 }}
+                sx={{
+                  color: 'text.secondary',
+                  textAlign: 'right',
+                  minWidth: 40,
+                }}
               >
                 {`${formatNumberShort(opt.count ?? 0)}`}
               </Typography>

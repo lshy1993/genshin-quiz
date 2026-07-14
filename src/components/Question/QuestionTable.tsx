@@ -47,7 +47,12 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
   if (questions.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography variant="h6" color="text.secondary">
+        <Typography
+          variant="h6"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           暂无符合条件的题目
         </Typography>
       </Box>
@@ -92,7 +97,12 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
             >
               <TableCell>
                 {question.solved && (
-                  <Typography color="success.main" sx={{ mr: 1 }}>
+                  <Typography
+                    sx={{
+                      color: 'success.main',
+                      mr: 1,
+                    }}
+                  >
                     ✅
                   </Typography>
                 )}
@@ -119,7 +129,12 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                   arrow
                   placement="bottom-end"
                 >
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'text.secondary',
+                    }}
+                  >
                     {formatNumberShort(question.answer_count ?? 0)}
                   </Typography>
                 </Tooltip>

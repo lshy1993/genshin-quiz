@@ -16,7 +16,12 @@ export default function BannerBox({ title, subtitle }: BannerBoxProps) {
         textAlign: 'center',
       }}
     >
-      <Typography variant="h4" fontWeight="bold">
+      <Typography
+        variant="h4"
+        sx={{
+          fontWeight: 'bold',
+        }}
+      >
         {title}
       </Typography>
       <Typography variant="subtitle1">{subtitle}</Typography>

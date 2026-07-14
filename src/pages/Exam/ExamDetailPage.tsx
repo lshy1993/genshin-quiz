@@ -43,13 +43,18 @@ export default function ExamDetailPage() {
       <Button component={Link} to="/quizzes" sx={{ mb: 2 }}>
         ← 返回测验列表
       </Button>
-
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom>
             {exam.title}
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: 'text.secondary',
+              mb: 2,
+            }}
+          >
             {exam.description}
           </Typography>
           <Box>
@@ -65,12 +70,16 @@ export default function ExamDetailPage() {
             {exam.time_limit && ` | 时间限制: ${exam.time_limit}秒`}
           </Typography>
 
-          <Typography variant="caption" color="text.secondary">
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             创建时间: {new Date(exam.created_at).toLocaleString()}
           </Typography>
         </CardContent>
       </Card>
-
       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
         <Button component={Link} to={`/exams/${exam.id}/play`} variant="contained" size="large">
           开始答题
@@ -79,7 +88,6 @@ export default function ExamDetailPage() {
           编辑测验
         </Button>
       </Box>
-
       <Card>
         <CardContent>
           <Typography variant="h6" gutterBottom>

@@ -15,7 +15,12 @@ export default function VoteTable({ votes }: VoteTableProps) {
   if (votes.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography variant="h6" color="text.secondary">
+        <Typography
+          variant="h6"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           暂无正在进行中的投票
         </Typography>
       </Box>
@@ -62,7 +67,12 @@ export default function VoteTable({ votes }: VoteTableProps) {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                 {vote.category && <CategoryChip category={vote.category} />}
-                <Typography variant="h6" fontWeight="bold">
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 'bold',
+                  }}
+                >
                   {getVoteTitle(vote)}
                 </Typography>
                 <Chip
@@ -77,18 +87,39 @@ export default function VoteTable({ votes }: VoteTableProps) {
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 1, flexWrap: 'wrap', alignItems: 'center' }}>
                 {vote.expire_at && (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'text.secondary',
+                    }}
+                  >
                     截止：{renderTime(vote.expire_at)}
                   </Typography>
                 )}
-                <Typography variant="body2" color={getStatusColor(vote)} fontWeight="medium">
+                <Typography
+                  variant="body2"
+                  color={getStatusColor(vote)}
+                  sx={{
+                    fontWeight: 'medium',
+                  }}
+                >
                   {getRemainingTime(vote.expire_at)}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 2, marginLeft: 'auto' }}>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'text.secondary',
+                    }}
+                  >
                     参与：{vote.participants ?? 0}人
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'text.secondary',
+                    }}
+                  >
                     总票：{vote.total_votes ?? 0}票
                   </Typography>
                 </Box>

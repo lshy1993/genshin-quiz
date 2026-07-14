@@ -99,7 +99,13 @@ export default function CreateVoteBasicInfo({ errors, form, setForm, setTouchedF
   );
 
   const VoteLimitForm = (
-    <Stack direction="row" spacing={2} alignItems="flex-top">
+    <Stack
+      direction="row"
+      spacing={2}
+      sx={{
+        alignItems: 'flex-top',
+      }}
+    >
       <TextField
         type="number"
         size="small"
@@ -140,7 +146,13 @@ export default function CreateVoteBasicInfo({ errors, form, setForm, setTouchedF
   );
 
   const AccessibilityForm = (
-    <Stack direction="row" spacing={2} alignItems="flex-top">
+    <Stack
+      direction="row"
+      spacing={2}
+      sx={{
+        alignItems: 'flex-top',
+      }}
+    >
       <FormControl sx={{ width: 120 }} error={!!errors?.category}>
         <InputLabel>分类</InputLabel>
         <Select

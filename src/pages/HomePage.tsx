@@ -38,7 +38,13 @@ export default function HomePage() {
         <Typography variant="h3" component="h1" gutterBottom>
           原神知识测验
         </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            color: 'text.secondary',
+            mb: 3,
+          }}
+        >
           测试你对原神世界的了解程度
         </Typography>
         <Button component={Link} to="/questions" variant="contained" size="large" sx={{ mr: 2 }}>
@@ -60,10 +66,22 @@ export default function HomePage() {
                 <Typography variant="h6" component="h3" gutterBottom>
                   {exam.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'text.secondary',
+                    mb: 2,
+                  }}
+                >
                   {exam.description}
                 </Typography>
-                <Typography variant="caption" display="block" sx={{ mb: 2 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: 'block',
+                    mb: 2,
+                  }}
+                >
                   难度: {exam.difficulty}
                 </Typography>
                 <Box>

@@ -20,7 +20,12 @@ export default function QuestionStatistics({ options }: Props) {
             value={option.count ? option.count * 2 : 0}
             sx={{ height: 10, borderRadius: 1 }}
           />
-          <Typography variant="caption" color="text.secondary">
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             {option.count}票
           </Typography>
         </Box>

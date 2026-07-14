@@ -98,7 +98,13 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
         gap: 3,
       }}
     >
-      <Stack direction="row" flexWrap="wrap" gap={1}>
+      <Stack
+        direction="row"
+        sx={{
+          flexWrap: 'wrap',
+          gap: 1,
+        }}
+      >
         <Chip
           sx={{ height: '40px', borderRadius: '9999px', fontSize: '16px' }}
           label="全部"
@@ -125,7 +131,13 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
           gap: 2,
         }}
       >
-        <Stack direction="row" spacing={2} alignItems="center">
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <TextField
             fullWidth
             label="搜索题目"
@@ -155,7 +167,13 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
           </Button>
         </Stack>
         <Collapse in={filterOpen} unmountOnExit>
-          <Stack direction="row" spacing={4} alignItems="center">
+          <Stack
+            direction="row"
+            spacing={4}
+            sx={{
+              alignItems: 'center',
+            }}
+          >
             <Autocomplete
               size="small"
               sx={{ minWidth: 250 }}
@@ -171,7 +189,13 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
             <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
               题目类型
             </Typography>
-            <Stack direction="row" flexWrap="wrap" gap={1}>
+            <Stack
+              direction="row"
+              sx={{
+                flexWrap: 'wrap',
+                gap: 1,
+              }}
+            >
               {allQuestionTypes.map((type) => (
                 <Chip
                   key={type}
@@ -185,7 +209,13 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
             <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
               难度等级
             </Typography>
-            <Stack direction="row" flexWrap="wrap" gap={1}>
+            <Stack
+              direction="row"
+              sx={{
+                flexWrap: 'wrap',
+                gap: 1,
+              }}
+            >
               {allDifficulties.map((diff) => (
                 <Chip
                   key={diff}

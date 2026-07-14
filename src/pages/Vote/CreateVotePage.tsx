@@ -90,7 +90,13 @@ export default function CreateVotePage() {
               </Alert>
             )}
             {/* 提交按钮 */}
-            <Stack direction="row" spacing={3} justifyContent="flex-end">
+            <Stack
+              direction="row"
+              spacing={3}
+              sx={{
+                justifyContent: 'flex-end',
+              }}
+            >
               <Button variant="outlined" onClick={() => navigate('/votes')}>
                 取消
               </Button>

@@ -43,7 +43,13 @@ export default function CreateQuestionChoice({
   }, [optionText]);
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center">
+    <Stack
+      direction="row"
+      spacing={2}
+      sx={{
+        alignItems: 'center',
+      }}
+    >
       {/* 单选 */}
       {questionType === QuestionType.single_choice && (
         <RadioGroup
@@ -53,7 +59,6 @@ export default function CreateQuestionChoice({
           <FormControlLabel value={index} control={<Radio />} label="" sx={{ margin: 0 }} />
         </RadioGroup>
       )}
-
       {/* 多选 */}
       {questionType === QuestionType.multiple_choice && (
         <FormControlLabel
@@ -62,7 +67,6 @@ export default function CreateQuestionChoice({
           sx={{ margin: 0 }}
         />
       )}
-
       <TextField
         label={`选项 ${index + 1}`}
         value={tmpInput}

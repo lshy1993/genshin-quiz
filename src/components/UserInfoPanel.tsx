@@ -80,23 +80,43 @@ export default function UserInfoPanel({ setOpen }: Props) {
               {user.nickname.charAt(0).toUpperCase()}
             </Avatar>
             <Box>
-              <Typography variant="subtitle1" fontWeight="medium">
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontWeight: 'medium',
+                }}
+              >
                 {user.nickname}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography
+                variant="caption"
+                sx={{
+                  color: 'text.secondary',
+                }}
+              >
                 {user.country || '未知地区'}
               </Typography>
             </Box>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-            <Typography variant="caption" color="text.secondary">
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
               正确率:{' '}
               {user.total_answers > 0
                 ? Math.round((user.correct_answers / user.total_answers) * 100)
                 : 0}
               %
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
               题目: {user.questions_created}
             </Typography>
           </Box>
@@ -148,7 +168,12 @@ export default function UserInfoPanel({ setOpen }: Props) {
         <Box sx={{ px: 2, py: 1.5 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
             <LanguageIcon sx={{ mr: 1, fontSize: 18 }} />
-            <Typography variant="body2" color="text.primary">
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'text.primary',
+              }}
+            >
               语言设置
             </Typography>
           </Box>

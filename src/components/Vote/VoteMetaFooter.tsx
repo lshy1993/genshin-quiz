@@ -18,7 +18,12 @@ export default function VoteMetaFooter({ voteInfo, handleLike }: Props) {
       />
       <Stack spacing={0.5} sx={{ alignItems: 'flex-end' }}>
         <AuthorLink userId={voteInfo.created_by} showAvatar />
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           创建日期: {voteInfo.created_at.toLocaleString()}
         </Typography>
       </Stack>

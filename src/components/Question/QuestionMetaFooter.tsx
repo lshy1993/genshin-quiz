@@ -27,7 +27,12 @@ export default function QuestionMetaFooter({ question, handleLike }: Props) {
       <CommentButton count={0} disabled />
       <Stack spacing={0.5} sx={{ flex: 1, alignItems: 'flex-end' }}>
         <AuthorLink userId={question.created_by} />
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           创建日期: {question.created_at.toLocaleString()}
         </Typography>
       </Stack>

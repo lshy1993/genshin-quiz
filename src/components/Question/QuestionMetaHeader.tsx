@@ -26,10 +26,20 @@ export default function QuestionMetaHeader({ question }: Props) {
         />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           正确次数: {question.correct_count}/{question.answer_count}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           正确率: {getCorrectRate(question, 1)}%
         </Typography>
       </Box>

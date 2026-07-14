@@ -26,7 +26,6 @@ export default function UsersListPage() {
           创建新用户
         </Button>
       </Box>
-
       <Grid container spacing={3}>
         {userList.map((user) => (
           <Grid item xs={12} md={6} lg={4} key={user.id}>
@@ -35,7 +34,13 @@ export default function UsersListPage() {
                 <Typography variant="h6" component="h3" gutterBottom>
                   {user.username}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'text.secondary',
+                    mb: 2,
+                  }}
+                >
                   {user.email}
                 </Typography>
                 <Box sx={{ mb: 2 }}>
@@ -51,7 +56,13 @@ export default function UsersListPage() {
                     size="small"
                   />
                 </Box>
-                <Typography variant="caption" display="block" sx={{ mb: 2 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: 'block',
+                    mb: 2,
+                  }}
+                >
                   注册时间: {new Date(user.created_at).toLocaleDateString()}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
@@ -77,10 +88,14 @@ export default function UsersListPage() {
           </Grid>
         ))}
       </Grid>
-
       {userList.length === 0 && (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography variant="h6" color="text.secondary">
+          <Typography
+            variant="h6"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             暂无用户数据
           </Typography>
         </Box>

@@ -38,9 +38,21 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
         placement="bottom-start"
         arrow
       >
-        <Stack direction="row" spacing={0.5} alignItems="center">
+        <Stack
+          direction="row"
+          spacing={0.5}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <AccessTimeIcon fontSize="small" />
-          <Typography variant="body2" color="text.secondary" align="right">
+          <Typography
+            variant="body2"
+            align="right"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             {getCountdownText(start, end)}
           </Typography>
         </Stack>
@@ -51,12 +63,24 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
   const renderParticipants = () => {
     const participants = voteInfo.participants ?? 0;
     return (
-      <Stack direction="row" spacing={0.5} alignItems="center">
+      <Stack
+        direction="row"
+        spacing={0.5}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
         <Tooltip title="总参与人数">
           <PeopleAltIcon fontSize="small" />
         </Tooltip>
         <Tooltip title={participants}>
-          <Typography variant="body2" color="text.secondary" align="right">
+          <Typography
+            variant="body2"
+            align="right"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             {formatNumberShort(participants)}
           </Typography>
         </Tooltip>
@@ -67,12 +91,24 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
   const renderTotalVotes = () => {
     const total = voteInfo.total_votes ?? 0;
     return (
-      <Stack direction="row" spacing={0.5} alignItems="center">
+      <Stack
+        direction="row"
+        spacing={0.5}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
         <Tooltip title="总票数">
           <HowToVoteIcon fontSize="small" />
         </Tooltip>
         <Tooltip title={total}>
-          <Typography variant="body2" color="text.secondary" align="right">
+          <Typography
+            variant="body2"
+            align="right"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             {formatNumberShort(total)}
           </Typography>
         </Tooltip>
@@ -83,7 +119,12 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
   return (
     <Stack spacing={1}>
       <Stack direction="row" spacing={1}>
-        <Typography variant="h4" fontWeight="bold">
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 'bold',
+          }}
+        >
           {voteInfo.title[currentLanguage]}
         </Typography>
         {/* 预留给自定义tag */}

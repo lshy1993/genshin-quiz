@@ -22,7 +22,13 @@ export default function NotFoundPage() {
       <Typography variant="h4" gutterBottom>
         {t('404.title_not_found')}
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        variant="body1"
+        sx={{
+          color: 'text.secondary',
+          mb: 3,
+        }}
+      >
         {t('404.label_not_found')}
       </Typography>
       <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>

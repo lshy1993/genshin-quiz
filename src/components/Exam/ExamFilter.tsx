@@ -48,7 +48,13 @@ export default function ExamFilter({ examList, searchParams, setSearchParams }: 
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Stack direction="row" flexWrap="wrap" gap={1}>
+      <Stack
+        direction="row"
+        sx={{
+          flexWrap: 'wrap',
+          gap: 1,
+        }}
+      >
         {allCategories.map((category) => (
           <Chip
             key={category}
@@ -66,7 +72,6 @@ export default function ExamFilter({ examList, searchParams, setSearchParams }: 
         value={searchParams.query}
         onChange={(e) => setSearchParams((prev) => ({ ...prev, query: e.target.value }))}
       />
-
       {/* <Box>
         <InputLabel sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 'medium' }}>标签</InputLabel>
         <Stack direction="row" flexWrap="wrap" gap={1}>
@@ -81,7 +86,13 @@ export default function ExamFilter({ examList, searchParams, setSearchParams }: 
           ))}
         </Stack>
       </Box> */}
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>难度</InputLabel>
           <Select

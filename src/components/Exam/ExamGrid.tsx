@@ -17,7 +17,12 @@ export default function ExamGrid({ exams }: Props) {
   if (exams.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography variant="h6" color="text.secondary">
+        <Typography
+          variant="h6"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           暂无符合条件的考试
         </Typography>
       </Box>
@@ -34,7 +39,13 @@ export default function ExamGrid({ exams }: Props) {
               <Typography variant="h6" component="h3" gutterBottom>
                 {exam.title}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.secondary',
+                  mb: 2,
+                }}
+              >
                 {exam.description}
               </Typography>
               <Box>
@@ -45,7 +56,13 @@ export default function ExamGrid({ exams }: Props) {
               <Box sx={{ mb: 2 }}>
                 <Chip label={exam.difficulty} color="primary" size="small" sx={{ mr: 1 }} />
               </Box>
-              <Typography variant="caption" display="block" sx={{ mb: 2 }}>
+              <Typography
+                variant="caption"
+                sx={{
+                  display: 'block',
+                  mb: 2,
+                }}
+              >
                 题目数量: {exam.questions.length}
                 {exam.time_limit && ` | 时间限制: ${exam.time_limit}秒`}
               </Typography>

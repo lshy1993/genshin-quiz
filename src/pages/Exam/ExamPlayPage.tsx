@@ -98,7 +98,12 @@ export default function ExamPlayPage({ exam }: Props) {
           value={((currentQuestionIndex + 1) / questions.length) * 100}
           sx={{ mb: 2 }}
         />
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
           题目 {currentQuestionIndex + 1} / {questions.length}
         </Typography>
       </Box>

@@ -47,8 +47,11 @@ export default function SingleChoice({ options, solved, selected, setSelected, d
             <Tooltip title={opt.count ?? 0} placement="bottom" arrow>
               <Typography
                 variant="caption"
-                color="text.secondary"
-                sx={{ textAlign: 'right', minWidth: 80 }}
+                sx={{
+                  color: 'text.secondary',
+                  textAlign: 'right',
+                  minWidth: 80,
+                }}
               >
                 {`${formatNumberShort(opt.count ?? 0)} (${percent}%)`}
               </Typography>

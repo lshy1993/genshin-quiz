@@ -98,7 +98,13 @@ export default function VoteChoices({
 
   const renderVoting = () => {
     return (
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
         <Typography>
           {submitted ? '已投' : '已选'}
           {` ${selectedCount}/${maxVotes}`}
@@ -151,7 +157,14 @@ export default function VoteChoices({
       const displayText =
         votesPerOption > 0 ? `${votesForThisOption}/${votesPerOption}` : votesForThisOption;
       return (
-        <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end">
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
           <Button
             size="small"
             variant="outlined"
@@ -269,7 +282,12 @@ export default function VoteChoices({
         </Table>
       </TableContainer>
       {!submitted && (
-        <Box mt={3} textAlign="center">
+        <Box
+          sx={{
+            mt: 3,
+            textAlign: 'center',
+          }}
+        >
           <Button
             variant="contained"
             color="primary"
@@ -297,7 +315,12 @@ export default function VoteChoices({
         >
           <Typography variant="h6">你确定要提交这 {selectedCount} 票吗？</Typography>
           {selectedCount < maxVotes && (
-            <Typography variant="body2" color="text.secondary">
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
               你还可以选择 {maxVotes - selectedCount} 票
             </Typography>
           )}

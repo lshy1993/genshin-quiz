@@ -100,7 +100,12 @@ export default function QuestionChoices({ question, mutate }: Props) {
         ) : (
           <>
             <Alert severity={'success'}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.secondary',
+                }}
+              >
                 {'回答正确！答案：'}
                 {question.options
                   .filter((opt) => opt.is_answer)
@@ -109,7 +114,13 @@ export default function QuestionChoices({ question, mutate }: Props) {
               </Typography>
             </Alert>
             {question.explanation && (
-              <Typography variant="body2" color="info.main" sx={{ mt: 1 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'info.main',
+                  mt: 1,
+                }}
+              >
                 解析：{question.explanation}
               </Typography>
             )}
