@@ -1,19 +1,24 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EditIcon from '@mui/icons-material/Edit';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Box, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
-import type { Vote } from '@/api/dto';
+import type { User, Vote } from '@/api/dto';
 import CategoryChip from '@/components/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
 import { formatNumberShort } from '@/util/utils';
 
 interface Props {
   voteInfo: Vote;
+  user: User | null;
 }
 
-export default function VoteMetaHeader({ voteInfo }: Props) {
+export default function VoteMetaHeader({ voteInfo, user }: Props) {
   const { currentLanguage } = useLanguage();
+  const hasVoted = voteInfo.voted || (voteInfo.voted_options && voteInfo.voted_options.length > 0);
+  const isOwner = !!user && voteInfo.created_by === user.uuid;
 
   function getCountdownText(start: Date, end?: Date) {
     const now = DateTime.now();
@@ -118,7 +123,7 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
 
   return (
     <Stack spacing={1}>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
         <Typography
           variant="h4"
           sx={{
@@ -127,6 +132,16 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
         >
           {voteInfo.title[currentLanguage]}
         </Typography>
+        {hasVoted && (
+          <Tooltip title="你已参与此投票">
+            <CheckCircleIcon color="success" />
+          </Tooltip>
+        )}
+        {isOwner && (
+          <Tooltip title="我创建的投票">
+            <EditIcon color="action" />
+          </Tooltip>
+        )}
         {/* 预留给自定义tag */}
         {/* <Box mt={1} display="flex" gap={1} flexWrap="wrap">
           {voteInfo.tags.map((tag) => (
@@ -134,6 +149,14 @@ export default function VoteMetaHeader({ voteInfo }: Props) {
           ))}
         </Box> */}
       </Stack>
+      <Typography
+        variant="subtitle1"
+        sx={{
+          color: 'text.secondary',
+        }}
+      >
+        {voteInfo.description?.[currentLanguage]}
+      </Typography>
       <Box sx={{ display: 'flex', gap: 1, justifyContent: 'space-between' }}>
         <Stack direction="row" spacing={1}>
           <CategoryChip category={voteInfo.category} />

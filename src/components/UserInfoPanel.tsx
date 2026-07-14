@@ -17,6 +17,8 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useSWRConfig } from 'swr';
+import { getGetCurrentUserKey, useUpdateUser } from '@/api/genshinQuizAPI';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
 import { allLanguages } from '@/util/enum';
@@ -30,6 +32,8 @@ export default function UserInfoPanel({ setOpen }: Props) {
   const { user, logout } = useUser();
   const { currentLanguage, setCurrentLanguage } = useLanguage();
   const navigate = useNavigate();
+  const { mutate } = useSWRConfig();
+  const { trigger: updateUser } = useUpdateUser(user?.uuid ?? '');
 
   const handleCreateQuestion = () => {
     navigate('/questions/create');
@@ -47,7 +51,27 @@ export default function UserInfoPanel({ setOpen }: Props) {
   };
 
   const handleLanguageChange = (event: SelectChangeEvent<string>) => {
-    setCurrentLanguage(event.target.value);
+    const nextLanguage = event.target.value;
+    const previousLanguage = currentLanguage;
+    if (!user) return;
+
+    const optimisticUser = { ...user, language: nextLanguage };
+
+    // 立即切换界面语言，并乐观更新 /auth/me 缓存，避免被后续的 SWR 重新校验用旧数据覆盖
+    setCurrentLanguage(nextLanguage);
+    mutate(getGetCurrentUserKey(), optimisticUser, false);
+
+    updateUser(optimisticUser)
+      .then((updatedUser) => {
+        // 用服务器返回的最新数据校正缓存
+        mutate(getGetCurrentUserKey(), updatedUser, false);
+      })
+      .catch((error) => {
+        console.error('Failed to update user language:', error);
+        // 回写失败，回滚本地语言和缓存
+        setCurrentLanguage(previousLanguage);
+        mutate(getGetCurrentUserKey(), user, false);
+      });
   };
 
   const handleLogout = () => {

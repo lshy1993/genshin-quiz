@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Chip, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { Exam } from '@/api/dto';
 
@@ -32,7 +32,7 @@ export default function ExamGrid({ exams }: Props) {
   return (
     <>
       {/* Exam 列表 */}
-      <Grid container spacing={3}>
+      <Stack spacing={3}>
         {exams.map((exam) => (
           <Card key={exam.id}>
             <CardContent>
@@ -89,7 +89,7 @@ export default function ExamGrid({ exams }: Props) {
             </CardContent>
           </Card>
         ))}
-      </Grid>
+      </Stack>
     </>
   );
 }

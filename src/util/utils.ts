@@ -173,11 +173,11 @@ export const createVoteSchema = z.object({
   votes_per_option: z.number().int().min(0, '每个选项的最大可投票数不能为负数'),
 });
 
-export function createEmptyVoteForm(): VoteWithOption {
+export function createEmptyVoteForm(languageCode: string): VoteWithOption {
   return {
     public: true,
-    title: { zh: '' },
-    description: { zh: '' },
+    title: { [languageCode]: '' },
+    description: { [languageCode]: '' },
     category: QuestionCategory.character,
     tags: [],
     start_at: new Date(),

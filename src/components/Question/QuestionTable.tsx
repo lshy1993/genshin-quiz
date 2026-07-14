@@ -1,3 +1,4 @@
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import {
   Box,
   LinearProgress,
@@ -64,7 +65,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 10 }}></TableCell>
+            <TableCell align="center" sx={{ width: 10 }}></TableCell>
             <TableCell sx={{ width: 80 }}>分类</TableCell>
             <TableCell sx={{ minWidth: 200 }}>题目内容</TableCell>
             <TableCell align="right" sx={{ width: 60 }}>
@@ -95,16 +96,13 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                 navigate(`/questions/${question.id}`);
               }}
             >
-              <TableCell>
+              <TableCell align="center" sx={{ verticalAlign: 'middle' }}>
                 {question.solved && (
-                  <Typography
-                    sx={{
-                      color: 'success.main',
-                      mr: 1,
-                    }}
-                  >
-                    ✅
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Tooltip title="你已答对此题">
+                      <CheckCircleIcon fontSize="small" color="success" />
+                    </Tooltip>
+                  </Box>
                 )}
               </TableCell>
               <TableCell>

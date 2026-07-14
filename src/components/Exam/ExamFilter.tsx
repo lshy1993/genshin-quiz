@@ -96,7 +96,7 @@ export default function ExamFilter({ examList, searchParams, setSearchParams }: 
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>难度</InputLabel>
           <Select
-            value={searchParams.difficulty}
+            value={searchParams.difficulty ?? ''}
             label="难度"
             onChange={(e) => setSearchParams((prev) => ({ ...prev, difficulty: e.target.value }))}
           >
@@ -112,7 +112,7 @@ export default function ExamFilter({ examList, searchParams, setSearchParams }: 
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>排序</InputLabel>
           <Select
-            value={searchParams.sortBy}
+            value={searchParams.sortBy ?? ExamSortType.DEFAULT}
             label="排序"
             onChange={(e) =>
               setSearchParams((prev) => ({ ...prev, sortBy: e.target.value as ExamSortType }))

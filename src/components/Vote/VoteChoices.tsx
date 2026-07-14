@@ -25,6 +25,7 @@ interface Props {
   voted: VoteSubmissionOption[];
   maxVotes: number;
   votesPerOption: number; // 每个选项最大可投票数
+  votesPerUser: number; // 每个用户最大可投票数
   handleSubmit: (selected: VoteSubmissionOption[]) => void;
 }
 
@@ -33,6 +34,7 @@ export default function VoteChoices({
   voted = [],
   maxVotes,
   votesPerOption,
+  votesPerUser,
   handleSubmit,
 }: Props) {
   const { currentLanguage } = useLanguage();
@@ -112,7 +114,7 @@ export default function VoteChoices({
         <Chip
           label={
             votesPerOption === 0
-              ? '每项无限票'
+              ? `每项限${votesPerUser}票` // 每项无限制，但每个用户总票数有限制
               : votesPerOption === 1
                 ? '每项限1票'
                 : `每项限${votesPerOption}票`
@@ -328,7 +330,7 @@ export default function VoteChoices({
             <Button
               size="small"
               variant="outlined"
-              color="inherit"
+              color="error"
               onClick={() => setConfirmOpen(false)}
             >
               取消

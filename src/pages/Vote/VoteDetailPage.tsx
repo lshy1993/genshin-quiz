@@ -14,7 +14,7 @@ import {
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import type { VoteSubmissionOption } from '@/api/dto';
-import { postVote, useGetVote } from '@/api/genshinQuizAPI';
+import { postLikeVote, postVote, useGetVote } from '@/api/genshinQuizAPI';
 import RandomButton from '@/components/Button/RandomButton';
 import PageContainer from '@/components/PageContainer';
 import VoteChoices from '@/components/Vote/VoteChoices';
@@ -25,7 +25,7 @@ import { useUser } from '@/context/UserContext';
 
 export default function VoteDetailPage() {
   const { currentLanguage } = useLanguage();
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated, user } = useUser();
   const { id } = useParams<{ id: string }>();
   const { data: voteInfo, isLoading, error, mutate } = useGetVote(id ?? '');
 
@@ -57,8 +57,13 @@ export default function VoteDetailPage() {
 
   // 处理点赞
   const handleLike = (likeStatus: 1 | 0 | -1) => {
-    // TODO: 实现点赞 API 调用
-    console.log('Like status:', likeStatus);
+    postLikeVote(voteInfo.id, { like: likeStatus })
+      .then(() => {
+        mutate();
+      })
+      .catch((err) => {
+        console.error('点赞失败:', err);
+      });
   };
 
   return (
@@ -76,13 +81,14 @@ export default function VoteDetailPage() {
         </Tabs>
         <CardContent>
           <Stack spacing={2} divider={<Divider flexItem />}>
-            <VoteMetaHeader voteInfo={voteInfo} />
+            <VoteMetaHeader voteInfo={voteInfo} user={user} />
             {currentTab === 0 && (
               <VoteChoices
                 options={voteInfo.options}
                 voted={voteInfo.voted_options ?? []}
                 maxVotes={voteInfo.votes_per_user}
                 votesPerOption={voteInfo.votes_per_option ?? 1}
+                votesPerUser={voteInfo.votes_per_user}
                 handleSubmit={handleSubmit}
               />
             )}

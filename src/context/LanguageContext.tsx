@@ -49,29 +49,30 @@ export function LanguageProvider({
   const [currentLanguage, setCurrentLanguage] = useState<string>(preferredLanguage);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // 初始化 i18n 语言 - 考虑用户语言变化
+  // 仅在用户资料语言变化时，同步到本地语言状态
   useEffect(() => {
     const newLanguage = getPreferredLanguage(userLanguage);
 
-    // 只有当语言确实改变时才更新
-    if (newLanguage !== currentLanguage) {
-      setCurrentLanguage(newLanguage);
-    }
-
-    // 确保 i18n 初始化
     if (!isInitialized || newLanguage !== i18n.language) {
-      console.log('Initializing i18n with language:', newLanguage);
       i18n
         .changeLanguage(newLanguage)
-        .then(() => setIsInitialized(true))
+        .then(() => {
+          setCurrentLanguage(newLanguage);
+          setIsInitialized(true);
+        })
         .catch(console.error);
     }
-  }, [userLanguage, currentLanguage, isInitialized]);
+  }, [userLanguage, isInitialized]);
 
-  // 包装 setCurrentLanguage 来同步 i18n
+  // 手动切换语言时，立即同步 i18n
   const handleSetCurrentLanguage = (lang: string) => {
     if (allLanguages.includes(lang)) {
-      setCurrentLanguage(lang);
+      i18n
+        .changeLanguage(lang)
+        .then(() => {
+          setCurrentLanguage(lang);
+        })
+        .catch(console.error);
     }
   };
 

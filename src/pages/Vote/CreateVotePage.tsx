@@ -4,13 +4,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import type { VoteWithOption } from '@/api/dto';
 import { postCreateVote } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
+import { useLanguage } from '@/context/LanguageContext';
 import { createEmptyVoteForm, createVoteSchema } from '@/util/utils';
 import CreateVoteBasicInfo from './CreateVoteBasicInfo';
 import CreateVoteOptionInfo from './CreateVoteOptionInfo';
+
 export default function CreateVotePage() {
+  const { currentLanguage } = useLanguage();
   const navigate = useNavigate();
   // 表单状态
-  const [form, setForm] = useState<VoteWithOption>(createEmptyVoteForm());
+  const defaultForm = createEmptyVoteForm(currentLanguage);
+  const [form, setForm] = useState<VoteWithOption>(defaultForm);
   const [loading, setLoading] = useState(false);
   // 已触摸字段集合
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());

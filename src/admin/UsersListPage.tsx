@@ -28,11 +28,11 @@ export default function UsersListPage() {
       </Box>
       <Grid container spacing={3}>
         {userList.map((user) => (
-          <Grid item xs={12} md={6} lg={4} key={user.id}>
+          <Grid key={user.uuid} size={{ xs: 12, md: 6, lg: 4 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" component="h3" gutterBottom>
-                  {user.username}
+                  {user.nickname}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -41,17 +41,17 @@ export default function UsersListPage() {
                     mb: 2,
                   }}
                 >
-                  {user.email}
+                  {user.country}
                 </Typography>
                 <Box sx={{ mb: 2 }}>
                   <Chip
-                    label={`积分: ${user.total_score || 0}`}
+                    label={`积分: ${user.correct_answers || 0}`}
                     color="primary"
                     size="small"
                     sx={{ mr: 1 }}
                   />
                   <Chip
-                    label={`完成: ${user.quizzes_completed || 0}次`}
+                    label={`完成: ${user.total_answers || 0}次`}
                     color="secondary"
                     size="small"
                   />
@@ -63,12 +63,12 @@ export default function UsersListPage() {
                     mb: 2,
                   }}
                 >
-                  注册时间: {new Date(user.created_at).toLocaleDateString()}
+                  注册时间: {user.registered_at.toLocaleDateString()}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Button
                     component={Link}
-                    to={`/users/${user.id}`}
+                    to={`/users/${user.uuid}`}
                     variant="contained"
                     size="small"
                   >
@@ -76,7 +76,7 @@ export default function UsersListPage() {
                   </Button>
                   <Button
                     component={Link}
-                    to={`/users/${user.id}/edit`}
+                    to={`/users/${user.uuid}/edit`}
                     variant="outlined"
                     size="small"
                   >

@@ -10,9 +10,15 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { QuestionOptionType, QuestionType, type QuestionWithAnswer } from '@/api/dto';
+import {
+  type QuestionOption,
+  QuestionOptionType,
+  QuestionType,
+  type QuestionWithAnswer,
+} from '@/api/dto';
 import LanguageTabs from '@/components/LanguageTabs';
 import { useLanguage } from '@/context/LanguageContext';
+import { useStableKey } from '@/hooks/useStableKey';
 import CreateQuestionChoice from './CreateQuestionChoice';
 
 interface Props {
@@ -33,6 +39,9 @@ export default function CreateQuestionChoiceInfo({
   // 默认第一个创建的使用智能语言
   const { currentLanguage } = useLanguage();
   const [currentLang, setCurrentLang] = useState<string>(currentLanguage);
+
+  // 未保存的选项没有 id，且 text 是对象无法直接拼接成唯一 key，用共享的 useStableKey 生成稳定 key。
+  const getOptionKey = useStableKey<QuestionOption>();
 
   const handleQuestionTextChange = (newText: string) => {
     setTouchedField(`question_text.${currentLang}`);
@@ -187,7 +196,7 @@ export default function CreateQuestionChoiceInfo({
       <Stack direction="column" spacing={3}>
         {form.options.map((option, index) => (
           <CreateQuestionChoice
-            key={`${option.id}-${option.text}`}
+            key={getOptionKey(option)}
             index={index}
             questionType={form.question_type}
             optionText={option.text?.[currentLang] || ''}

@@ -60,7 +60,7 @@ export default function HomePage() {
       </Typography>
       <Grid container spacing={3}>
         {featuredExams.map((exam) => (
-          <Grid item xs={12} md={4} key={exam.id}>
+          <Grid key={exam.id} size={{ xs: 12, md: 4 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" component="h3" gutterBottom>

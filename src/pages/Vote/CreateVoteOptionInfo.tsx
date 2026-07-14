@@ -3,7 +3,7 @@ import { Button, Card, CardContent, Stack, TextField, Typography } from '@mui/ma
 import { useState } from 'react';
 import type { VoteOption, VoteWithOption } from '@/api/dto';
 import LanguageTabs from '@/components/LanguageTabs';
-import { useLanguage } from '@/context/LanguageContext';
+import { useStableKey } from '@/hooks/useStableKey';
 import CreateVoteOption from './CreateVoteOption';
 
 interface Props {
@@ -14,11 +14,15 @@ interface Props {
 }
 
 export default function CreateVoteOptionInfo({ errors, form, setForm, setTouchedField }: Props) {
-  const { currentLanguage } = useLanguage();
-  const [selectedLang, setSelectedLang] = useState<string>(currentLanguage);
+  // 表单里实际存在的语言列表
+  const availableLanguages = Object.keys(form.title);
+  const [selectedLang, setSelectedLang] = useState<string>(availableLanguages[0]);
+
+  // 未保存的选项没有 id，且 text 是对象无法直接拼接成唯一 key，用共享的 useStableKey 生成稳定 key。
+  const getOptionKey = useStableKey<VoteOption>();
 
   const addOption = () => {
-    const newOption: VoteOption = { type: 'text', text: { [currentLanguage]: '' } };
+    const newOption: VoteOption = { type: 'text', text: { [selectedLang]: '' } };
     setForm({ ...form, options: [...form.options, newOption] });
   };
 
@@ -81,7 +85,7 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
       <LanguageTabs
         currentLang={selectedLang}
         handleLanguageChange={handleLanguageChange}
-        selectedLanguages={Object.keys(form.title)}
+        selectedLanguages={availableLanguages}
         handleDeleteLanguage={handleDeleteLanguage}
         handleAddLanguage={handleAddLanguage}
       />
@@ -92,12 +96,12 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
             fullWidth
             label="投票标题"
             size="small"
-            value={form.title[currentLanguage] || ''}
+            value={form.title[selectedLang] || ''}
             onChange={(e) => {
               setTouchedField('title');
               setForm((prev) => ({
                 ...prev,
-                title: { ...prev.title, [currentLanguage]: e.target.value },
+                title: { ...prev.title, [selectedLang]: e.target.value },
               }));
             }}
             error={!!errors?.title}
@@ -111,12 +115,12 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
             rows={3}
             size="small"
             label="投票描述"
-            value={form.description?.[currentLanguage] || ''}
+            value={form.description?.[selectedLang] || ''}
             onChange={(e) => {
               setTouchedField('description');
               setForm((prev) => ({
                 ...prev,
-                description: { ...prev.description, [currentLanguage]: e.target.value },
+                description: { ...prev.description, [selectedLang]: e.target.value },
               }));
             }}
             error={!!errors?.description}
@@ -128,12 +132,12 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
           </Typography>
           {form.options.map((option, index) => (
             <CreateVoteOption
-              key={`${option.id}-${option.text}`}
+              key={getOptionKey(option)}
               index={index}
-              optionText={option.text?.[currentLanguage] ?? ''}
+              optionText={option.text?.[selectedLang] ?? ''}
               updateOption={(i, str) => {
                 const newOptions = [...form.options];
-                newOptions[i].text = { ...newOptions[i].text, [currentLanguage]: str };
+                newOptions[i].text = { ...newOptions[i].text, [selectedLang]: str };
                 setForm({ ...form, options: newOptions });
               }}
               removeOption={(i) => {
@@ -141,7 +145,7 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
                 setForm({ ...form, options: newOptions });
               }}
               showDeleteIcon={form.options.length > 1}
-              error={errors[`options.${index}.text.${currentLanguage}`]}
+              error={errors[`options.${index}.text.${selectedLang}`]}
             />
           ))}
           <Button variant="outlined" startIcon={<AddIcon />} onClick={addOption}>
