@@ -7,13 +7,13 @@
  */
 
 /**
- * 点赞状态：-1踩, 0未操作, 1赞
+ * 点赞状态：1=点赞，0=取消操作，-1=点踩
  */
-export type VoteLikeStatus = (typeof VoteLikeStatus)[keyof typeof VoteLikeStatus];
+export type PostLikeVoteBodyLike = (typeof PostLikeVoteBodyLike)[keyof typeof PostLikeVoteBodyLike];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const VoteLikeStatus = {
-  NUMBER_MINUS_1: -1,
-  NUMBER_0: 0,
+export const PostLikeVoteBodyLike = {
   NUMBER_1: 1,
+  NUMBER_0: 0,
+  NUMBER_MINUS_1: -1,
 } as const;

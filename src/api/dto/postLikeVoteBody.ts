@@ -5,9 +5,9 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { PostLikeQuestionBodyLike } from './postLikeQuestionBodyLike';
+import type { PostLikeVoteBodyLike } from './postLikeVoteBodyLike';
 
-export type PostLikeQuestionBody = {
+export type PostLikeVoteBody = {
   /** 点赞状态：1=点赞，0=取消操作，-1=点踩 */
-  like: PostLikeQuestionBodyLike;
+  like: PostLikeVoteBodyLike;
 };
