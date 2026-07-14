@@ -1,4 +1,4 @@
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutlined';
 import { Button } from '@mui/material';
 import { formatNumberShort } from '@/util/utils';
 

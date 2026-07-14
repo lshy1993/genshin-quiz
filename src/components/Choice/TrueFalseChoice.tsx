@@ -12,7 +12,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export default function renderTrueFalse({
+export default function TrueFalseChoice({
   options,
   solved,
   selected,

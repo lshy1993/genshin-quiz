@@ -187,7 +187,7 @@ export default function CreateQuestionChoiceInfo({
       <Stack direction="column" spacing={3}>
         {form.options.map((option, index) => (
           <CreateQuestionChoice
-            key={`${index}-${option.text}`}
+            key={`${option.id}-${option.text}`}
             index={index}
             questionType={form.question_type}
             optionText={option.text?.[currentLang] || ''}

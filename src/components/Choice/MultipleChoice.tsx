@@ -19,7 +19,7 @@ interface Props {
   disabled: boolean;
 }
 
-export default function renderMultiple({
+export default function MultipleChoice({
   options,
   solved,
   selected,
@@ -28,6 +28,12 @@ export default function renderMultiple({
 }: Props) {
   const { currentLanguage } = useLanguage();
   const maxCount = Math.max(...options.map((opt) => opt.count ?? 0), 1);
+
+  const handleCheckBoxChange =
+    (opt: QuestionOption) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.checked && opt.id) setSelected([...selected, opt.id]);
+      else setSelected(selected.filter((v) => v !== opt.id));
+    };
 
   const renderOption = (opt: QuestionOption) => {
     if (!opt.id) return null;
@@ -38,10 +44,7 @@ export default function renderMultiple({
           control={
             <Checkbox
               checked={selected.includes(opt.id)}
-              onChange={(e) => {
-                if (e.target.checked && opt.id) setSelected([...selected, opt.id]);
-                else setSelected(selected.filter((v) => v !== opt.id));
-              }}
+              onChange={handleCheckBoxChange(opt)}
               disabled={disabled}
             />
           }

@@ -12,10 +12,10 @@ import {
   MenuItem,
   Paper,
   Select,
+  type SelectChangeEvent,
   Stack,
   Typography,
 } from '@mui/material';
-import type { SelectChangeEvent } from '@mui/material/Select';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';

@@ -16,7 +16,7 @@ export default function CreateVoteOption({
   updateOption,
   removeOption,
   showDeleteIcon,
-  error,
+  // error,
 }: Props) {
   return (
     <Stack direction="row" spacing={2}>
