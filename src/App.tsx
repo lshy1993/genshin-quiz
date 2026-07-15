@@ -16,6 +16,7 @@ import CreateQuestionPage from './pages/Question/CreateQuestionPage';
 import QuestionDetailPage from './pages/Question/QuestionDetailPage';
 import QuestionListPage from './pages/Question/QuestionListPage';
 import RankPage from './pages/Rank/RankPage';
+import UserProfilePage from './pages/User/UserProfilePage';
 import CreateVotePage from './pages/Vote/CreateVotePage';
 import VoteDetailPage from './pages/Vote/VoteDetailPage';
 import VoteListPage from './pages/Vote/VoteListPage';
@@ -85,6 +86,7 @@ function App() {
             <Route path="/exams" element={<ExamListPage />} />
             <Route path="/exams/:id" element={<ExamDetailPage />} />
             <Route path="/rank" element={<RankPage />} />
+            <Route path="/users/:id" element={<UserProfilePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

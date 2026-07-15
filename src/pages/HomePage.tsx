@@ -18,11 +18,13 @@ import {
   Typography,
 } from '@mui/material';
 import { t } from 'i18next';
-import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { Exam } from '../api/dto';
 import { useGetExams, useGetQuestions, useGetVotes } from '../api/genshinQuizAPI';
 import CategoryChip from '../components/CategoryChip';
+import ContentCardGridSection from '../components/ContentCardGridSection';
+import QuestionPreviewCard from '../components/Question/QuestionPreviewCard';
+import VotePreviewCard from '../components/Vote/VotePreviewCard';
 import { useLanguage } from '../context/LanguageContext';
 import { getDifficultyColor, getDifficultyLabel } from '../util/utils';
 
@@ -47,31 +49,6 @@ const quickLinks = [
     icon: <QuizIcon fontSize="large" color="primary" />,
   },
 ];
-
-// 内容区块的统一标题：图标 + 标题 + “查看更多”
-function SectionHeader({
-  icon,
-  title,
-  viewAllTo,
-}: {
-  icon: ReactNode;
-  title: string;
-  viewAllTo: string;
-}) {
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-        {icon}
-        <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold' }}>
-          {title}
-        </Typography>
-      </Stack>
-      <Button component={Link} to={viewAllTo} size="small" endIcon={<ArrowForwardIcon />}>
-        查看更多
-      </Button>
-    </Box>
-  );
-}
 
 export default function HomePage() {
   const { currentLanguage } = useLanguage();
@@ -123,10 +100,6 @@ export default function HomePage() {
   const latestQuestions = questionRes?.questions ?? [];
   const latestVotes = voteRes?.votes ?? [];
   const popularVotes = popularVoteRes?.votes ?? [];
-
-  const getVoteTitle = (title: Record<string, string>) => {
-    return title[currentLanguage] || title[Object.keys(title)[0]] || '';
-  };
 
   return (
     <Stack spacing={6}>
@@ -191,180 +164,107 @@ export default function HomePage() {
 
       {/* 热门测验 */}
       {popularExams.length > 0 && (
-        <Box>
-          <SectionHeader
-            icon={<WhatshotIcon color="error" />}
-            title="热门测验"
-            viewAllTo="/exams"
-          />
-          <Grid container spacing={3}>
-            {popularExams.map((exam) => (
-              <Grid key={exam.id} size={{ xs: 12, md: 4 }}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" component="h3" gutterBottom>
-                      {exam.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: 'text.secondary',
-                        mb: 2,
-                      }}
-                    >
-                      {exam.description}
-                    </Typography>
-                    <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
-                      {exam.categories?.map((cat) => (
-                        <CategoryChip key={cat} category={cat} />
-                      ))}
-                      <Chip
-                        label={getDifficultyLabel(exam.difficulty)}
-                        size="small"
-                        color={getDifficultyColor(exam.difficulty)}
-                      />
-                    </Stack>
-                  </CardContent>
-                  <Box sx={{ p: 2, pt: 0 }}>
-                    <Button
-                      component={Link}
-                      to={`/exams/${exam.id}`}
-                      variant="contained"
-                      size="small"
-                      fullWidth
-                    >
-                      开始答题
-                    </Button>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <ContentCardGridSection
+          icon={<WhatshotIcon color="error" />}
+          title="热门测验"
+          action={
+            <Button component={Link} to="/exams" size="small" endIcon={<ArrowForwardIcon />}>
+              查看更多
+            </Button>
+          }
+          items={popularExams}
+          getKey={(exam) => exam.id}
+          renderCard={(exam) => (
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" component="h3" gutterBottom>
+                  {exam.title}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'text.secondary',
+                    mb: 2,
+                  }}
+                >
+                  {exam.description}
+                </Typography>
+                <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+                  {exam.categories?.map((cat) => (
+                    <CategoryChip key={cat} category={cat} />
+                  ))}
+                  <Chip
+                    label={getDifficultyLabel(exam.difficulty)}
+                    size="small"
+                    color={getDifficultyColor(exam.difficulty)}
+                  />
+                </Stack>
+              </CardContent>
+              <Box sx={{ p: 2, pt: 0 }}>
+                <Button
+                  component={Link}
+                  to={`/exams/${exam.id}`}
+                  variant="contained"
+                  size="small"
+                  fullWidth
+                >
+                  开始答题
+                </Button>
+              </Box>
+            </Card>
+          )}
+        />
       )}
       {/* 热门投票 */}
       {popularVotes.length > 0 && (
-        <Box>
-          <SectionHeader
-            icon={<WhatshotIcon color="error" />}
-            title="热门投票"
-            viewAllTo="/votes"
-          />
-          <Grid container spacing={3}>
-            {popularVotes.map((vote) => (
-              <Grid key={vote.id} size={{ xs: 12, md: 4 }}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" component="h3" gutterBottom>
-                      {getVoteTitle(vote.title)}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: 'text.secondary',
-                        mb: 2,
-                      }}
-                    >
-                      {vote.description ? getVoteTitle(vote.description) : ''}
-                    </Typography>
-                  </CardContent>
-                  <Box sx={{ p: 2, pt: 0 }}>
-                    <Button
-                      component={Link}
-                      to={`/votes/${vote.id}`}
-                      variant="contained"
-                      size="small"
-                      fullWidth
-                    >
-                      参与投票
-                    </Button>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <ContentCardGridSection
+          icon={<WhatshotIcon color="error" />}
+          title="热门投票"
+          action={
+            <Button component={Link} to="/votes" size="small" endIcon={<ArrowForwardIcon />}>
+              查看更多
+            </Button>
+          }
+          items={popularVotes}
+          getKey={(vote) => vote.id}
+          renderCard={(vote) => (
+            <VotePreviewCard vote={vote} language={currentLanguage} actionLabel="参与投票" />
+          )}
+        />
       )}
       {/* 最新题目 */}
       {latestQuestions.length > 0 && (
-        <Box>
-          <SectionHeader
-            icon={<UpdateIcon color="info" />}
-            title="最新题目"
-            viewAllTo="/questions"
-          />
-          <Grid container spacing={3}>
-            {latestQuestions.map((question) => (
-              <Grid key={question.id} size={{ xs: 12, md: 4 }}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" component="h3" gutterBottom>
-                      {question.question_text}
-                    </Typography>
-                    <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
-                      <CategoryChip category={question.category} />
-                      <Chip
-                        label={getDifficultyLabel(question.difficulty)}
-                        size="small"
-                        color={getDifficultyColor(question.difficulty)}
-                      />
-                    </Stack>
-                  </CardContent>
-                  <Box sx={{ p: 2, pt: 0 }}>
-                    <Button
-                      component={Link}
-                      to={`/questions/${question.id}`}
-                      variant="contained"
-                      size="small"
-                      fullWidth
-                    >
-                      查看题目
-                    </Button>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <ContentCardGridSection
+          icon={<UpdateIcon color="info" />}
+          title="最新题目"
+          action={
+            <Button component={Link} to="/questions" size="small" endIcon={<ArrowForwardIcon />}>
+              查看更多
+            </Button>
+          }
+          items={latestQuestions}
+          getKey={(question) => question.id}
+          renderCard={(question) => (
+            <QuestionPreviewCard question={question} actionLabel="查看题目" />
+          )}
+        />
       )}
       {/* 最新投票 */}
       {latestVotes.length > 0 && (
-        <Box>
-          <SectionHeader icon={<UpdateIcon color="info" />} title="最新投票" viewAllTo="/votes" />
-          <Grid container spacing={3}>
-            {latestVotes.map((vote) => (
-              <Grid key={vote.id} size={{ xs: 12, md: 4 }}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" component="h3" gutterBottom>
-                      {getVoteTitle(vote.title)}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: 'text.secondary',
-                        mb: 2,
-                      }}
-                    >
-                      {vote.description ? getVoteTitle(vote.description) : ''}
-                    </Typography>
-                  </CardContent>
-                  <Box sx={{ p: 2, pt: 0 }}>
-                    <Button
-                      component={Link}
-                      to={`/votes/${vote.id}`}
-                      variant="contained"
-                      size="small"
-                      fullWidth
-                    >
-                      参与投票
-                    </Button>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <ContentCardGridSection
+          icon={<UpdateIcon color="info" />}
+          title="最新投票"
+          action={
+            <Button component={Link} to="/votes" size="small" endIcon={<ArrowForwardIcon />}>
+              查看更多
+            </Button>
+          }
+          items={latestVotes}
+          getKey={(vote) => vote.id}
+          renderCard={(vote) => (
+            <VotePreviewCard vote={vote} language={currentLanguage} actionLabel="参与投票" />
+          )}
+        />
       )}
     </Stack>
   );

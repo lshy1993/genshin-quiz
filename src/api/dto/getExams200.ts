@@ -8,6 +8,6 @@
 import type { Exam } from './exam';
 
 export type GetExams200 = {
-  exams?: Exam[];
-  total?: number;
+  exams: Exam[];
+  total: number;
 };

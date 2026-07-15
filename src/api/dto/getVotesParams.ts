@@ -20,6 +20,10 @@ export type GetVotesParams = {
   type?: GetVotesType;
   query?: string;
   language?: string[];
+  /**
+   * 只返回指定用户创建的投票
+   */
+  created_by?: string;
   sortBy?: string;
   sortDesc?: boolean;
 };

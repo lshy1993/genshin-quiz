@@ -21,6 +21,10 @@ export type GetExamsParams = {
   category?: QuestionCategory;
   difficulty?: QuestionDifficulty;
   query?: string;
+  /**
+   * 只返回指定用户创建的测验
+   */
+  created_by?: string;
   sortBy?: string;
   sortDesc?: boolean;
 };

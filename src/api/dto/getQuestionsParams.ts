@@ -22,6 +22,10 @@ export type GetQuestionsParams = {
   difficulty?: QuestionDifficulty[];
   query?: string;
   language?: string[];
+  /**
+   * 只返回指定用户创建的题目
+   */
+  created_by?: string;
   sortBy?: string;
   sortDesc?: boolean;
 };

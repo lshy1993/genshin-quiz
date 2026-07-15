@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { User } from '@/api/dto';
 import { useGetUsers } from '@/api/genshinQuizAPI';
 import BannerBox from '@/components/BannerBox';
@@ -39,12 +40,14 @@ function RankColumn({
   caption,
   entries,
   currentUserId,
+  onEntryClick,
 }: {
   icon: ReactNode;
   title: string;
   caption?: string;
   entries: RankEntry[];
   currentUserId?: string;
+  onEntryClick: (entry: RankEntry) => void;
 }) {
   return (
     <Card sx={{ height: '100%' }}>
@@ -69,13 +72,19 @@ function RankColumn({
             {entries.map((entry, index) => (
               <Box
                 key={entry.user.uuid}
+                onClick={() => onEntryClick(entry)}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: 1.5,
                   p: 1,
                   borderRadius: 1.5,
+                  cursor: 'pointer',
                   bgcolor: entry.user.uuid === currentUserId ? 'action.selected' : 'transparent',
+                  transition: 'background-color 0.15s ease',
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
                 }}
               >
                 <Box
@@ -118,11 +127,16 @@ function RankColumn({
 
 export default function RankPage() {
   const { user: currentUser } = useUser();
+  const navigate = useNavigate();
   // 拉取用户列表并定时刷新，实现“实时”排名效果
   const { data, isLoading, error } = useGetUsers(
     { limit: 100, offset: 0 },
     { swr: { refreshInterval: REFRESH_INTERVAL_MS, revalidateOnFocus: true } },
   );
+
+  const handleEntryClick = (entry: RankEntry) => {
+    navigate(`/users/${entry.user.uuid}`);
+  };
 
   if (isLoading) {
     return <CircularProgress />;
@@ -172,6 +186,7 @@ export default function RankPage() {
             caption="按置信区间加权，答题数越多越可信"
             entries={accuracyEntries}
             currentUserId={currentUser?.uuid}
+            onEntryClick={handleEntryClick}
           />
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
@@ -180,6 +195,7 @@ export default function RankPage() {
             title="投票达人榜"
             entries={voteEntries}
             currentUserId={currentUser?.uuid}
+            onEntryClick={handleEntryClick}
           />
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
@@ -189,6 +205,7 @@ export default function RankPage() {
             caption="暂不支持按点赞率排序，当前按创建数量排序"
             entries={creatorEntries}
             currentUserId={currentUser?.uuid}
+            onEntryClick={handleEntryClick}
           />
         </Grid>
       </Grid>
