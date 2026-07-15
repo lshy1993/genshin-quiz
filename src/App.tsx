@@ -15,6 +15,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import CreateQuestionPage from './pages/Question/CreateQuestionPage';
 import QuestionDetailPage from './pages/Question/QuestionDetailPage';
 import QuestionListPage from './pages/Question/QuestionListPage';
+import RankPage from './pages/Rank/RankPage';
 import CreateVotePage from './pages/Vote/CreateVotePage';
 import VoteDetailPage from './pages/Vote/VoteDetailPage';
 import VoteListPage from './pages/Vote/VoteListPage';
@@ -83,6 +84,7 @@ function App() {
             <Route path="/votes/:id" element={<VoteDetailPage />} />
             <Route path="/exams" element={<ExamListPage />} />
             <Route path="/exams/:id" element={<ExamDetailPage />} />
+            <Route path="/rank" element={<RankPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

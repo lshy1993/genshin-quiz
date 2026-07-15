@@ -25,6 +25,23 @@ export function getCorrectRate(q: Question, fixed: number = 1): number {
   return parseFloat((rate * 100).toFixed(fixed));
 }
 
+/**
+ * 计算二项比例的 Wilson 置信区间下界（95% 置信度）。
+ *
+ * 用于给"正确率"这类比例排名时，兼顾样本量：同样的正确率，回答次数越多，
+ * 分数越接近真实正确率（越可信）；回答次数很少时分数会被适当压低，
+ * 避免"1题全对=100%"排到"1000题对950题=95%"前面。
+ */
+export function getWilsonScoreLowerBound(successes: number, total: number): number {
+  if (total <= 0) return 0;
+  const z = 1.96; // 95% 置信度
+  const p = successes / total;
+  const denominator = 1 + (z * z) / total;
+  const center = p + (z * z) / (2 * total);
+  const margin = z * Math.sqrt((p * (1 - p)) / total + (z * z) / (4 * total * total));
+  return (center - margin) / denominator;
+}
+
 export function getQuestionTypeLabel(type: string): string {
   return t(`question.type.${type}`);
 }

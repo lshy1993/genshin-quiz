@@ -17,6 +17,8 @@ export interface User {
   correct_answers: number;
   questions_created: number;
   votes: number;
+  /** 该用户创建的所有题目获得的点赞总数，用于创作达人榜按点赞率排序 */
+  likes_received?: number;
   registered_at: Date;
   last_login_at: Date;
 }

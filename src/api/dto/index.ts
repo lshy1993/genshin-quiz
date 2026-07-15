@@ -30,6 +30,7 @@ export * from './getUsers200';
 export * from './getUsers200.ts';
 export * from './getUsersParams';
 export * from './getUsersParams.ts';
+export * from './getUsersSortBy';
 export * from './getVotes200';
 export * from './getVotes200.ts';
 export * from './getVotesParams';

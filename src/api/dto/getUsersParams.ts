@@ -5,6 +5,7 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+import type { GetUsersSortBy } from './getUsersSortBy';
 
 export type GetUsersParams = {
   ids?: string[];
@@ -17,4 +18,10 @@ export type GetUsersParams = {
    * @minimum 0
    */
   offset?: number;
+  /**
+ * 排行榜排序依据。accuracy 按 Wilson 95% 置信区间下界排序（兼顾正确率与答题量， 公式见 User.total_answers/correct_answers 说明，total_answers=0 的用户排除在外）； votes/questions_created/likes_received 均按对应字段数值直接排序。
+
+ */
+  sortBy?: GetUsersSortBy;
+  sortDesc?: boolean;
 };

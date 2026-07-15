@@ -27,14 +27,14 @@
     "title": "Genshin Quiz",
     "label": {},
     "btn_label": {
-      "home": "Home",
-      "questions": "Questions",
-      "votes": "Votes",
-      "exams": "Exams",
-      "rank": "Rank",
-      "about": "About",
-      "login_signup": "Login/Sign Up",
-      "logout": "Logout"
+      "home": "主页",
+      "questions": "问题",
+      "votes": "投票",
+      "exams": "测验",
+      "rank": "排行榜",
+      "about": "关于",
+      "login_signup": "登录/注册",
+      "logout": "登出"
     }
   },
   "home": {},
