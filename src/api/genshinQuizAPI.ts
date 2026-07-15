@@ -27,6 +27,7 @@ import type {
   MySubmission,
   NotFoundResponse,
   PostForgotPasswordBody,
+  PostLikeExamBody,
   PostLikeQuestionBody,
   PostLikeVoteBody,
   PostLoginUserBody,
@@ -1156,6 +1157,66 @@ export const useDeleteExam = <
 
   const swrKey = swrOptions?.swrKey ?? getDeleteExamMutationKey(id);
   const swrFn = getDeleteExamMutationFetcher(id);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary 点赞测验
+ */
+export const postLikeExam = (id: string, postLikeExamBody: PostLikeExamBody) => {
+  return Fetcher<void>({
+    url: `/exams/${id}/like`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: postLikeExamBody,
+  });
+};
+
+export const getPostLikeExamMutationFetcher = (id: string) => {
+  return (_: Key, { arg }: { arg: PostLikeExamBody }) => {
+    return postLikeExam(id, arg);
+  };
+};
+export const getPostLikeExamMutationKey = (id: string) => [`/exams/${id}/like`] as const;
+
+export type PostLikeExamMutationResult = NonNullable<Awaited<ReturnType<typeof postLikeExam>>>;
+export type PostLikeExamMutationError =
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | NotFoundResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary 点赞测验
+ */
+export const usePostLikeExam = <
+  TError =
+    | BadRequestResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | InternalServerErrorResponse,
+>(
+  id: string,
+  options?: {
+    swr?: SWRMutationConfiguration<
+      Awaited<ReturnType<typeof postLikeExam>>,
+      TError,
+      Key,
+      PostLikeExamBody,
+      Awaited<ReturnType<typeof postLikeExam>>
+    > & { swrKey?: string };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostLikeExamMutationKey(id);
+  const swrFn = getPostLikeExamMutationFetcher(id);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 

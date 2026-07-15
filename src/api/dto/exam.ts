@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
+import type { ExamLikeStatus } from './examLikeStatus';
 import type { ExamQuestionsItem } from './examQuestionsItem';
 import type { QuestionCategory } from './questionCategory';
 import type { QuestionDifficulty } from './questionDifficulty';
@@ -23,4 +24,8 @@ export interface Exam {
   created_by: string;
   created_at: Date;
   updated_at: Date;
+  /** 点赞数 */
+  likes?: number;
+  /** 点赞状态：-1踩, 0未操作, 1赞 */
+  likeStatus?: ExamLikeStatus;
 }
