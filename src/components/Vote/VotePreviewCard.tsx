@@ -1,24 +1,16 @@
-import HowToVoteIcon from '@mui/icons-material/HowToVote';
-import { Box, Button, Card, CardActionArea, CardContent, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { Vote } from '@/api/dto';
-import { formatNumberShort } from '@/util/utils';
+import ExpiredTimeChip from '../Chip/ExpiredTimeChip';
+import LikesChip from '../Chip/LikesChip';
+import UsersChip from '../Chip/UsersChip';
+import VotesChip from '../Chip/VotesChip';
 
 interface VotePreviewCardProps {
   vote: Vote;
   language: string;
   linkTo?: string;
   actionLabel?: string;
-  showDescription?: boolean;
-  showStats?: boolean;
-  titleVariant?: 'h6' | 'body1';
-  cardVariant?: 'elevation' | 'outlined';
-  fullHeight?: boolean;
-}
-
-function getLocalizedText(language: string, text?: Record<string, string>) {
-  if (!text) return '';
-  return text[language] || text[Object.keys(text)[0]] || '';
 }
 
 export default function VotePreviewCard({
@@ -26,59 +18,47 @@ export default function VotePreviewCard({
   language,
   linkTo,
   actionLabel,
-  showDescription = true,
-  showStats = false,
-  titleVariant = 'h6',
-  cardVariant = 'elevation',
-  fullHeight = true,
 }: VotePreviewCardProps) {
   const targetTo = linkTo ?? `/votes/${vote.id}`;
 
   return (
     <Card
-      variant={cardVariant}
-      sx={fullHeight ? { height: '100%', display: 'flex', flexDirection: 'column' } : undefined}
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'background-color 0.2s ease-in-out',
+        '&:hover': {
+          backgroundColor: 'action.hover',
+        },
+      }}
     >
-      <CardActionArea component={Link} to={targetTo} sx={{ flexGrow: 1 }}>
-        <CardContent>
-          <Typography variant={titleVariant} component="h3" gutterBottom>
-            {getLocalizedText(language, vote.title)}
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexGrow: 1 }}>
+        <Box>
+          <Typography>{vote.title[language]}</Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
+            {vote.description?.[language]}
           </Typography>
-          {showDescription && (
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'text.secondary',
-                mb: 2,
-              }}
-            >
-              {vote.description ? getLocalizedText(language, vote.description) : ''}
-            </Typography>
-          )}
-
-          {showStats && (
-            <Stack direction="row" spacing={2}>
-              <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
-                <HowToVoteIcon fontSize="small" sx={{ color: 'text.secondary' }} />
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  {formatNumberShort(vote.total_votes ?? 0)} 票
-                </Typography>
-              </Stack>
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                {formatNumberShort(vote.participants ?? 0)} 人参与
-              </Typography>
-            </Stack>
-          )}
-        </CardContent>
-      </CardActionArea>
-
-      {actionLabel && (
-        <Box sx={{ p: 2, pt: 0 }}>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+            <VotesChip votes={vote.total_votes ?? 0} />
+            <UsersChip participants={vote.participants ?? 0} />
+            <LikesChip likes={vote.likes ?? 0} />
+          </Stack>
+          <ExpiredTimeChip start={vote.start_at} end={vote.expire_at} />
+        </Box>
+        {actionLabel && (
           <Button component={Link} to={targetTo} variant="contained" size="small" fullWidth>
             {actionLabel}
           </Button>
-        </Box>
-      )}
+        )}
+      </CardContent>
     </Card>
   );
 }

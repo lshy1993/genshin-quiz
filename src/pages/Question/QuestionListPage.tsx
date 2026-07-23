@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import type { GetQuestionsParams } from '@/api/dto';
 import { useGetQuestions } from '@/api/genshinQuizAPI';
 import BannerBox from '@/components/BannerBox';
-import FloatingAddButton from '@/components/FloatingAddButton';
+import FloatingAddButton from '@/components/Button/FloatingAddButton';
 import PageContainer from '@/components/PageContainer';
 import QuestionFilter from '@/components/Question/QuestionFilter';
 import QuestionTable from '@/components/Question/QuestionTable';

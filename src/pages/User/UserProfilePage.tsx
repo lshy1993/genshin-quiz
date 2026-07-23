@@ -106,6 +106,18 @@ export default function UserProfilePage() {
         </CardContent>
       </Card>
 
+      {/* 创建的投票 */}
+      <ContentCardGridSection
+        icon={<PollIcon color="secondary" />}
+        title="创建的投票"
+        items={createdVotes}
+        emptyText="还没有创建过投票"
+        getKey={(vote) => vote.id}
+        gridSize={{ xs: 12, md: 6 }}
+        spacing={2}
+        renderCard={(vote) => <VotePreviewCard vote={vote} language={currentLanguage} />}
+      />
+
       {/* 创建的题目 */}
       <ContentCardGridSection
         icon={<QuizIcon color="primary" />}
@@ -119,28 +131,6 @@ export default function UserProfilePage() {
           <QuestionPreviewCard
             question={question}
             showLikes
-            titleVariant="body1"
-            cardVariant="outlined"
-            fullHeight={false}
-          />
-        )}
-      />
-
-      {/* 创建的投票 */}
-      <ContentCardGridSection
-        icon={<PollIcon color="secondary" />}
-        title="创建的投票"
-        items={createdVotes}
-        emptyText="还没有创建过投票"
-        getKey={(vote) => vote.id}
-        gridSize={{ xs: 12, md: 6 }}
-        spacing={2}
-        renderCard={(vote) => (
-          <VotePreviewCard
-            vote={vote}
-            language={currentLanguage}
-            showDescription={false}
-            showStats
             titleVariant="body1"
             cardVariant="outlined"
             fullHeight={false}

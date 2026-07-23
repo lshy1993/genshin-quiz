@@ -1,4 +1,5 @@
 import { t } from 'i18next';
+import { DateTime } from 'luxon';
 import z from 'zod';
 import {
   type Question,
@@ -23,6 +24,47 @@ export function getCorrectRate(q: Question, fixed: number = 1): number {
   if (q.answer_count === 0) return 0;
   const rate = q.correct_count / q.answer_count;
   return parseFloat((rate * 100).toFixed(fixed));
+}
+
+export function getTimeStatusText(start: Date, end?: Date) {
+  if (!end) return '无限期';
+  const now = DateTime.now();
+  const startDt = DateTime.fromJSDate(start);
+
+  if (now < startDt) return '未开始';
+  return getCountdownText(end);
+}
+
+export function getCountdownText(expireAt: Date | undefined): string {
+  if (!expireAt) {
+    return '-';
+  }
+
+  const now = Date.now();
+  const diffMs = expireAt.getTime() - now;
+  if (diffMs <= 0) {
+    return '已结束';
+  }
+
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (days > 0) {
+    return `${days}天${hours}小时`;
+  }
+
+  if (hours > 0) {
+    return `${hours}小时${minutes}分钟`;
+  }
+
+  if (minutes > 0) {
+    return `${minutes}分钟${seconds}秒`;
+  }
+
+  return `${seconds}秒`;
 }
 
 /**

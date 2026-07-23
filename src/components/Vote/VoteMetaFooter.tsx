@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import type { Vote } from '@/api/dto';
 import AuthorLink from '@/components/AuthorLink';
-import LikeButtons from '@/components/LikeButtons';
+import LikeButtons from '@/components/Button/LikeButtons';
 
 interface Props {
   voteInfo: Vote;

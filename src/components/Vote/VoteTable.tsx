@@ -12,9 +12,10 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { Vote } from '@/api/dto';
-import CategoryChip from '@/components/CategoryChip';
+import CategoryChip from '@/components/Chip/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
+import { getCountdownText } from '@/util/utils';
 
 interface VoteTableProps {
   votes: Vote[];
@@ -52,18 +53,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
 
   const getRemainingTime = (expireDate: Date | undefined) => {
     if (!expireDate) return '永久有效';
-    const now = new Date();
-    const diff = expireDate.getTime() - now.getTime();
-
-    if (diff < 0) return '已结束';
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-    if (days > 0) return `剩余${days}天${hours}小时`;
-    if (hours > 0) return `剩余${hours}小时${minutes}分钟`;
-    return `剩余${minutes}分钟`;
+    return `剩余${getCountdownText(expireDate)}`;
   };
 
   const getStatusColor = (vote: Vote) => {

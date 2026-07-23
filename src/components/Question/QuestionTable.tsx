@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { Question } from '@/api/dto';
-import CategoryChip from '@/components/CategoryChip';
+import CategoryChip from '@/components/Chip/CategoryChip';
 import {
   formatNumberShort,
   getCorrectRate,

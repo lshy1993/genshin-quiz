@@ -1,50 +1,40 @@
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import {
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  Chip,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { Question } from '@/api/dto';
-import CategoryChip from '@/components/CategoryChip';
-import { formatNumberShort, getDifficultyColor, getDifficultyLabel } from '@/util/utils';
+import CategoryChip from '@/components/Chip/CategoryChip';
+import { getDifficultyColor, getDifficultyLabel } from '@/util/utils';
+import CorrectChip from '../Chip/CorrectChip';
+import LikesChip from '../Chip/LikesChip';
+import UsersChip from '../Chip/UsersChip';
 
 interface QuestionPreviewCardProps {
   question: Question;
   linkTo?: string;
   actionLabel?: string;
-  showLikes?: boolean;
-  titleVariant?: 'h6' | 'body1';
-  cardVariant?: 'elevation' | 'outlined';
-  fullHeight?: boolean;
 }
 
 export default function QuestionPreviewCard({
   question,
   linkTo,
   actionLabel,
-  showLikes = false,
-  titleVariant = 'h6',
-  cardVariant = 'elevation',
-  fullHeight = true,
 }: QuestionPreviewCardProps) {
   const targetTo = linkTo ?? `/questions/${question.id}`;
 
   return (
     <Card
-      variant={cardVariant}
-      sx={fullHeight ? { height: '100%', display: 'flex', flexDirection: 'column' } : undefined}
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'background-color 0.2s ease-in-out',
+        '&:hover': {
+          backgroundColor: 'action.hover',
+        },
+      }}
     >
-      <CardActionArea component={Link} to={targetTo} sx={{ flexGrow: 1 }}>
-        <CardContent>
-          <Typography variant={titleVariant} component="h3" gutterBottom>
-            {question.question_text}
-          </Typography>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box>
+          <Typography component="h3">{question.question_text}</Typography>
           <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
             <CategoryChip category={question.category} />
             <Chip
@@ -52,24 +42,19 @@ export default function QuestionPreviewCard({
               size="small"
               color={getDifficultyColor(question.difficulty)}
             />
-            {showLikes && typeof question.likes === 'number' && (
-              <Chip
-                icon={<ThumbUpIcon fontSize="small" />}
-                label={formatNumberShort(question.likes)}
-                size="small"
-                variant="outlined"
-              />
-            )}
           </Stack>
-        </CardContent>
-      </CardActionArea>
-      {actionLabel && (
-        <Box sx={{ p: 2, pt: 0 }}>
+        </Box>
+        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+          <CorrectChip correctCount={question.correct_count ?? 0} />
+          <UsersChip participants={question.answer_count ?? 0} />
+          <LikesChip likes={question.likes ?? 0} />
+        </Stack>
+        {actionLabel && (
           <Button component={Link} to={targetTo} variant="contained" size="small" fullWidth>
             {actionLabel}
           </Button>
-        </Box>
-      )}
+        )}
+      </CardContent>
     </Card>
   );
 }

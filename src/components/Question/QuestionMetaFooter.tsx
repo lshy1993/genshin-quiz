@@ -1,8 +1,8 @@
 import { Box, Stack, Typography } from '@mui/material';
 import type { Question } from '@/api/dto';
 import AuthorLink from '@/components/AuthorLink';
-import CommentButton from '@/components/CommentButton';
-import LikeButtons from '@/components/LikeButtons';
+import CommentButton from '@/components/Button/CommentButton';
+import LikeButtons from '@/components/Button/LikeButtons';
 
 interface Props {
   question: Question;

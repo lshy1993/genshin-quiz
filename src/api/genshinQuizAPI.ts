@@ -17,12 +17,14 @@ import type {
   Exam,
   GetExams200,
   GetExamsParams,
+  GetHomeParams,
   GetQuestions200,
   GetQuestionsParams,
   GetUsers200,
   GetUsersParams,
   GetVotes200,
   GetVotesParams,
+  HomePageData,
   InternalServerErrorResponse,
   MySubmission,
   NotFoundResponse,
@@ -231,6 +233,45 @@ export const useGetCurrentUser = <
   const isEnabled = swrOptions?.enabled !== false;
   const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetCurrentUserKey() : null));
   const swrFn = () => getCurrentUser();
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Get homepage data
+ */
+export const getHome = (params?: GetHomeParams) => {
+  return Fetcher<HomePageData>({ url: `/home`, method: 'GET', params });
+};
+
+export const getGetHomeKey = (params?: GetHomeParams) =>
+  [`/home`, ...(params ? [params] : [])] as const;
+
+export type GetHomeQueryResult = NonNullable<Awaited<ReturnType<typeof getHome>>>;
+export type GetHomeQueryError = BadRequestResponse | InternalServerErrorResponse;
+
+/**
+ * @summary Get homepage data
+ */
+export const useGetHome = <TError = BadRequestResponse | InternalServerErrorResponse>(
+  params?: GetHomeParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getHome>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetHomeKey(params) : null));
+  const swrFn = () => getHome(params);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 

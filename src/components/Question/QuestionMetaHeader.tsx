@@ -1,6 +1,6 @@
 import { Box, Chip, Typography } from '@mui/material';
 import type { Question } from '@/api/dto';
-import CategoryChip from '@/components/CategoryChip';
+import CategoryChip from '@/components/Chip/CategoryChip';
 import { getCorrectRate, getDifficultyColor, getDifficultyLabel } from '@/util/utils';
 
 interface Props {

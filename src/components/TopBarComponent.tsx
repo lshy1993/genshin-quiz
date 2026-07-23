@@ -15,7 +15,13 @@ export default function TopBarComponent() {
     { labelKey: 'rank', path: '/rank' },
     { labelKey: 'about', path: '/about' },
   ];
-  const currentTab = navItems.findIndex((item) => location.pathname.startsWith(item.path));
+  const currentTab = navItems.findIndex((item) => {
+    if (item.path === '/rank' && location.pathname.startsWith('/user')) {
+      return true;
+    }
+
+    return location.pathname.startsWith(item.path);
+  });
   const tabValue = currentTab === -1 ? 0 : currentTab;
 
   return (

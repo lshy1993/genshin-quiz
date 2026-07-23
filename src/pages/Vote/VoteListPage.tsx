@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { type GetVotesParams, GetVotesType } from '@/api/dto';
 import { useGetVotes } from '@/api/genshinQuizAPI';
 import BannerBox from '@/components/BannerBox';
-import FloatingAddButton from '@/components/FloatingAddButton';
+import FloatingAddButton from '@/components/Button/FloatingAddButton';
 import PageContainer from '@/components/PageContainer';
 import VoteFilter from '@/components/Vote/VoteFilter';
 import VoteTable from '@/components/Vote/VoteTable';
