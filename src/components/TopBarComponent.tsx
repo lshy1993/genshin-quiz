@@ -1,7 +1,7 @@
 import { AppBar, Box, Button, Tab, Tabs, Toolbar, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { UserInfoBox } from './UserInfoBox';
+import { LoginUserMenu } from './LoginUserMenu';
 
 export default function TopBarComponent() {
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ export default function TopBarComponent() {
             ))}
           </Tabs>
         </Box>
-        <UserInfoBox />
+        <LoginUserMenu />
       </Toolbar>
     </AppBar>
   );

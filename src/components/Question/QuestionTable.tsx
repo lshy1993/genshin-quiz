@@ -30,17 +30,34 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
   const navigate = useNavigate();
 
   const renderCorrectRate = (question: Question) => {
-    const rate = getCorrectRate(question, 1);
+    const rate = getCorrectRate(question);
     return (
       <Tooltip title={`${rate}%`} arrow>
-        <TableCell align="right">
+        <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'flex-end' }}>
           <LinearProgress
             sx={{ height: 8, borderRadius: 4, width: 60 }}
             variant="determinate"
             value={rate}
             color={rate > 70 ? 'success' : rate > 50 ? 'warning' : 'error'}
           />
-        </TableCell>
+        </Box>
+      </Tooltip>
+    );
+  };
+
+  const renderSolvedNumber = (count: number) => {
+    return (
+      <Tooltip title={count >= 1000 ? count : ''} arrow placement="bottom-end">
+        <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
+            {formatNumberShort(count)}
+          </Typography>
+        </Box>
       </Tooltip>
     );
   };
@@ -98,45 +115,35 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
             >
               <TableCell align="center" sx={{ verticalAlign: 'middle' }}>
                 {question.solved && (
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Tooltip title="你已答对此题">
+                  <Tooltip title="你已答对此题">
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <CheckCircleIcon fontSize="small" color="success" />
-                    </Tooltip>
-                  </Box>
+                    </Box>
+                  </Tooltip>
                 )}
               </TableCell>
               <TableCell>
                 <CategoryChip category={question.category} />
               </TableCell>
               <TableCell>
-                <Typography variant="body2">
-                  {question.question_text.length > 60
-                    ? `${question.question_text.substring(0, 60)}...`
-                    : question.question_text}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {question.question_text}
                 </Typography>
               </TableCell>
-              {renderCorrectRate(question)}
+              <TableCell align="right">{renderCorrectRate(question)}</TableCell>
               <TableCell align="right">
                 <Typography variant="body2" color={getDifficultyColor(question.difficulty)}>
                   {getDifficultyLabel(question.difficulty)}
                 </Typography>
               </TableCell>
-              <TableCell align="right">
-                <Tooltip
-                  title={(question.answer_count ?? 0).toLocaleString()}
-                  arrow
-                  placement="bottom-end"
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {formatNumberShort(question.answer_count ?? 0)}
-                  </Typography>
-                </Tooltip>
-              </TableCell>
+              <TableCell align="right">{renderSolvedNumber(question.answer_count ?? 0)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -28,7 +28,7 @@ interface Props {
   setOpen: (open: boolean) => void;
 }
 
-export default function UserInfoPanel({ setOpen }: Props) {
+export default function UserMenuPanel({ setOpen }: Props) {
   const { user, logout } = useUser();
   const { currentLanguage, setCurrentLanguage } = useLanguage();
   const navigate = useNavigate();
@@ -48,6 +48,11 @@ export default function UserInfoPanel({ setOpen }: Props) {
   const handleCreateExam = () => {
     navigate('/exams/create');
     setOpen(false);
+  };
+
+  const handleGoToProfile = () => {
+    if (!user?.uuid) return;
+    navigate(`/users/${user.uuid}`);
   };
 
   const handleLanguageChange = (event: SelectChangeEvent<string>) => {
@@ -94,46 +99,31 @@ export default function UserInfoPanel({ setOpen }: Props) {
     >
       <Stack spacing={0}>
         {/* 用户资料区域 */}
-        <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <Avatar
-              src={user.avatar_url}
-              alt={user.nickname}
-              sx={{ width: 40, height: 40, mr: 1.5 }}
-            >
-              {user.nickname.charAt(0).toUpperCase()}
-            </Avatar>
-            <Box>
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontWeight: 'medium',
-                }}
-              >
-                {user.nickname}
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: 'text.secondary',
-                }}
-              >
-                {user.country || '未知地区'}
-              </Typography>
-            </Box>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            cursor: 'pointer',
+            p: 2,
+            transition: 'background-color 0.2s',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            },
+          }}
+          onClick={handleGoToProfile}
+        >
+          <Avatar src={user.avatar_url} alt={user.nickname} sx={{ width: 40, height: 40, mr: 1.5 }}>
+            {user.nickname.charAt(0).toUpperCase()}
+          </Avatar>
+          <Box>
             <Typography
-              variant="caption"
+              variant="subtitle1"
               sx={{
-                color: 'text.secondary',
+                fontWeight: 'medium',
               }}
             >
-              正确率:{' '}
-              {user.total_answers > 0
-                ? Math.round((user.correct_answers / user.total_answers) * 100)
-                : 0}
-              %
+              {user.nickname}
             </Typography>
             <Typography
               variant="caption"
@@ -141,10 +131,35 @@ export default function UserInfoPanel({ setOpen }: Props) {
                 color: 'text.secondary',
               }}
             >
-              题目: {user.questions_created}
+              {user.country || '未知地区'}
             </Typography>
           </Box>
         </Box>
+        <Divider />
+        {/* 用户排行区域 */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2 }}>
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
+            正确率:{' '}
+            {user.total_answers > 0
+              ? Math.round((user.correct_answers / user.total_answers) * 100)
+              : 0}
+            %
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
+            题目: {user.questions_created}
+          </Typography>
+        </Box>
+        <Divider />
         {/* 创建功能按钮 */}
         <Button
           onClick={handleCreateQuestion}
@@ -185,9 +200,7 @@ export default function UserInfoPanel({ setOpen }: Props) {
         >
           创建测验
         </Button>
-
         <Divider />
-
         {/* 语言选择 */}
         <Box sx={{ px: 2, py: 1.5 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -215,9 +228,7 @@ export default function UserInfoPanel({ setOpen }: Props) {
             ))}
           </Select>
         </Box>
-
         <Divider />
-
         {/* 登出按钮 */}
         <Button
           onClick={handleLogout}

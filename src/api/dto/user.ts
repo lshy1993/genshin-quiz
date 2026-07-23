@@ -21,4 +21,6 @@ export interface User {
   likes_received?: number;
   registered_at: Date;
   last_login_at: Date;
+  registered_ip?: string;
+  last_login_ip?: string;
 }

@@ -16,8 +16,11 @@ import { useGetQuestions, useGetUser, useGetVotes } from '@/api/genshinQuizAPI';
 import ContentCardGridSection from '@/components/ContentCardGridSection';
 import PageContainer from '@/components/PageContainer';
 import QuestionPreviewCard from '@/components/Question/QuestionPreviewCard';
+import ChangePasswordForm from '@/components/User/ChangePasswordForm';
+import EditProfileForm from '@/components/User/EditProfileForm';
 import VotePreviewCard from '@/components/Vote/VotePreviewCard';
 import { useLanguage } from '@/context/LanguageContext';
+import { useUser } from '@/context/UserContext';
 import { formatNumberShort } from '@/util/utils';
 
 // 每个列表最多展示的条目数
@@ -38,8 +41,11 @@ function StatItem({ label, value }: { label: string; value: string }) {
 
 export default function UserProfilePage() {
   const { id } = useParams<{ id: string }>();
+  const { user: me } = useUser();
   const { currentLanguage } = useLanguage();
 
+  const isMe = me?.uuid === id;
+  // fetch target user info
   const { data: user, isLoading: isUserLoading, error: userError } = useGetUser(id ?? '');
   const { data: questionRes } = useGetQuestions({
     created_by: id,
@@ -79,15 +85,32 @@ export default function UserProfilePage() {
             <Avatar src={user.avatar_url} sx={{ width: 72, height: 72, fontSize: 28 }}>
               {user.nickname.charAt(0).toUpperCase()}
             </Avatar>
-            <Box sx={{ flex: 1, minWidth: 160 }}>
+            <Stack direction="column" spacing={0.5}>
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 {user.nickname}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {user.country || '未知地区'} · 加入于{' '}
-                {new Date(user.registered_at).toLocaleDateString()}
+                {user.country || '未知地区'}
               </Typography>
-            </Box>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {'注册于'}
+                {user.registered_at.toLocaleDateString()}
+                {user.registered_ip && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    IP: {user.registered_ip}
+                  </Typography>
+                )}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {'上次登录'}
+                {user.last_login_at ? new Date(user.last_login_at).toLocaleDateString() : '未知'}
+                {user.last_login_ip && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    IP: {user.last_login_ip}
+                  </Typography>
+                )}
+              </Typography>
+            </Stack>
             <Stack
               direction="row"
               spacing={2}
@@ -102,6 +125,13 @@ export default function UserProfilePage() {
                 <StatItem label="获赞数" value={formatNumberShort(user.likes_received)} />
               )}
             </Stack>
+            {isMe && (
+              <Box sx={{ width: '100%', mt: 2 }}>
+                <EditProfileForm userId={user.uuid} initialNickname={user.nickname} />
+                <Box sx={{ height: 8 }} />
+                <ChangePasswordForm />
+              </Box>
+            )}
           </Stack>
         </CardContent>
       </Card>
@@ -109,7 +139,7 @@ export default function UserProfilePage() {
       {/* 创建的投票 */}
       <ContentCardGridSection
         icon={<PollIcon color="secondary" />}
-        title="创建的投票"
+        title={isMe ? '我创建的投票' : '创建的投票'}
         items={createdVotes}
         emptyText="还没有创建过投票"
         getKey={(vote) => vote.id}
@@ -121,21 +151,13 @@ export default function UserProfilePage() {
       {/* 创建的题目 */}
       <ContentCardGridSection
         icon={<QuizIcon color="primary" />}
-        title="创建的题目"
+        title={isMe ? '我创建的题目' : '创建的题目'}
         items={createdQuestions}
         emptyText="还没有创建过题目"
         getKey={(question) => question.id}
         gridSize={{ xs: 12, md: 6 }}
         spacing={2}
-        renderCard={(question) => (
-          <QuestionPreviewCard
-            question={question}
-            showLikes
-            titleVariant="body1"
-            cardVariant="outlined"
-            fullHeight={false}
-          />
-        )}
+        renderCard={(question) => <QuestionPreviewCard question={question} />}
       />
     </PageContainer>
   );
