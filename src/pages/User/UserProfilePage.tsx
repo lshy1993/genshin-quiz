@@ -46,7 +46,7 @@ export default function UserProfilePage() {
 
   const isMe = me?.uuid === id;
   // fetch target user info
-  const { data: user, isLoading: isUserLoading, error: userError } = useGetUser(id ?? '');
+  const { data: user, isLoading: isUserLoading, error: userError, mutate } = useGetUser(id ?? '');
   const { data: questionRes } = useGetQuestions({
     created_by: id,
     limit: LIST_LIMIT,
@@ -80,62 +80,71 @@ export default function UserProfilePage() {
     <PageContainer>
       {/* 用户资料卡 */}
       <Card>
-        <CardContent>
+        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Stack direction="row" spacing={3} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Avatar src={user.avatar_url} sx={{ width: 72, height: 72, fontSize: 28 }}>
               {user.nickname.charAt(0).toUpperCase()}
             </Avatar>
-            <Stack direction="column" spacing={0.5}>
+            <Stack direction="column" spacing={1}>
               <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 {user.nickname}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {user.country || '未知地区'}
+              <Typography sx={{ color: 'text.secondary' }}>
+                {user.bio || '这个人很懒，什么都没有留下'}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {'注册于'}
-                {user.registered_at.toLocaleDateString()}
-                {user.registered_ip && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    IP: {user.registered_ip}
-                  </Typography>
+              <Stack direction="row" spacing={1}>
+                <Typography sx={{ color: 'text.secondary' }}>{'注册于'}</Typography>
+                <Typography>{user.registered_at.toLocaleDateString()}</Typography>
+                {isMe && (
+                  <>
+                    <Typography sx={{ color: 'text.secondary' }}>IP</Typography>
+                    <Typography>{user.registered_ip}</Typography>
+                  </>
                 )}
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {'上次登录'}
-                {user.last_login_at ? new Date(user.last_login_at).toLocaleDateString() : '未知'}
-                {user.last_login_ip && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    IP: {user.last_login_ip}
-                  </Typography>
+              </Stack>
+              <Stack direction="row" spacing={1}>
+                <Typography sx={{ color: 'text.secondary' }}>{'上次登录'}</Typography>
+                <Typography>
+                  {user.last_login_at ? new Date(user.last_login_at).toLocaleDateString() : '未知'}
+                </Typography>
+                {isMe && (
+                  <>
+                    <Typography sx={{ color: 'text.secondary' }}>IP</Typography>
+                    <Typography>{user.last_login_ip}</Typography>
+                  </>
                 )}
-              </Typography>
+              </Stack>
             </Stack>
-            <Stack
-              direction="row"
-              spacing={2}
-              divider={<Divider orientation="vertical" flexItem />}
-              sx={{ flexWrap: 'wrap' }}
-            >
-              <StatItem label="正确率" value={accuracy === '-' ? '-' : `${accuracy}%`} />
-              <StatItem label="答题次数" value={formatNumberShort(user.total_answers)} />
-              <StatItem label="创建题目" value={formatNumberShort(user.questions_created)} />
-              <StatItem label="参与投票" value={formatNumberShort(user.votes)} />
-              {typeof user.likes_received === 'number' && (
-                <StatItem label="获赞数" value={formatNumberShort(user.likes_received)} />
-              )}
-            </Stack>
-            {isMe && (
-              <Box sx={{ width: '100%', mt: 2 }}>
-                <EditProfileForm userId={user.uuid} initialNickname={user.nickname} />
-                <Box sx={{ height: 8 }} />
-                <ChangePasswordForm />
-              </Box>
+          </Stack>
+          {isMe && (
+            <>
+              <Divider />
+              <EditProfileForm user={user} initialNickname={user.nickname} mutate={mutate} />
+              <Divider />
+              <ChangePasswordForm />
+            </>
+          )}
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {/* 用户答题页面 */}
+          <Stack
+            sx={{ width: '100%', flexWrap: 'wrap' }}
+            direction="row"
+            spacing={2}
+            divider={<Divider orientation="vertical" flexItem />}
+          >
+            <StatItem label="正确率" value={accuracy === '-' ? '-' : `${accuracy}%`} />
+            <StatItem label="答题次数" value={formatNumberShort(user.total_answers)} />
+            <StatItem label="创建题目" value={formatNumberShort(user.questions_created)} />
+            <StatItem label="参与投票" value={formatNumberShort(user.votes)} />
+            {typeof user.likes_received === 'number' && (
+              <StatItem label="获赞数" value={formatNumberShort(user.likes_received)} />
             )}
           </Stack>
         </CardContent>
       </Card>
-
       {/* 创建的投票 */}
       <ContentCardGridSection
         icon={<PollIcon color="secondary" />}
@@ -147,7 +156,6 @@ export default function UserProfilePage() {
         spacing={2}
         renderCard={(vote) => <VotePreviewCard vote={vote} language={currentLanguage} />}
       />
-
       {/* 创建的题目 */}
       <ContentCardGridSection
         icon={<QuizIcon color="primary" />}

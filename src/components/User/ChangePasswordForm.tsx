@@ -1,46 +1,90 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Button, Grid, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import { Fetcher } from '@/api/fetcher/fetcher';
+import { postChangePassword } from '@/api/genshinQuizAPI';
 
 export default function ChangePasswordForm() {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = async () => {
+  const handleChange = () => {
     setLoading(true);
-    try {
-      await Fetcher({
-        url: '/auth/change-password',
-        method: 'POST',
-        data: { old_password: oldPassword, new_password: newPassword },
+    postChangePassword({
+      old_password: oldPassword,
+      new_password: newPassword,
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.error('Error changing password:', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
-    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', width: '100%' }}>
-      <TextField
-        label="当前密码"
-        type="password"
-        size="small"
-        value={oldPassword}
-        onChange={(e) => setOldPassword(e.target.value)}
-      />
-      <TextField
-        label="新密码"
-        type="password"
-        size="small"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-      />
+    <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+      <Grid size={2}>
+        <Typography>当前密码</Typography>
+      </Grid>
+      <Grid size={10}>
+        <TextField
+          type={showOldPassword ? 'text' : 'password'}
+          size="small"
+          value={oldPassword}
+          onChange={(e) => setOldPassword(e.target.value)}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={() => setShowOldPassword(!showOldPassword)}
+                    edge="end"
+                  >
+                    {showOldPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+      </Grid>
+      <Grid size={2}>
+        <Typography>新密码</Typography>{' '}
+      </Grid>
+      <Grid size={10}>
+        <TextField
+          type={showNewPassword ? 'text' : 'password'}
+          size="small"
+          // fullWidth
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    edge="end"
+                  >
+                    {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+      </Grid>
       <Button disabled={loading} variant="contained" onClick={handleChange}>
         修改
       </Button>
-    </Box>
+    </Grid>
   );
 }

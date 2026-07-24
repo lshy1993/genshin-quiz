@@ -5,20 +5,25 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+import type { UserSexuality } from './userSexuality';
 
 export interface User {
   uuid: string;
   nickname: string;
   avatar_url: string;
+  email?: string;
+  email_verified?: boolean;
+  email_public?: boolean;
+  sexuality?: UserSexuality;
+  bio?: string;
   country: string;
   language?: string;
-  ip: string;
   total_answers: number;
   correct_answers: number;
   questions_created: number;
   votes: number;
   /** 该用户创建的所有题目获得的点赞总数，用于创作达人榜按点赞率排序 */
-  likes_received?: number;
+  likes_received: number;
   registered_at: Date;
   last_login_at: Date;
   registered_ip?: string;

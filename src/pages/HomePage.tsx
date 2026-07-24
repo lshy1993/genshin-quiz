@@ -39,7 +39,7 @@ export default function HomePage() {
     return <CircularProgress />;
   }
   if (error) {
-    console.error('Error fetching quizzes:', error);
+    console.error('Error fetching home data:', error);
     return (
       <Alert severity="error">
         <Typography color="error">{t('common.loading_failed')}</Typography>
@@ -100,7 +100,6 @@ export default function HomePage() {
                     variant="body2"
                     sx={{
                       color: 'text.secondary',
-                      mb: 2,
                     }}
                   >
                     {exam.description}
