@@ -5,7 +5,8 @@ import type { VoteWithOption } from '@/api/dto';
 import { postCreateVote } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
 import { useLanguage } from '@/context/LanguageContext';
-import { createEmptyVoteForm, createVoteSchema } from '@/util/utils';
+import { createEmptyVoteForm } from '@/util/utils';
+import { createVoteSchema } from '@/util/zod';
 import CreateVoteBasicInfo from './CreateVoteBasicInfo';
 import CreateVoteOptionInfo from './CreateVoteOptionInfo';
 

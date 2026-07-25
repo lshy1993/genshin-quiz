@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import { DateTime } from 'luxon';
-import z from 'zod';
+
 import {
   type Question,
   QuestionCategory,
@@ -66,6 +66,22 @@ export function getCountdownText(expireAt: Date | undefined): string {
 
   return `${seconds}秒`;
 }
+
+// 密码强度计算辅助函数
+export const getPasswordStrength = (pass: string) => {
+  let score = 0;
+  if (!pass) return { score: 0, label: '', color: 'error' as const };
+
+  if (pass.length >= 6) score += 25;
+  if (pass.length >= 10) score += 25;
+  if (/[0-9]/.test(pass) && /[a-zA-Z]/.test(pass)) score += 25;
+  if (/[^a-zA-Z0-9]/.test(pass)) score += 25;
+
+  if (score <= 25) return { score, label: '弱', color: 'error' as const };
+  if (score <= 50) return { score, label: '中等', color: 'warning' as const };
+  if (score <= 75) return { score, label: '良好', color: 'info' as const };
+  return { score, label: '强', color: 'success' as const };
+};
 
 /**
  * 计算二项比例的 Wilson 置信区间下界（95% 置信度）。
@@ -166,35 +182,6 @@ export function areAnswersEqual(answer: string[], selected: string[]): boolean {
   return true;
 }
 
-export const createQuestionOptionSchema = z.object({
-  type: z.enum(['text', 'image'], { message: '请选择选项类型' }),
-  text: z
-    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '选项内容不能为空'))
-    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
-  is_answer: z.boolean(),
-});
-
-// Zod 验证 schema
-export const createQuestionSchema = z.object({
-  public: z.boolean(),
-  question_type: z.enum(QuestionType, { message: '请选择题目类型' }),
-  category: z.enum(QuestionCategory, { message: '请选择题目分类' }),
-  difficulty: z.enum(QuestionDifficulty, { message: '请选择题目难度' }),
-  options: z
-    .array(createQuestionOptionSchema)
-    .min(2, '至少需要两个选项')
-    .refine((opts) => opts.some((opt) => opt.is_answer), {
-      message: '必须至少有一个正确答案',
-      path: ['options'],
-    }),
-  /** 多语言题干 */
-  question_text: z
-    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '题干内容不能为空'))
-    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
-  /** 多语言解释 */
-  explanation: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
-});
-
 export function createEmptyQuestionForm(languageCode: string): QuestionWithAnswer {
   return {
     public: true,
@@ -209,28 +196,6 @@ export function createEmptyQuestionForm(languageCode: string): QuestionWithAnswe
     ],
   };
 }
-
-export const createVoteOptionSchema = z.object({
-  type: z.enum(['text', 'image', 'url'], { message: '请选择选项类型' }),
-  text: z
-    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '选项内容不能为空'))
-    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
-});
-
-// Zod 验证 schema
-export const createVoteSchema = z.object({
-  public: z.boolean(),
-  password: z.string().optional(),
-  title: z.record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '投票标题不能为空')),
-  description: z.record(z.string().min(1, '语言代码不能为空'), z.string().optional()),
-  options: z.array(createVoteOptionSchema).min(1, '至少需要1个投票项'),
-  tags: z.array(z.string().min(1, '标签不能为空')).optional(),
-  start_at: z.date().optional(),
-  expire_at: z.date().min(new Date(), '截止时间必须在当前时间之后').optional(),
-  /** 每个用户最多可投票数 */
-  votes_per_user: z.number().int().min(1, '每个用户最多可投票数必须至少为1'),
-  votes_per_option: z.number().int().min(0, '每个选项的最大可投票数不能为负数'),
-});
 
 export function createEmptyVoteForm(languageCode: string): VoteWithOption {
   return {

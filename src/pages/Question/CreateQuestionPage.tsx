@@ -5,7 +5,8 @@ import type { QuestionWithAnswer } from '@/api/dto';
 import { postCreateQuestion } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
 import { useLanguage } from '@/context/LanguageContext';
-import { createEmptyQuestionForm, createQuestionSchema } from '@/util/utils';
+import { createEmptyQuestionForm } from '@/util/utils';
+import { createQuestionSchema } from '@/util/zod';
 import CreateQuestionBasicInfo from './CreateQuestionBasicInfo';
 import CreateQuestionChoiceInfo from './CreateQuestionChoiceInfo';
 

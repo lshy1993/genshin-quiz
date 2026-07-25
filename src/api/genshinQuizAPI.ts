@@ -35,6 +35,8 @@ import type {
   PostLikeVoteBody,
   PostLoginUserBody,
   PostRegisterUserBody,
+  PostResetPasswordBody,
+  PostSendVerificationEmailBody,
   PostSubmitAnswer200,
   PostSubmitAnswerBody,
   PostVerifyEmailBody,
@@ -205,6 +207,57 @@ export const usePostForgotPassword = <
 };
 
 /**
+ * @summary Reset password
+ */
+export const postResetPassword = (postResetPasswordBody: PostResetPasswordBody) => {
+  return Fetcher<void>({
+    url: `/auth/reset-password`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: postResetPasswordBody,
+  });
+};
+
+export const getPostResetPasswordMutationFetcher = () => {
+  return (_: Key, { arg }: { arg: PostResetPasswordBody }) => {
+    return postResetPassword(arg);
+  };
+};
+export const getPostResetPasswordMutationKey = () => [`/auth/reset-password`] as const;
+
+export type PostResetPasswordMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postResetPassword>>
+>;
+export type PostResetPasswordMutationError = BadRequestResponse | InternalServerErrorResponse;
+
+/**
+ * @summary Reset password
+ */
+export const usePostResetPassword = <
+  TError = BadRequestResponse | InternalServerErrorResponse,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postResetPassword>>,
+    TError,
+    Key,
+    PostResetPasswordBody,
+    Awaited<ReturnType<typeof postResetPassword>>
+  > & { swrKey?: string };
+}) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostResetPasswordMutationKey();
+  const swrFn = getPostResetPasswordMutationFetcher();
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
  * @summary Change password
  */
 export const postChangePassword = (postChangePasswordBody: PostChangePasswordBody) => {
@@ -297,6 +350,63 @@ export const usePostVerifyEmail = <
 
   const swrKey = swrOptions?.swrKey ?? getPostVerifyEmailMutationKey();
   const swrFn = getPostVerifyEmailMutationFetcher();
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * Sends a email with a verification token link to the user.
+ * @summary Send verification email
+ */
+export const postSendVerificationEmail = (
+  postSendVerificationEmailBody: PostSendVerificationEmailBody,
+) => {
+  return Fetcher<void>({
+    url: `/auth/send-verification-email`,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: postSendVerificationEmailBody,
+  });
+};
+
+export const getPostSendVerificationEmailMutationFetcher = () => {
+  return (_: Key, { arg }: { arg: PostSendVerificationEmailBody }) => {
+    return postSendVerificationEmail(arg);
+  };
+};
+export const getPostSendVerificationEmailMutationKey = () =>
+  [`/auth/send-verification-email`] as const;
+
+export type PostSendVerificationEmailMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postSendVerificationEmail>>
+>;
+export type PostSendVerificationEmailMutationError =
+  | BadRequestResponse
+  | InternalServerErrorResponse;
+
+/**
+ * @summary Send verification email
+ */
+export const usePostSendVerificationEmail = <
+  TError = BadRequestResponse | InternalServerErrorResponse,
+>(options?: {
+  swr?: SWRMutationConfiguration<
+    Awaited<ReturnType<typeof postSendVerificationEmail>>,
+    TError,
+    Key,
+    PostSendVerificationEmailBody,
+    Awaited<ReturnType<typeof postSendVerificationEmail>>
+  > & { swrKey?: string };
+}) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const swrKey = swrOptions?.swrKey ?? getPostSendVerificationEmailMutationKey();
+  const swrFn = getPostSendVerificationEmailMutationFetcher();
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions);
 

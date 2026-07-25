@@ -1,8 +1,13 @@
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Alert,
   Box,
   Button,
   Container,
+  IconButton,
+  InputAdornment,
+  Link,
   Paper,
   Snackbar,
   Tab,
@@ -13,24 +18,10 @@ import {
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { z } from 'zod';
 import { postLoginUser, postRegisterUser } from '@/api/genshinQuizAPI';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
-
-const loginSchema = z.object({
-  email: z.email({ message: '邮箱格式不正确' }).min(1, { message: '请输入邮箱' }),
-  password: z.string().min(6, { message: '密码至少6位' }),
-});
-
-const registerSchema = loginSchema
-  .extend({
-    confirmPassword: z.string().min(1, { message: '请确认密码' }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: '两次密码输入不一致',
-    path: ['confirmPassword'],
-  });
+import { loginSchema, registerSchema } from '@/util/zod';
 
 export default function AuthForm() {
   const navigate = useNavigate();
@@ -45,11 +36,14 @@ export default function AuthForm() {
   }, [user, navigate]);
 
   const [tab, setTab] = useState(0);
+  const [showPassword, setShowPassword] = useState(false); // 💡 密码显隐控制
+  const [touched, setTouched] = useState<Record<string, boolean>>({}); // 💡 记录输入框是否被操作过，防止一进来就变红
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
-    language: currentLanguage, // 注册时选择最合适的语言
+    language: currentLanguage,
   });
 
   // 监听语言变化，自动更新表单语言设置
@@ -91,10 +85,17 @@ export default function AuthForm() {
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
+    setTouched({}); // 切换 Tab 时重置校验状态
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setTouched((prev) => ({ ...prev, [name]: true }));
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setTouched((prev) => ({ ...prev, [e.target.name]: true }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -106,8 +107,8 @@ export default function AuthForm() {
       // 登录
       postLoginUser({ email: formData.email, password: formData.password })
         .then((res) => {
-          login(res.token); // 只传递token，用户信息从API获取
-          navigate('/home'); // 登录成功后跳转到首页
+          login(res.token);
+          navigate('/home');
         })
         .catch((err) => {
           console.error('登录失败:', err);
@@ -120,8 +121,8 @@ export default function AuthForm() {
       // 注册
       postRegisterUser(formData)
         .then((res) => {
-          login(res.token); // 只传递token，用户信息从API获取
-          navigate('/home'); // 注册成功后跳转到首页
+          login(res.token);
+          navigate('/home');
         })
         .catch((err) => {
           console.error('注册失败:', err);
@@ -145,6 +146,8 @@ export default function AuthForm() {
             <Typography variant="h5" align="center" gutterBottom>
               {tab === 0 ? '邮箱登录' : '邮箱注册'}
             </Typography>
+
+            {/* 邮箱 */}
             <TextField
               margin="normal"
               fullWidth
@@ -153,37 +156,75 @@ export default function AuthForm() {
               type="email"
               value={formData.email}
               onChange={handleChange}
+              onBlur={handleBlur}
               autoFocus
               required
-              error={!!emailError}
-              helperText={emailError}
+              error={touched.email && !!emailError}
+              helperText={touched.email && emailError}
             />
+
+            {/* 密码（带显示/隐藏切换按钮） */}
             <TextField
               margin="normal"
               fullWidth
               label="密码"
               name="password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               value={formData.password}
               onChange={handleChange}
+              onBlur={handleBlur}
               required
-              error={!!passwordError}
-              helperText={passwordError}
+              error={touched.password && !!passwordError}
+              helperText={touched.password && passwordError}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
+
+            {/* 确认密码（仅注册时显示） */}
             {tab === 1 && (
               <TextField
                 margin="normal"
                 fullWidth
                 label="确认密码"
                 name="confirmPassword"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 required
-                error={!!confirmPasswordError}
-                helperText={confirmPasswordError}
+                error={touched.confirmPassword && !!confirmPasswordError}
+                helperText={touched.confirmPassword && confirmPasswordError}
               />
             )}
+
+            {/* 💡 登录状态下显示的“忘记密码”链接 */}
+            {tab === 0 && (
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                <Link
+                  component="button"
+                  type="button"
+                  variant="body2"
+                  onClick={() => navigate('/forgot-password')}
+                  sx={{ textDecoration: 'none' }}
+                >
+                  忘记密码？
+                </Link>
+              </Box>
+            )}
+
             <Button
               sx={{ mt: 2 }}
               type="submit"
@@ -196,6 +237,7 @@ export default function AuthForm() {
           </Box>
         </Paper>
       </Container>
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}

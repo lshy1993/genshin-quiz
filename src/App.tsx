@@ -9,6 +9,7 @@ import { useAuthManager } from './hooks/useAuthManager';
 import AboutPage from './pages/AboutPage';
 import ExamDetailPage from './pages/Exam/ExamDetailPage';
 import ExamListPage from './pages/Exam/ExamListPage';
+import ForgotPassword from './pages/ForgotPassword';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -16,7 +17,9 @@ import CreateQuestionPage from './pages/Question/CreateQuestionPage';
 import QuestionDetailPage from './pages/Question/QuestionDetailPage';
 import QuestionListPage from './pages/Question/QuestionListPage';
 import RankPage from './pages/Rank/RankPage';
+import ResetPassword from './pages/ResetPassword';
 import UserProfilePage from './pages/User/UserProfilePage';
+import VerifyEmail from './pages/VerifyEmail';
 import CreateVotePage from './pages/Vote/CreateVotePage';
 import VoteDetailPage from './pages/Vote/VoteDetailPage';
 import VoteListPage from './pages/Vote/VoteListPage';
@@ -88,6 +91,9 @@ function App() {
             <Route path="/rank" element={<RankPage />} />
             <Route path="/users/:id" element={<UserProfilePage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/forgot-password/" element={<ForgotPassword />} />
+            <Route path="/reset-password/" element={<ResetPassword />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Box>

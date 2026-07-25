@@ -64,6 +64,8 @@ export * from './postLoginUserBody';
 export * from './postLoginUserBody.ts';
 export * from './postRegisterUserBody';
 export * from './postRegisterUserBody.ts';
+export * from './postResetPasswordBody';
+export * from './postSendVerificationEmailBody';
 export * from './postSubmitAnswer200';
 export * from './postSubmitAnswer200.ts';
 export * from './postSubmitAnswerBody';
