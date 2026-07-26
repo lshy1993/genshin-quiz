@@ -18,7 +18,7 @@ export default function EditProfileForm({ user, initialNickname, mutate }: Props
   const [emailPublicity, setEmailPublicity] = useState<Visibility>(user.email_visibility);
   const [saving, setSaving] = useState<boolean>(false);
 
-  const genderOptions: Gender[] = ['male', 'female', 'other'];
+  const genderOptions: Gender[] = ['unknown', 'male', 'female', 'other'];
   const emailPublicityOptions: Visibility[] = ['public', 'private'];
 
   const handleSave = () => {

@@ -1,19 +1,19 @@
 import { Box, Stack, Typography } from '@mui/material';
-import type { Vote } from '@/api/dto';
+import type { LikeStatus, Poll } from '@/api/dto';
 import AuthorLink from '@/components/AuthorLink';
 import LikeButtons from '@/components/Button/LikeButtons';
 
 interface Props {
-  voteInfo: Vote;
-  handleLike: (likeStatus: 1 | 0 | -1) => void;
+  voteInfo: Poll;
+  handleLike: (likeStatus: LikeStatus) => void;
 }
 
 export default function VoteMetaFooter({ voteInfo, handleLike }: Props) {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
       <LikeButtons
-        likes={voteInfo.likes ?? 0}
-        likeStatus={voteInfo.likeStatus}
+        likes={voteInfo.likes_count}
+        likeStatus={voteInfo.like_status}
         onLike={handleLike}
       />
       <Stack spacing={0.5} sx={{ alignItems: 'flex-end' }}>

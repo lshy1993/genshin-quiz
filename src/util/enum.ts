@@ -1,7 +1,7 @@
-import { QuestionCategory, QuestionDifficulty, QuestionType } from '@/api/dto';
+import { Category, Difficulty, QuestionType } from '@/api/dto';
 
-export const allCategories = Object.values(QuestionCategory);
-export const allDifficulties = Object.values(QuestionDifficulty);
+export const allCategories = Object.values(Category);
+export const allDifficulties = Object.values(Difficulty);
 export const allQuestionTypes = Object.values(QuestionType);
 export const allLanguages = ['zh', 'ja', 'en', 'ko'];
 

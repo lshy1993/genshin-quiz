@@ -1,11 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material';
 import { t } from 'i18next';
-import type {
-  CreateQuestionRequest,
-  QuestionCategory,
-  QuestionDifficulty,
-  QuestionType,
-} from '@/api/dto';
+import type { Category, CreateQuestionRequest, Difficulty, QuestionType } from '@/api/dto';
 import { allCategories, allDifficulties, allQuestionTypes } from '@/util/enum';
 
 interface Props {
@@ -46,8 +41,8 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
                 options:
                   newType === 'true_false'
                     ? [
-                        { type: 'text', text: { zh: 'yes' }, is_answer: true },
-                        { type: 'text', text: { zh: 'no' }, is_answer: false },
+                        { option_type: 'text', text: { zh: 'yes' }, is_answer: true },
+                        { option_type: 'text', text: { zh: 'no' }, is_answer: false },
                       ]
                     : options,
               };
@@ -69,7 +64,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
           value={form.category}
           onChange={(e) => {
             setTouchedField('category');
-            setForm((prev) => ({ ...prev, category: e.target.value as QuestionCategory }));
+            setForm((prev) => ({ ...prev, category: e.target.value as Category }));
           }}
           label="分类"
           required
@@ -89,7 +84,7 @@ export default function CreateQuestionBasicInfo({ errors, form, setForm, setTouc
             setTouchedField('difficulty');
             setForm((prev) => ({
               ...prev,
-              difficulty: e.target.value as QuestionDifficulty,
+              difficulty: e.target.value as Difficulty,
             }));
           }}
           label="难度"

@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { User } from '@/api/dto';
+import type { UserPublic } from '@/api/dto';
 import { useGetUsers } from '@/api/genshinQuizAPI';
 import BannerBox from '@/components/BannerBox';
 import PageContainer from '@/components/PageContainer';
@@ -29,7 +29,7 @@ const TOP_N = 10;
 const MEDAL_COLORS = ['#FFD700', '#C0C0C0', '#CD7F32'];
 
 interface RankEntry {
-  user: User;
+  user: UserPublic;
   primaryText: string;
   secondaryText?: string;
 }
@@ -163,10 +163,10 @@ export default function RankPage() {
 
   // 投票达人榜：按参与投票数排序
   const voteEntries: RankEntry[] = users
-    .filter((u) => u.votes > 0)
-    .sort((a, b) => b.votes - a.votes)
+    .filter((u) => u.polls_created > 0)
+    .sort((a, b) => b.polls_created - a.polls_created)
     .slice(0, TOP_N)
-    .map((user) => ({ user, primaryText: `${formatNumberShort(user.votes)} 票` }));
+    .map((user) => ({ user, primaryText: `${formatNumberShort(user.polls_created)} 票` }));
 
   // 创作达人榜：按创建题目数排序
   const creatorEntries: RankEntry[] = users

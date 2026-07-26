@@ -1,8 +1,8 @@
 import { Alert, Box, Button, Paper, Stack, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import type { VoteWithOption } from '@/api/dto';
-import { postCreateVote } from '@/api/genshinQuizAPI';
+import type { CreatePollRequest } from '@/api/dto';
+import { postCreatePoll } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
 import { useLanguage } from '@/context/LanguageContext';
 import { createEmptyVoteForm } from '@/util/utils';
@@ -15,7 +15,7 @@ export default function CreateVotePage() {
   const navigate = useNavigate();
   // 表单状态
   const defaultForm = createEmptyVoteForm(currentLanguage);
-  const [form, setForm] = useState<VoteWithOption>(defaultForm);
+  const [form, setForm] = useState<CreatePollRequest>(defaultForm);
   const [loading, setLoading] = useState(false);
   // 已触摸字段集合
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
@@ -38,8 +38,8 @@ export default function CreateVotePage() {
     e.preventDefault();
     if (!isValid) return; // 防止无效提交
     setLoading(true);
-    postCreateVote(form)
-      .then((_res) => {
+    postCreatePoll(form)
+      .then(() => {
         // 创建成功，跳转到投票列表
         navigate('/votes');
       })

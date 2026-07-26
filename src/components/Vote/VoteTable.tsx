@@ -11,14 +11,14 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import type { Vote } from '@/api/dto';
+import type { Poll } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
 import { getCountdownText } from '@/util/utils';
 
 interface VoteTableProps {
-  votes: Vote[];
+  votes: Poll[];
 }
 
 export default function VoteTable({ votes }: VoteTableProps) {
@@ -41,7 +41,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
     );
   }
 
-  const getVoteTitle = (vote: Vote) => {
+  const getVoteTitle = (vote: Poll) => {
     const defaultLang = Object.keys(vote.title)[0];
     return vote.title[currentLanguage] || vote.title[defaultLang];
   };
@@ -56,16 +56,17 @@ export default function VoteTable({ votes }: VoteTableProps) {
     return `剩余${getCountdownText(expireDate)}`;
   };
 
-  const getStatusColor = (vote: Vote) => {
+  const getStatusColor = (vote: Poll) => {
     if (!vote.expire_at) return 'primary.main';
-    if (vote.expired) return 'error';
+    const expired = vote.expire_at ? vote.expire_at < new Date() : false;
+    if (expired) return 'error';
     return 'success.main';
   };
 
   return (
     <Stack direction="column" spacing={2}>
       {votes.map((vote) => {
-        const hasVoted = vote.voted || (vote.voted_options && vote.voted_options.length > 0);
+        const hasVoted = vote.my_votes && vote.my_votes.length > 0;
         const isOwner = !!user && vote.created_by === user.uuid;
         return (
           <Card key={vote.id}>
@@ -134,7 +135,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
                         gap: 0.5,
                       }}
                     >
-                      参与：{vote.participants ?? 0}人
+                      参与：{vote.participants_count}人
                     </Typography>
                     <Typography
                       variant="body2"
@@ -142,7 +143,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
                         color: 'text.secondary',
                       }}
                     >
-                      总票：{vote.total_votes ?? 0}票
+                      总票：{vote.total_votes_count}票
                     </Typography>
                   </Box>
                 </Box>

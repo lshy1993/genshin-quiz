@@ -8,7 +8,7 @@ export function HomeLinks() {
   // 首页快捷入口
   const quickLinks = [
     {
-      to: '/votes',
+      to: '/polls',
       label: '投票',
       description: '参与投票，表达你的看法',
       icon: <PollIcon fontSize="large" color="primary" />,

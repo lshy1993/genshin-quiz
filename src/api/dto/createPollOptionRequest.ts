@@ -5,9 +5,6 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
+import type { PollOptionBase } from './pollOptionBase';
 
-export type PollOptionAllOf = {
-  id: string;
-  /** 获得的累计票数 */
-  votes_count: number;
-};
+export type CreatePollOptionRequest = PollOptionBase;

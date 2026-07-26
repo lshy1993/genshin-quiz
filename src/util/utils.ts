@@ -2,12 +2,12 @@ import { t } from 'i18next';
 import { DateTime } from 'luxon';
 
 import {
+  Category,
+  type CreatePollRequest,
   type CreateQuestionRequest,
+  Difficulty,
   type Question,
-  QuestionCategory,
-  QuestionDifficulty,
   QuestionType,
-  type VoteWithOption,
 } from '@/api/dto';
 
 export function formatNumberShort(count: number): string {
@@ -20,9 +20,9 @@ export function formatNumberShort(count: number): string {
 }
 
 export function getCorrectRate(q: Question, fixed: number = 1): number {
-  if (!q.answer_count || !q.correct_count) return 0;
-  if (q.answer_count === 0) return 0;
-  const rate = q.correct_count / q.answer_count;
+  if (!q.answers_count || !q.correct_answers_count) return 0;
+  if (q.answers_count === 0) return 0;
+  const rate = q.correct_answers_count / q.answers_count;
   return parseFloat((rate * 100).toFixed(fixed));
 }
 
@@ -185,24 +185,24 @@ export function areAnswersEqual(answer: string[], selected: string[]): boolean {
 export function createEmptyQuestionForm(languageCode: string): CreateQuestionRequest {
   return {
     public: true,
-    category: QuestionCategory.character,
-    difficulty: QuestionDifficulty.easy,
+    category: Category.character,
+    difficulty: Difficulty.easy,
     question_type: QuestionType.single_choice,
     question_text: { [languageCode]: '' },
     explanation: { [languageCode]: '' },
     options: [
-      { type: 'text', text: { [languageCode]: '' }, is_answer: true },
-      { type: 'text', text: { [languageCode]: '' }, is_answer: false },
+      { option_type: 'text', text: { [languageCode]: '' }, is_answer: true },
+      { option_type: 'text', text: { [languageCode]: '' }, is_answer: false },
     ],
   };
 }
 
-export function createEmptyVoteForm(languageCode: string): VoteWithOption {
+export function createEmptyVoteForm(languageCode: string): CreatePollRequest {
   return {
     public: true,
     title: { [languageCode]: '' },
     description: { [languageCode]: '' },
-    category: QuestionCategory.character,
+    category: Category.character,
     tags: [],
     start_at: new Date(),
     /** 每个用户最多可投票数 */

@@ -9,7 +9,7 @@ export default function TopBarComponent() {
 
   const navItems = [
     { labelKey: 'home', path: '/home' },
-    { labelKey: 'votes', path: '/votes' },
+    { labelKey: 'polls', path: '/polls' },
     { labelKey: 'questions', path: '/questions' },
     { labelKey: 'exams', path: '/exams' },
     { labelKey: 'rank', path: '/rank' },

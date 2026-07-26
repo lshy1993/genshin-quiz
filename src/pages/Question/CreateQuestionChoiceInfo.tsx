@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import {
+  type CreateQuestionOptionRequest,
   type CreateQuestionRequest,
-  type QuestionOption,
-  QuestionOptionType,
+  OptionType,
   QuestionType,
 } from '@/api/dto';
 import LanguageTabs from '@/components/LanguageTabs';
@@ -41,7 +41,7 @@ export default function CreateQuestionChoiceInfo({
   const [currentLang, setCurrentLang] = useState<string>(currentLanguage);
 
   // 未保存的选项没有 id，且 text 是对象无法直接拼接成唯一 key，用共享的 useStableKey 生成稳定 key。
-  const getOptionKey = useStableKey<QuestionOption>();
+  const getOptionKey = useStableKey<CreateQuestionOptionRequest>();
 
   const handleQuestionTextChange = (newText: string) => {
     setTouchedField(`question_text.${currentLang}`);
@@ -72,7 +72,7 @@ export default function CreateQuestionChoiceInfo({
     setTouchedField(`options.${form.options.length}.text.${currentLang}`);
     setForm((prev) => {
       const new_option = {
-        type: QuestionOptionType.text,
+        option_type: OptionType.text,
         text: { [currentLang]: '' },
         is_answer: false,
       };
@@ -223,8 +223,8 @@ export default function CreateQuestionChoiceInfo({
     setForm((prev) => ({
       ...prev,
       options: [
-        { type: QuestionOptionType.text, text: { [currentLang]: 'yes' }, is_answer: isTrue },
-        { type: QuestionOptionType.text, text: { [currentLang]: 'no' }, is_answer: !isTrue },
+        { option_type: OptionType.text, text: { [currentLang]: 'yes' }, is_answer: isTrue },
+        { option_type: OptionType.text, text: { [currentLang]: 'no' }, is_answer: !isTrue },
       ],
     }));
   };

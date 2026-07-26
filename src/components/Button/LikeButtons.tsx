@@ -1,12 +1,13 @@
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import { Button, ButtonGroup } from '@mui/material';
+import type { LikeStatus } from '@/api/dto';
 import { formatNumberShort } from '@/util/utils';
 
 interface LikeButtonsProps {
   likes: number;
-  likeStatus?: 1 | 0 | -1;
-  onLike: (likeStatus: 1 | 0 | -1) => void;
+  likeStatus: LikeStatus;
+  onLike: (likeStatus: LikeStatus) => void;
 }
 
 export default function LikeButtons({ likes, likeStatus, onLike }: LikeButtonsProps) {
@@ -17,7 +18,7 @@ export default function LikeButtons({ likes, likeStatus, onLike }: LikeButtonsPr
         color="inherit"
         variant="text"
         startIcon={<ThumbUpAltOutlinedIcon fontSize="small" />}
-        onClick={() => onLike(likeStatus === 1 ? 0 : 1)}
+        onClick={() => onLike(likeStatus)}
         sx={{
           px: 1.5,
           bgcolor: likeStatus === 1 ? 'primary.main' : undefined,

@@ -15,4 +15,5 @@ export type LikeStatus = (typeof LikeStatus)[keyof typeof LikeStatus];
 export const LikeStatus = {
   NUMBER_MINUS_1: -1,
   NUMBER_0: 0,
+  NUMBER_1: 1,
 } as const;

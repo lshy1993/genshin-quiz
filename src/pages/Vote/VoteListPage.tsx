@@ -1,7 +1,7 @@
 import { Alert, CircularProgress } from '@mui/material';
 import { useState } from 'react';
-import { type GetVotesParams, GetVotesType } from '@/api/dto';
-import { useGetVotes } from '@/api/genshinQuizAPI';
+import { type GetPollsParams, GetPollsType } from '@/api/dto';
+import { useGetPolls } from '@/api/genshinQuizAPI';
 import BannerBox from '@/components/BannerBox';
 import FloatingAddButton from '@/components/Button/FloatingAddButton';
 import PageContainer from '@/components/PageContainer';
@@ -14,17 +14,17 @@ export default function VoteListPage() {
   const { user } = useUser();
   const { currentLanguage } = useLanguage();
 
-  const [searchParams, setSearchParams] = useState<GetVotesParams>({
+  const [searchParams, setSearchParams] = useState<GetPollsParams>({
     page: 1,
     limit: 25,
     query: '',
     language: [currentLanguage],
-    type: GetVotesType.available,
+    type: GetPollsType.available,
     sortBy: '',
     sortDesc: false,
   });
 
-  const { data: votesRes, isLoading, error } = useGetVotes(searchParams);
+  const { data: votesRes, isLoading, error } = useGetPolls(searchParams);
 
   if (isLoading) {
     return <CircularProgress />;
@@ -47,7 +47,7 @@ export default function VoteListPage() {
             page: 1,
           }))
         }
-        typeFilter={searchParams.type || GetVotesType.available}
+        typeFilter={searchParams.type || GetPollsType.available}
         setTypeFilter={(value) =>
           setSearchParams((prev) => ({
             ...prev,
@@ -56,7 +56,7 @@ export default function VoteListPage() {
           }))
         }
       />
-      <VoteTable votes={votesRes.votes} />
+      <VoteTable votes={votesRes.polls} />
       {user && <FloatingAddButton to="/votes/create" label="创建投票" />}
     </PageContainer>
   );

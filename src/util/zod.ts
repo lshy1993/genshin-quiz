@@ -1,5 +1,5 @@
 import z from 'zod';
-import { QuestionCategory, QuestionDifficulty, QuestionType } from '@/api/dto';
+import { Category, Difficulty, QuestionType } from '@/api/dto';
 
 export const loginSchema = z.object({
   email: z.string().email({ message: '邮箱格式不正确' }).min(1, { message: '请输入邮箱' }),
@@ -27,8 +27,8 @@ export const createQuestionOptionSchema = z.object({
 export const createQuestionSchema = z.object({
   public: z.boolean(),
   question_type: z.enum(QuestionType, { message: '请选择题目类型' }),
-  category: z.enum(QuestionCategory, { message: '请选择题目分类' }),
-  difficulty: z.enum(QuestionDifficulty, { message: '请选择题目难度' }),
+  category: z.enum(Category, { message: '请选择题目分类' }),
+  difficulty: z.enum(Difficulty, { message: '请选择题目难度' }),
   options: z
     .array(createQuestionOptionSchema)
     .min(2, '至少需要两个选项')

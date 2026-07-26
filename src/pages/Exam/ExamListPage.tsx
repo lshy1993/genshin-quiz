@@ -6,12 +6,12 @@ import BannerBox from '@/components/BannerBox';
 import ExamFilter from '@/components/Exam/ExamFilter';
 import ExamGrid from '@/components/Exam/ExamGrid';
 import PageContainer from '@/components/PageContainer';
-import { useLanguage } from '@/context/LanguageContext';
-import { useUser } from '@/context/UserContext';
+// import { useLanguage } from '@/context/LanguageContext';
+// import { useUser } from '@/context/UserContext';
 
 export default function ExamListPage() {
-  const { user } = useUser();
-  const { currentLanguage } = useLanguage();
+  // const { user } = useUser();
+  // const { currentLanguage } = useLanguage();
 
   const [searchParams, setSearchParams] = useState<GetExamsParams>({
     page: 1,

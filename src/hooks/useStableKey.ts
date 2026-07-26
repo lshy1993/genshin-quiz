@@ -9,11 +9,14 @@ import { useRef } from 'react';
  * 已有 `id` 的条目直接复用该 id；没有 `id` 的条目按对象引用缓存一个随机生成
  * 的 uuid，只要对象引用不变（即使内容被修改），key 就保持稳定。
  */
-export function useStableKey<T extends { id?: string }>() {
+export function useStableKey<T extends object>() {
   const keysRef = useRef(new WeakMap<T, string>());
 
   return (item: T): string => {
-    if (item.id) return item.id;
+    if ('id' in item && typeof item.id === 'string') {
+      return item.id;
+    }
+
     const cache = keysRef.current;
     let key = cache.get(item);
     if (!key) {

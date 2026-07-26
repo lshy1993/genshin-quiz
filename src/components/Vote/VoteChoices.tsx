@@ -16,17 +16,17 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import type { VoteOption, VoteSubmissionOption } from '@/api/dto';
+import type { PollOption, PollVote } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
 
 interface Props {
-  options: VoteOption[];
-  voted: VoteSubmissionOption[];
+  options: PollOption[];
+  voted: PollVote[];
   maxVotes: number;
   votesPerOption: number; // 每个选项最大可投票数
   votesPerUser: number; // 每个用户最大可投票数
-  handleSubmit: (selected: VoteSubmissionOption[]) => void;
+  handleSubmit: (selected: PollVote[]) => void;
 }
 
 export default function VoteChoices({
@@ -91,7 +91,7 @@ export default function VoteChoices({
   const handleConfirm = () => {
     setConfirmOpen(false);
     // 将对象格式转换为 VoteSubmissionOption[]
-    const options: VoteSubmissionOption[] = Object.entries(selected).map(([option_id, votes]) => ({
+    const options: PollVote[] = Object.entries(selected).map(([option_id, votes]) => ({
       option_id,
       votes,
     }));
@@ -127,7 +127,7 @@ export default function VoteChoices({
     );
   };
 
-  const renderResult = (option: VoteOption) => {
+  const renderResult = (option: PollOption) => {
     if (!option.id) return null;
     const votesForThisOption = selected[option.id] || 0;
     if (votesForThisOption > 0) {
@@ -136,7 +136,7 @@ export default function VoteChoices({
     return null;
   };
 
-  const renderAction = (option: VoteOption) => {
+  const renderAction = (option: PollOption) => {
     if (!option.id) return null;
     if (votesPerOption === 1) {
       const isVoted = option.id in selected && selected[option.id] > 0;
@@ -193,12 +193,12 @@ export default function VoteChoices({
 
   const filteredItems = options.filter((option) => {
     const text = option.text?.[currentLanguage] || '';
-    const desc = option.description || '';
+    const desc = option.description?.[currentLanguage] || '';
     return text.includes(filter) || desc.includes(filter);
   });
   if (sortByVotes !== '') {
     filteredItems.sort((a, b) =>
-      sortByVotes === 'asc' ? (a.votes ?? 0) - (b.votes ?? 0) : (b.votes ?? 0) - (a.votes ?? 0),
+      sortByVotes === 'asc' ? a.votes_count - b.votes_count : b.votes_count - a.votes_count,
     );
   }
   if (showSelectedOnly) {
@@ -273,11 +273,13 @@ export default function VoteChoices({
               >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.text?.[currentLanguage] || ''}</TableCell>
-                <TableCell>{item.description}</TableCell>
+                <TableCell>{item.description?.[currentLanguage] || ''}</TableCell>
                 <TableCell align="right">
                   {submitted ? renderResult(item) : renderAction(item)}
                 </TableCell>
-                {submitted && isAuthenticated && <TableCell align="right">{item.votes}</TableCell>}
+                {submitted && isAuthenticated && (
+                  <TableCell align="right">{item.votes_count}</TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

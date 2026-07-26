@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { useGetQuestions, useGetUser, useGetVotes } from '@/api/genshinQuizAPI';
+import { useGetPolls, useGetQuestions, useGetUser } from '@/api/genshinQuizAPI';
 import ContentCardGridSection from '@/components/ContentCardGridSection';
 import PageContainer from '@/components/PageContainer';
 import QuestionPreviewCard from '@/components/Question/QuestionPreviewCard';
@@ -54,7 +54,7 @@ export default function UserProfilePage() {
     sortBy: 'created_at',
     sortDesc: true,
   });
-  const { data: voteRes } = useGetVotes({
+  const { data: voteRes } = useGetPolls({
     created_by: id,
     limit: LIST_LIMIT,
     language: [currentLanguage],
@@ -74,7 +74,7 @@ export default function UserProfilePage() {
   const accuracy =
     user.total_answers > 0 ? ((user.correct_answers / user.total_answers) * 100).toFixed(1) : '-';
   const createdQuestions = questionRes?.questions ?? [];
-  const createdVotes = voteRes?.votes ?? [];
+  const createdVotes = voteRes?.polls ?? [];
 
   return (
     <PageContainer>
@@ -95,31 +95,29 @@ export default function UserProfilePage() {
               <Stack direction="row" spacing={1}>
                 <Typography sx={{ color: 'text.secondary' }}>{'注册于'}</Typography>
                 <Typography>{user.registered_at.toLocaleDateString()}</Typography>
-                {isMe && (
+                {isMe && me && (
                   <>
                     <Typography sx={{ color: 'text.secondary' }}>IP</Typography>
-                    <Typography>{user.registered_ip}</Typography>
+                    <Typography>{me.registered_ip}</Typography>
                   </>
                 )}
               </Stack>
-              <Stack direction="row" spacing={1}>
-                <Typography sx={{ color: 'text.secondary' }}>{'上次登录'}</Typography>
-                <Typography>
-                  {user.last_login_at ? new Date(user.last_login_at).toLocaleDateString() : '未知'}
-                </Typography>
-                {isMe && (
-                  <>
-                    <Typography sx={{ color: 'text.secondary' }}>IP</Typography>
-                    <Typography>{user.last_login_ip}</Typography>
-                  </>
-                )}
-              </Stack>
+              {isMe && me && (
+                <Stack direction="row" spacing={1}>
+                  <Typography sx={{ color: 'text.secondary' }}>{'上次登录'}</Typography>
+                  <Typography>
+                    {me.last_login_at ? new Date(me.last_login_at).toLocaleDateString() : '未知'}
+                  </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>IP</Typography>
+                  <Typography>{me.last_login_ip}</Typography>
+                </Stack>
+              )}
             </Stack>
           </Stack>
-          {isMe && (
+          {isMe && me && (
             <>
               <Divider />
-              <EditProfileForm user={user} initialNickname={user.nickname} mutate={mutate} />
+              <EditProfileForm user={me} initialNickname={me.nickname} mutate={mutate} />
               <Divider />
               <ChangePasswordForm />
             </>
@@ -138,10 +136,8 @@ export default function UserProfilePage() {
             <StatItem label="正确率" value={accuracy === '-' ? '-' : `${accuracy}%`} />
             <StatItem label="答题次数" value={formatNumberShort(user.total_answers)} />
             <StatItem label="创建题目" value={formatNumberShort(user.questions_created)} />
-            <StatItem label="参与投票" value={formatNumberShort(user.votes)} />
-            {typeof user.likes_received === 'number' && (
-              <StatItem label="获赞数" value={formatNumberShort(user.likes_received)} />
-            )}
+            <StatItem label="创建投票" value={formatNumberShort(user.polls_created)} />
+            <StatItem label="获赞数" value={formatNumberShort(user.likes_received)} />
           </Stack>
         </CardContent>
       </Card>
@@ -151,10 +147,10 @@ export default function UserProfilePage() {
         title={isMe ? '我创建的投票' : '创建的投票'}
         items={createdVotes}
         emptyText="还没有创建过投票"
-        getKey={(vote) => vote.id}
+        getKey={(poll) => poll.id}
         gridSize={{ xs: 12, md: 6 }}
         spacing={2}
-        renderCard={(vote) => <VotePreviewCard vote={vote} language={currentLanguage} />}
+        renderCard={(poll) => <VotePreviewCard poll={poll} language={currentLanguage} />}
       />
       {/* 创建的题目 */}
       <ContentCardGridSection

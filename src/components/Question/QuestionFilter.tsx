@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
-import type { GetQuestionsParams, QuestionCategory, QuestionDifficulty } from '@/api/dto';
+import type { Category, Difficulty, GetQuestionsParams } from '@/api/dto';
 import { allCategories, allDifficulties, allLanguages, allQuestionTypes } from '@/util/enum';
 import {
   getCategoryColor,
@@ -43,7 +43,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
     return <li {...props}>{getLanguageLabel(option)}</li>;
   };
 
-  const handleCategoryChange = (category: QuestionCategory | 'all') => {
+  const handleCategoryChange = (category: Category | 'all') => {
     setSearchParams((prev) => {
       if (category === 'all') {
         const { category, ...rest } = prev;
@@ -76,7 +76,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
     }));
   };
 
-  const handleQuestionDifficultyToggle = (diff: QuestionDifficulty | 'all') => {
+  const handleQuestionDifficultyToggle = (diff: Difficulty | 'all') => {
     setSearchParams((prev) => {
       if (diff === 'all') {
         const { difficulty, ...rest } = prev;

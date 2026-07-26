@@ -1,7 +1,7 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import { Box, Divider, Stack, Tooltip, Typography } from '@mui/material';
-import type { User, Vote } from '@/api/dto';
+import type { Poll, UserPublic } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
 import ExpiredTimeChip from '../Chip/ExpiredTimeChip';
@@ -9,13 +9,13 @@ import UsersChip from '../Chip/UsersChip';
 import VotesChip from '../Chip/VotesChip';
 
 interface Props {
-  voteInfo: Vote;
-  user: User | null;
+  voteInfo: Poll;
+  user: UserPublic | null;
 }
 
 export default function VoteMetaHeader({ voteInfo, user }: Props) {
   const { currentLanguage } = useLanguage();
-  const hasVoted = voteInfo.voted || (voteInfo.voted_options && voteInfo.voted_options.length > 0);
+  const hasVoted = voteInfo.my_votes && voteInfo.my_votes.length > 0;
   const isOwner = !!user && voteInfo.created_by === user.uuid;
 
   return (
@@ -60,8 +60,8 @@ export default function VoteMetaHeader({ voteInfo, user }: Props) {
           <ExpiredTimeChip start={voteInfo.start_at} end={voteInfo.expire_at} />
         </Stack>
         <Stack direction="row" spacing={1} divider={<Divider orientation="vertical" flexItem />}>
-          <UsersChip participants={voteInfo.participants ?? 0} />
-          <VotesChip votes={voteInfo.total_votes ?? 0} />
+          <UsersChip participants={voteInfo.participants_count} />
+          <VotesChip votes={voteInfo.total_votes_count} />
         </Stack>
       </Box>
     </Stack>

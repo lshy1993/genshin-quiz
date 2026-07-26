@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import type { VoteSubmissionOption } from '@/api/dto';
-import { postLikeVote, postVote, useGetVote } from '@/api/genshinQuizAPI';
+import type { LikeStatus, PollVote } from '@/api/dto';
+import { postLikePoll, postVotePoll, useGetPoll } from '@/api/genshinQuizAPI';
 import RandomButton from '@/components/Button/RandomButton';
 import PageContainer from '@/components/PageContainer';
 import VoteChoices from '@/components/Vote/VoteChoices';
@@ -27,7 +27,7 @@ export default function VoteDetailPage() {
   const { currentLanguage } = useLanguage();
   const { isAuthenticated, user } = useUser();
   const { id } = useParams<{ id: string }>();
-  const { data: voteInfo, isLoading, error, mutate } = useGetVote(id ?? '');
+  const { data: voteInfo, isLoading, error, mutate } = useGetPoll(id ?? '');
 
   const [currentTab, setCurrentTab] = useState<number>(0);
 
@@ -41,12 +41,12 @@ export default function VoteDetailPage() {
   }
 
   // 提交投票结果
-  const handleSubmit = (options: VoteSubmissionOption[]) => {
+  const handleSubmit = (options: PollVote[]) => {
     if (options.length === 0) {
       return;
     }
 
-    postVote(voteInfo.id, { options, anonymous: false })
+    postVotePoll(voteInfo.id, { options, anonymous: false })
       .then(() => {
         mutate();
       })
@@ -56,8 +56,8 @@ export default function VoteDetailPage() {
   };
 
   // 处理点赞
-  const handleLike = (likeStatus: 1 | 0 | -1) => {
-    postLikeVote(voteInfo.id, { like: likeStatus })
+  const handleLike = (likeStatus: LikeStatus) => {
+    postLikePoll(voteInfo.id, { like: likeStatus })
       .then(() => {
         mutate();
       })
@@ -85,7 +85,7 @@ export default function VoteDetailPage() {
             {currentTab === 0 && (
               <VoteChoices
                 options={voteInfo.options}
-                voted={voteInfo.voted_options ?? []}
+                voted={voteInfo.my_votes}
                 maxVotes={voteInfo.votes_per_user}
                 votesPerOption={voteInfo.votes_per_option ?? 1}
                 votesPerUser={voteInfo.votes_per_user}
@@ -102,13 +102,13 @@ export default function VoteDetailPage() {
                   {voteInfo.options.map((option) => (
                     <Box key={option.id} sx={{ mb: 1 }}>
                       <Typography variant="body2">
-                        {option.text?.[currentLanguage]}:{option.votes} 票
+                        {option.text?.[currentLanguage]}:{option.votes_count} 票
                         <Box
                           component="span"
                           sx={{
                             display: 'inline-block',
                             ml: 1,
-                            width: `${((option.votes ?? 0) / (voteInfo.total_votes ?? 1)) * 100}%`,
+                            width: `${((option.votes_count ?? 0) / (voteInfo.total_votes_count ?? 1)) * 100}%`,
                             height: 8,
                             bgcolor: 'primary.main',
                             borderRadius: 1,

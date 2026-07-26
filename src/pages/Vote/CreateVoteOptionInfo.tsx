@@ -1,15 +1,15 @@
 import { Add as AddIcon } from '@mui/icons-material';
 import { Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import type { VoteOption, VoteWithOption } from '@/api/dto';
+import type { CreatePollOptionRequest, CreatePollRequest } from '@/api/dto';
 import LanguageTabs from '@/components/LanguageTabs';
 import { useStableKey } from '@/hooks/useStableKey';
 import CreateVoteOption from './CreateVoteOption';
 
 interface Props {
   errors: Record<string, string | undefined>;
-  form: VoteWithOption;
-  setForm: React.Dispatch<React.SetStateAction<VoteWithOption>>;
+  form: CreatePollRequest;
+  setForm: React.Dispatch<React.SetStateAction<CreatePollRequest>>;
   setTouchedField: (field: string) => void;
 }
 
@@ -19,10 +19,13 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
   const [selectedLang, setSelectedLang] = useState<string>(availableLanguages[0]);
 
   // 未保存的选项没有 id，且 text 是对象无法直接拼接成唯一 key，用共享的 useStableKey 生成稳定 key。
-  const getOptionKey = useStableKey<VoteOption>();
+  const getOptionKey = useStableKey<CreatePollOptionRequest>();
 
   const addOption = () => {
-    const newOption: VoteOption = { type: 'text', text: { [selectedLang]: '' } };
+    const newOption: CreatePollOptionRequest = {
+      option_type: 'text',
+      text: { [selectedLang]: '' },
+    };
     setForm({ ...form, options: [...form.options, newOption] });
   };
 

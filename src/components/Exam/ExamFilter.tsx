@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import type { Dispatch, SetStateAction } from 'react';
 import type { Exam, GetExamsParams } from '@/api/dto';
-import { QuestionCategory } from '@/api/dto';
+import { Category } from '@/api/dto';
 import { ExamSortType } from '@/util/enum';
 import { getCategoryLabel } from '@/util/utils';
 
@@ -24,7 +24,7 @@ interface ExamFilterProps {
 
 export default function ExamFilter({ examList, searchParams, setSearchParams }: ExamFilterProps) {
   // 获取所有分类、难度
-  const allCategories = Object.values(QuestionCategory);
+  const allCategories = Object.values(Category);
   const allDifficulties = Array.from(new Set(examList.map((e) => e.difficulty).filter(Boolean)));
 
   // const handleTagToggle = (tag: string) => {
@@ -33,7 +33,7 @@ export default function ExamFilter({ examList, searchParams, setSearchParams }: 
   //   );
   // };
 
-  const handleCategoryToggle = (category: QuestionCategory | 'all') => {
+  const handleCategoryToggle = (category: Category | 'all') => {
     setSearchParams((prev) => {
       if (category === 'all') {
         const { category, ...rest } = prev;

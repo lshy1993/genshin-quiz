@@ -12,6 +12,7 @@ export * from './category';
 export * from './commonError';
 export * from './createExamRequest';
 export * from './createExamRequestAllOf';
+export * from './createPollOptionRequest';
 export * from './createPollRequest';
 export * from './createPollRequestAllOf';
 export * from './createQuestionOptionRequest';

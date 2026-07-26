@@ -12,13 +12,13 @@ import {
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { t } from 'i18next';
 import { DateTime } from 'luxon';
-import type { QuestionCategory, VoteWithOption } from '@/api/dto';
+import type { Category, CreatePollRequest } from '@/api/dto';
 import { allCategories } from '@/util/enum';
 
 interface Props {
   errors: Record<string, string | undefined>;
-  form: VoteWithOption;
-  setForm: React.Dispatch<React.SetStateAction<VoteWithOption>>;
+  form: CreatePollRequest;
+  setForm: React.Dispatch<React.SetStateAction<CreatePollRequest>>;
   setTouchedField: (field: string) => void;
 }
 
@@ -160,7 +160,7 @@ export default function CreateVoteBasicInfo({ errors, form, setForm, setTouchedF
           size="small"
           onChange={(e) => {
             setTouchedField('category');
-            setForm((prev) => ({ ...prev, category: e.target.value as QuestionCategory }));
+            setForm((prev) => ({ ...prev, category: e.target.value as Category }));
           }}
           label="分类"
           required

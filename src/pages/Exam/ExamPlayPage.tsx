@@ -11,7 +11,6 @@ import {
 import { useState } from 'react';
 import type { Exam, Question } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
-import { mockQuestionData } from '@/util/mock';
 
 interface Props {
   exam: Exam;
@@ -26,7 +25,7 @@ interface AnswerRecord {
 export default function ExamPlayPage({ exam }: Props) {
   const { currentLanguage } = useLanguage();
   const questionIds = exam.questions.map((q) => q.question_id);
-  const questions: Question[] = mockQuestionData.filter((q) => questionIds.includes(q.id));
+  const questions: Question[] = [];
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [answers, setAnswers] = useState<Record<number, AnswerRecord>>({});
