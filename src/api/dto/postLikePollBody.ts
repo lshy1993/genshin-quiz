@@ -7,6 +7,6 @@
  */
 import type { LikeStatus } from './likeStatus';
 
-export type PostLikeExamBody = {
+export type PostLikePollBody = {
   like: LikeStatus;
 };

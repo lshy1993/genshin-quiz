@@ -5,8 +5,8 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { LikeStatus } from './likeStatus';
 
-export type PostLikeExamBody = {
-  like: LikeStatus;
+export type CreateQuestionOptionRequestAllOf = {
+  /** 是否为正确答案 */
+  is_answer: boolean;
 };

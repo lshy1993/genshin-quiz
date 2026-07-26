@@ -6,9 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-import type { QuestionAllOf } from './questionAllOf';
+import type { CreateQuestionRequestAllOf } from './createQuestionRequestAllOf';
 import type { QuestionBase } from './questionBase';
 
-export type Question = QuestionBase &
-  QuestionAllOf &
-  Required<Pick<QuestionBase & QuestionAllOf, 'answer_count' | 'correct_count'>>;
+export type CreateQuestionRequest = QuestionBase & CreateQuestionRequestAllOf;

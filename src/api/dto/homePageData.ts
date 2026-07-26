@@ -6,12 +6,12 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { Exam } from './exam';
+import type { Poll } from './poll';
 import type { Question } from './question';
-import type { Vote } from './vote';
 
 export interface HomePageData {
   popularExams: Exam[];
   latestQuestions: Question[];
-  latestVotes: Vote[];
-  popularVotes: Vote[];
+  latestPolls: Poll[];
+  popularPolls: Poll[];
 }

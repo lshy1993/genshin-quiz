@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-import type { RecentSubmissionAllOf } from './recentSubmissionAllOf';
+import type { QuestionSubmissionAllOf } from './questionSubmissionAllOf';
 import type { SubmissionBase } from './submissionBase';
 
-export type RecentSubmission = SubmissionBase & RecentSubmissionAllOf;
+export type QuestionSubmission = SubmissionBase & QuestionSubmissionAllOf;

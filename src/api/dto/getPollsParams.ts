@@ -5,10 +5,9 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { Category } from './category';
-import type { Difficulty } from './difficulty';
+import type { GetPollsType } from './getPollsType';
 
-export type GetExamsParams = {
+export type GetPollsParams = {
   /**
    * @minimum 1
    */
@@ -18,11 +17,11 @@ export type GetExamsParams = {
    * @maximum 100
    */
   limit?: number;
-  category?: Category;
-  difficulty?: Difficulty;
+  type?: GetPollsType;
   query?: string;
+  language?: string[];
   /**
-   * 只返回指定用户创建的测验
+   * 只返回指定用户创建的投票
    */
   created_by?: string;
   sortBy?: string;

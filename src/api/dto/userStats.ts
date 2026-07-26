@@ -5,8 +5,11 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { LikeStatus } from './likeStatus';
 
-export type PostLikeExamBody = {
-  like: LikeStatus;
-};
+export interface UserStats {
+  total_answers: number;
+  correct_answers: number;
+  questions_created: number;
+  polls_created: number;
+  likes_received: number;
+}

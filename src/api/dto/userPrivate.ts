@@ -5,9 +5,9 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { UserPublic } from './userPublic';
 
-export type GetUsers200 = {
-  users: UserPublic[];
-  total: number;
-};
+import type { UserPrivacy } from './userPrivacy';
+import type { UserPublic } from './userPublic';
+import type { UserSecurity } from './userSecurity';
+
+export type UserPrivate = UserPublic & UserPrivacy & UserSecurity;

@@ -5,8 +5,9 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { LikeStatus } from './likeStatus';
+import type { Poll } from './poll';
 
-export type PostLikeExamBody = {
-  like: LikeStatus;
+export type GetPolls200 = {
+  polls: Poll[];
+  total: number;
 };

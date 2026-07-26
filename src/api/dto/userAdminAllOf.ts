@@ -5,8 +5,7 @@
  * API for Genshin Impact Quiz Application
  * OpenAPI spec version: 1.0.0
  */
-import type { LikeStatus } from './likeStatus';
 
-export type PostLikeExamBody = {
-  like: LikeStatus;
+export type UserAdminAllOf = {
+  is_deleted: boolean;
 };
