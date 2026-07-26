@@ -1,37 +1,35 @@
 import { Alert, Button, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import type { User } from '@/api/dto';
+import type { Gender, UserPrivate, Visibility } from '@/api/dto';
 import { updateUser } from '@/api/genshinQuizAPI';
 import CountrySelect from '../Select/CountrySelect';
 
 interface Props {
-  user: User;
+  user: UserPrivate;
   initialNickname: string;
   mutate: () => void;
 }
 
-type UserSexuality = User['sexuality'];
-
 export default function EditProfileForm({ user, initialNickname, mutate }: Props) {
   const [nickname, setNickname] = useState<string>(initialNickname ?? '');
   const [bio, setBio] = useState<string>(user.bio ?? '');
-  const [sexuality, setSexuality] = useState<UserSexuality>(user.sexuality ?? 'other');
+  const [gender, setGender] = useState<Gender>(user.gender ?? 'other');
   const [country, setCountry] = useState<string>(user.country ?? '');
-  const [emailPublicity, setEmailPublicity] = useState<boolean>(user.email_public ?? false);
+  const [emailPublicity, setEmailPublicity] = useState<Visibility>(user.email_visibility);
   const [saving, setSaving] = useState<boolean>(false);
 
-  const sexualityOptions: UserSexuality[] = ['male', 'female', 'other'];
-  const emailPublicityOptions: string[] = ['true', 'false'];
+  const genderOptions: Gender[] = ['male', 'female', 'other'];
+  const emailPublicityOptions: Visibility[] = ['public', 'private'];
 
   const handleSave = () => {
     setSaving(true);
-    updateUser(user.uuid, {
+    updateUser({
       ...user,
       nickname,
       bio,
-      sexuality,
+      gender,
       country,
-      email_public: emailPublicity,
+      email_visibility: emailPublicity,
     })
       .then(() => {
         mutate();
@@ -65,10 +63,10 @@ export default function EditProfileForm({ user, initialNickname, mutate }: Props
         <TextField
           select
           size="small"
-          value={sexuality}
-          onChange={(e) => setSexuality(e.target.value as UserSexuality)}
+          value={gender}
+          onChange={(e) => setGender(e.target.value as Gender)}
         >
-          {sexualityOptions.map((option) => (
+          {genderOptions.map((option) => (
             <MenuItem key={option} value={option}>
               {option}
             </MenuItem>
@@ -122,11 +120,11 @@ export default function EditProfileForm({ user, initialNickname, mutate }: Props
           select
           size="small"
           value={emailPublicity}
-          onChange={(e) => setEmailPublicity(e.target.value === 'true')}
+          onChange={(e) => setEmailPublicity(e.target.value as Visibility)}
         >
           {emailPublicityOptions.map((option) => (
             <MenuItem key={option} value={option}>
-              {option === 'true' ? '是' : '否'}
+              {option}
             </MenuItem>
           ))}
         </TextField>

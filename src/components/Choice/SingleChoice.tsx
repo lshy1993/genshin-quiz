@@ -21,10 +21,10 @@ interface Props {
 
 export default function SingleChoice({ options, solved, selected, setSelected, disabled }: Props) {
   const { currentLanguage } = useLanguage();
-  const total = options.reduce((sum, opt) => sum + (opt.count ?? 0), 0);
+  const total = options.reduce((sum, opt) => sum + (opt.selected_count ?? 0), 0);
 
   const renderOption = (opt: QuestionOption) => {
-    const percent = total > 0 ? Math.round(((opt.count ?? 0) / total) * 100) : 0;
+    const percent = total > 0 ? Math.round(((opt.selected_count ?? 0) / total) * 100) : 0;
 
     return (
       <Box key={opt.id}>
@@ -44,7 +44,7 @@ export default function SingleChoice({ options, solved, selected, setSelected, d
                 sx={{ height: 16, flex: 1, transition: '0.5s' }}
               />
             </Tooltip>
-            <Tooltip title={opt.count ?? 0} placement="bottom" arrow>
+            <Tooltip title={opt.selected_count ?? 0} placement="bottom" arrow>
               <Typography
                 variant="caption"
                 sx={{
@@ -53,7 +53,7 @@ export default function SingleChoice({ options, solved, selected, setSelected, d
                   minWidth: 80,
                 }}
               >
-                {`${formatNumberShort(opt.count ?? 0)} (${percent}%)`}
+                {`${formatNumberShort(opt.selected_count ?? 0)} (${percent}%)`}
               </Typography>
             </Tooltip>
           </Box>

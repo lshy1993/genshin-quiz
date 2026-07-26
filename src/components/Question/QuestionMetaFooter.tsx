@@ -20,8 +20,8 @@ export default function QuestionMetaFooter({ question, handleLike }: Props) {
       }}
     >
       <LikeButtons
-        likes={question.likes ?? 0}
-        likeStatus={question.likeStatus}
+        likes={question.likes_count ?? 0}
+        likeStatus={question.like_status}
         onLike={handleLike}
       />
       <CommentButton count={0} disabled />

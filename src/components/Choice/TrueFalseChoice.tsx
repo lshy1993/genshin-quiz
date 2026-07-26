@@ -27,8 +27,8 @@ export default function TrueFalseChoice({
     return <Alert severity="error">{t('question.error.options_invalid')}</Alert>;
   }
 
-  const yesCount = yesOption.count ?? 0;
-  const noCount = noOption.count ?? 0;
+  const yesCount = yesOption.selected_count ?? 0;
+  const noCount = noOption.selected_count ?? 0;
 
   return (
     <>

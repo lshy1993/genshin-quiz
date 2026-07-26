@@ -9,7 +9,7 @@
 export type QuestionOptionAllOf = {
   id: string;
   /** 选中次数 */
-  selected_count?: number;
+  selected_count: number;
   /** 是否为正确答案 */
   is_answer?: boolean;
 };

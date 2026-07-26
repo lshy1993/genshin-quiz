@@ -12,9 +12,11 @@ import {
   Typography,
 } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
+import { useLanguage } from '@/context/LanguageContext';
 import { useGetExam } from '../../api/genshinQuizAPI';
 
 export default function ExamDetailPage() {
+  const { currentLanguage } = useLanguage();
   const { id } = useParams<{ id: string }>();
   const { data: exam, isLoading, error } = useGetExam(id as string);
 
@@ -46,7 +48,7 @@ export default function ExamDetailPage() {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom>
-            {exam.title}
+            {exam.title[currentLanguage]}
           </Typography>
           <Typography
             variant="body1"
@@ -55,7 +57,7 @@ export default function ExamDetailPage() {
               mb: 2,
             }}
           >
-            {exam.description}
+            {exam.description?.[currentLanguage]}
           </Typography>
           <Box>
             {exam.categories?.map((category) => (

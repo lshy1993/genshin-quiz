@@ -2,11 +2,11 @@ import { t } from 'i18next';
 import { DateTime } from 'luxon';
 
 import {
+  type CreateQuestionRequest,
   type Question,
   QuestionCategory,
   QuestionDifficulty,
   QuestionType,
-  type QuestionWithAnswer,
   type VoteWithOption,
 } from '@/api/dto';
 
@@ -182,7 +182,7 @@ export function areAnswersEqual(answer: string[], selected: string[]): boolean {
   return true;
 }
 
-export function createEmptyQuestionForm(languageCode: string): QuestionWithAnswer {
+export function createEmptyQuestionForm(languageCode: string): CreateQuestionRequest {
   return {
     public: true,
     category: QuestionCategory.character,

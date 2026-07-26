@@ -21,7 +21,7 @@ import { useGetHome } from '../api/genshinQuizAPI';
 import CategoryChip from '../components/Chip/CategoryChip';
 import ContentCardGridSection from '../components/ContentCardGridSection';
 import QuestionPreviewCard from '../components/Question/QuestionPreviewCard';
-import VotePreviewCard from '../components/Vote/VotePreviewCard';
+import PollPreviewCard from '../components/Vote/PollPreviewCard';
 import { useLanguage } from '../context/LanguageContext';
 import { getDifficultyColor, getDifficultyLabel } from '../util/utils';
 
@@ -49,8 +49,8 @@ export default function HomePage() {
 
   const popularExams: Exam[] = homeData?.popularExams ?? [];
   const latestQuestions = homeData?.latestQuestions ?? [];
-  const latestVotes = homeData?.latestVotes ?? [];
-  const popularVotes = homeData?.popularVotes ?? [];
+  const latestPolls = homeData?.latestPolls ?? [];
+  const popularPolls = homeData?.popularPolls ?? [];
 
   return (
     <Box
@@ -62,19 +62,19 @@ export default function HomePage() {
         {/* 快捷入口 */}
         <HomeLinks />
         {/* 热门投票 */}
-        {popularVotes.length > 0 && (
+        {popularPolls.length > 0 && (
           <ContentCardGridSection
             icon={<WhatshotIcon color="error" />}
             title="热门投票"
             action={
-              <Button component={Link} to="/votes" size="small" endIcon={<ArrowForwardIcon />}>
+              <Button component={Link} to="/polls" size="small" endIcon={<ArrowForwardIcon />}>
                 查看更多
               </Button>
             }
-            items={popularVotes}
-            getKey={(vote) => vote.id}
-            renderCard={(vote) => (
-              <VotePreviewCard vote={vote} language={currentLanguage} actionLabel="参与投票" />
+            items={popularPolls}
+            getKey={(poll) => poll.id}
+            renderCard={(poll) => (
+              <PollPreviewCard poll={poll} language={currentLanguage} actionLabel="参与投票" />
             )}
           />
         )}
@@ -94,7 +94,7 @@ export default function HomePage() {
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography variant="h6" component="h3" gutterBottom>
-                    {exam.title}
+                    {exam.title[currentLanguage]}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -102,7 +102,7 @@ export default function HomePage() {
                       color: 'text.secondary',
                     }}
                   >
-                    {exam.description}
+                    {exam.description?.[currentLanguage]}
                   </Typography>
                   <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
                     {exam.categories?.map((cat) => (
@@ -148,19 +148,19 @@ export default function HomePage() {
           />
         )}
         {/* 最新投票 */}
-        {latestVotes.length > 0 && (
+        {latestPolls.length > 0 && (
           <ContentCardGridSection
             icon={<UpdateIcon color="info" />}
             title="最新投票"
             action={
-              <Button component={Link} to="/votes" size="small" endIcon={<ArrowForwardIcon />}>
+              <Button component={Link} to="/polls" size="small" endIcon={<ArrowForwardIcon />}>
                 查看更多
               </Button>
             }
-            items={latestVotes}
-            getKey={(vote) => vote.id}
-            renderCard={(vote) => (
-              <VotePreviewCard vote={vote} language={currentLanguage} actionLabel="参与投票" />
+            items={latestPolls}
+            getKey={(poll) => poll.id}
+            renderCard={(poll) => (
+              <PollPreviewCard poll={poll} language={currentLanguage} actionLabel="参与投票" />
             )}
           />
         )}

@@ -1,6 +1,7 @@
 import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { Exam } from '@/api/dto';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Props {
   exams: Exam[];
@@ -8,6 +9,7 @@ interface Props {
 
 export default function ExamGrid({ exams }: Props) {
   const navigate = useNavigate();
+  const { currentLanguage } = useLanguage();
 
   // const selectedValues = useMemo(
   //   () => allLanguages.filter((v) => params.language?.includes(v)),
@@ -37,7 +39,7 @@ export default function ExamGrid({ exams }: Props) {
           <Card key={exam.id}>
             <CardContent>
               <Typography variant="h6" component="h3" gutterBottom>
-                {exam.title}
+                {exam.title[currentLanguage]}
               </Typography>
               <Typography
                 variant="body2"
@@ -46,7 +48,7 @@ export default function ExamGrid({ exams }: Props) {
                   mb: 2,
                 }}
               >
-                {exam.description}
+                {exam.description?.[currentLanguage]}
               </Typography>
               <Box>
                 {exam.categories?.map((cat) => (

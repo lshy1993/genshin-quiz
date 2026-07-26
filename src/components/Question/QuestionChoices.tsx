@@ -121,7 +121,7 @@ export default function QuestionChoices({ question, mutate }: Props) {
                   mt: 1,
                 }}
               >
-                解析：{question.explanation}
+                解析：{question.explanation?.[currentLanguage]}
               </Typography>
             )}
             <Button
@@ -150,7 +150,7 @@ export default function QuestionChoices({ question, mutate }: Props) {
   return (
     <Stack spacing={3}>
       <Box sx={{ alignItems: 'center' }}>
-        <Typography variant="h4">{question.question_text}</Typography>
+        <Typography variant="h4">{question.question_text[currentLanguage]}</Typography>
       </Box>
       {renderChoices()}
       {!submitted ? (

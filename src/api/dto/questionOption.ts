@@ -9,6 +9,4 @@
 import type { QuestionOptionAllOf } from './questionOptionAllOf';
 import type { QuestionOptionBase } from './questionOptionBase';
 
-export type QuestionOption = QuestionOptionBase &
-  QuestionOptionAllOf &
-  Required<Pick<QuestionOptionBase & QuestionOptionAllOf, 'count'>>;
+export type QuestionOption = QuestionOptionBase & QuestionOptionAllOf;

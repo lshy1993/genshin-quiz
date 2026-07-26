@@ -16,9 +16,9 @@ export type QuestionAllOf = {
   solved: boolean;
   like_status: LikeStatus;
   /** 总答题人数 */
-  answers_count?: number;
+  answers_count: number;
   /** 总答对人数 */
-  correct_answers_count?: number;
+  correct_answers_count: number;
   /** 点赞数 */
   likes_count: number;
   created_by: string;

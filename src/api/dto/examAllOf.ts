@@ -11,8 +11,8 @@ import type { LikeStatus } from './likeStatus';
 
 export type ExamAllOf = {
   id: string;
-  created_by?: string;
-  created_at?: Date;
+  created_by: string;
+  created_at: Date;
   updated_at: Date;
   /** 点赞数 */
   likes_count: number;

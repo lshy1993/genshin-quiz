@@ -1,11 +1,14 @@
 import { Box, Divider, LinearProgress, Typography } from '@mui/material';
 import type { QuestionOption } from '@/api/dto';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Props {
   options: QuestionOption[];
 }
 
 export default function QuestionStatistics({ options }: Props) {
+  const { currentLanguage } = useLanguage();
+
   return (
     <Box>
       <Divider sx={{ my: 1 }} />
@@ -13,11 +16,11 @@ export default function QuestionStatistics({ options }: Props) {
       {options.map((option) => (
         <Box key={option.id} sx={{ mb: 1 }}>
           <Typography variant="body2" sx={{ mb: 0.5 }}>
-            {option.text}
+            {option.text?.[currentLanguage]}
           </Typography>
           <LinearProgress
             variant="determinate"
-            value={option.count ? option.count * 2 : 0}
+            value={option.selected_count ? option.selected_count * 2 : 0}
             sx={{ height: 10, borderRadius: 1 }}
           />
           <Typography
@@ -26,7 +29,7 @@ export default function QuestionStatistics({ options }: Props) {
               color: 'text.secondary',
             }}
           >
-            {option.count}票
+            {option.selected_count}票
           </Typography>
         </Box>
       ))}

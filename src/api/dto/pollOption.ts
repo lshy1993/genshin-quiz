@@ -9,6 +9,4 @@
 import type { PollOptionAllOf } from './pollOptionAllOf';
 import type { PollOptionBase } from './pollOptionBase';
 
-export type PollOption = PollOptionBase &
-  PollOptionAllOf &
-  Required<Pick<PollOptionBase & PollOptionAllOf, 'type'>>;
+export type PollOption = PollOptionBase & PollOptionAllOf;

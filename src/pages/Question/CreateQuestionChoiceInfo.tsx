@@ -11,10 +11,10 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import {
+  type CreateQuestionRequest,
   type QuestionOption,
   QuestionOptionType,
   QuestionType,
-  type QuestionWithAnswer,
 } from '@/api/dto';
 import LanguageTabs from '@/components/LanguageTabs';
 import { useLanguage } from '@/context/LanguageContext';
@@ -23,8 +23,8 @@ import CreateQuestionChoice from './CreateQuestionChoice';
 
 interface Props {
   errors: Record<string, string | undefined>;
-  form: QuestionWithAnswer;
-  setForm: React.Dispatch<React.SetStateAction<QuestionWithAnswer>>;
+  form: CreateQuestionRequest;
+  setForm: React.Dispatch<React.SetStateAction<CreateQuestionRequest>>;
   setTouchedField: (field: string) => void;
   removeTouchedField: (field: string) => void;
 }

@@ -1,7 +1,7 @@
 import { Alert, Box, Button, Paper, Stack, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import type { QuestionWithAnswer } from '@/api/dto';
+import type { CreateQuestionRequest } from '@/api/dto';
 import { postCreateQuestion } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
 import { useLanguage } from '@/context/LanguageContext';
@@ -14,7 +14,7 @@ export default function CreateQuestionPage() {
   const { currentLanguage } = useLanguage();
   const navigate = useNavigate();
   // 表单状态
-  const [form, setForm] = useState<QuestionWithAnswer>(createEmptyQuestionForm(currentLanguage));
+  const [form, setForm] = useState<CreateQuestionRequest>(createEmptyQuestionForm(currentLanguage));
   const [loading, setLoading] = useState(false);
   // 已触摸字段集合
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());

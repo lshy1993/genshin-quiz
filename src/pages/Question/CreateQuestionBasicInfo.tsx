@@ -1,17 +1,17 @@
 import { FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material';
 import { t } from 'i18next';
 import type {
+  CreateQuestionRequest,
   QuestionCategory,
   QuestionDifficulty,
   QuestionType,
-  QuestionWithAnswer,
 } from '@/api/dto';
 import { allCategories, allDifficulties, allQuestionTypes } from '@/util/enum';
 
 interface Props {
   errors: Record<string, string | undefined>;
-  form: QuestionWithAnswer;
-  setForm: React.Dispatch<React.SetStateAction<QuestionWithAnswer>>;
+  form: CreateQuestionRequest;
+  setForm: React.Dispatch<React.SetStateAction<CreateQuestionRequest>>;
   setTouchedField: (field: string) => void;
 }
 

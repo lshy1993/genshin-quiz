@@ -76,16 +76,16 @@ function App() {
               }
             />
             <Route path="/questions/:id" element={<QuestionDetailPage />} />
-            <Route path="/votes" element={<VoteListPage />} />
+            <Route path="/polls" element={<VoteListPage />} />
             <Route
-              path="/votes/create"
+              path="/polls/create"
               element={
                 <RequireAuth>
                   <CreateVotePage />
                 </RequireAuth>
               }
             />
-            <Route path="/votes/:id" element={<VoteDetailPage />} />
+            <Route path="/polls/:id" element={<VoteDetailPage />} />
             <Route path="/exams" element={<ExamListPage />} />
             <Route path="/exams/:id" element={<ExamDetailPage />} />
             <Route path="/rank" element={<RankPage />} />

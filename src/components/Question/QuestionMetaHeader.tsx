@@ -32,7 +32,7 @@ export default function QuestionMetaHeader({ question }: Props) {
             color: 'text.secondary',
           }}
         >
-          正确次数: {question.correct_count}/{question.answer_count}
+          正确次数: {question.correct_answers_count}/{question.answers_count}
         </Typography>
         <Typography
           variant="body2"

@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardContent, Chip, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import type { User } from '../api/dto';
+import type { UserPublic } from '../api/dto';
 import { useGetUsers } from '../api/genshinQuizAPI';
 
 export default function UsersListPage() {
@@ -14,7 +14,7 @@ export default function UsersListPage() {
     );
   }
 
-  const userList: User[] = users?.users || [];
+  const userList: UserPublic[] = users?.users || [];
 
   return (
     <Box sx={{ p: 3 }}>

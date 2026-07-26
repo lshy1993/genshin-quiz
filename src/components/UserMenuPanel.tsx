@@ -33,7 +33,7 @@ export default function UserMenuPanel({ setOpen }: Props) {
   const { currentLanguage, setCurrentLanguage } = useLanguage();
   const navigate = useNavigate();
   const { mutate } = useSWRConfig();
-  const { trigger: updateUser } = useUpdateUser(user?.uuid ?? '');
+  const { trigger: updateUser } = useUpdateUser();
 
   const handleCreateQuestion = () => {
     navigate('/questions/create');

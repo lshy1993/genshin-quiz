@@ -9,6 +9,4 @@
 import type { ExamAllOf } from './examAllOf';
 import type { ExamBase } from './examBase';
 
-export type Exam = ExamBase &
-  ExamAllOf &
-  Required<Pick<ExamBase & ExamAllOf, 'create_at' | 'create_by'>>;
+export type Exam = ExamBase & ExamAllOf;

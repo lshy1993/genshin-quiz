@@ -1,25 +1,25 @@
 import { Box, Button, Card, CardContent, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import type { Vote } from '@/api/dto';
+import type { Poll } from '@/api/dto';
 import ExpiredTimeChip from '../Chip/ExpiredTimeChip';
 import LikesChip from '../Chip/LikesChip';
 import UsersChip from '../Chip/UsersChip';
 import VotesChip from '../Chip/VotesChip';
 
-interface VotePreviewCardProps {
-  vote: Vote;
+interface PollPreviewCardProps {
+  poll: Poll;
   language: string;
   linkTo?: string;
   actionLabel?: string;
 }
 
-export default function VotePreviewCard({
-  vote,
+export default function PollPreviewCard({
+  poll,
   language,
   linkTo,
   actionLabel,
-}: VotePreviewCardProps) {
-  const targetTo = linkTo ?? `/votes/${vote.id}`;
+}: PollPreviewCardProps) {
+  const targetTo = linkTo ?? `/polls/${poll.id}`;
 
   return (
     <Card
@@ -35,23 +35,23 @@ export default function VotePreviewCard({
     >
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexGrow: 1 }}>
         <Box>
-          <Typography>{vote.title[language]}</Typography>
+          <Typography>{poll.title[language]}</Typography>
           <Typography
             variant="body2"
             sx={{
               color: 'text.secondary',
             }}
           >
-            {vote.description?.[language]}
+            {poll.description?.[language]}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-            <VotesChip votes={vote.total_votes ?? 0} />
-            <UsersChip participants={vote.participants ?? 0} />
-            <LikesChip likes={vote.likes ?? 0} />
+            <VotesChip votes={poll.total_votes_count ?? 0} />
+            <UsersChip participants={poll.participants_count ?? 0} />
+            <LikesChip likes={poll.likes_count ?? 0} />
           </Stack>
-          <ExpiredTimeChip start={vote.start_at} end={vote.expire_at} />
+          <ExpiredTimeChip start={poll.start_at} end={poll.expire_at} />
         </Box>
         {actionLabel && (
           <Button component={Link} to={targetTo} variant="contained" size="small" fullWidth>

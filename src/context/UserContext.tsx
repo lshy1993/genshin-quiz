@@ -1,13 +1,13 @@
 import { Skeleton } from '@mui/material';
 import { createContext, useContext, useEffect, useState } from 'react';
-import type { User } from '@/api/dto';
+import type { UserPrivate } from '@/api/dto';
 import { setGlobalLogoutCallback, setJWT } from '@/api/fetcher/fetcher';
 import { useGetCurrentUser } from '@/api/genshinQuizAPI';
 import { navigateTo } from '@/util/navigation';
 import { LanguageProvider } from './LanguageContext';
 
 interface UserContextType {
-  user: User | null;
+  user: UserPrivate | null;
   token: string | null;
   login: (token: string) => void;
   logout: () => void;

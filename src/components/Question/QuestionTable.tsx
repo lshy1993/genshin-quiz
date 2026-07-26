@@ -15,6 +15,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import type { Question } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   formatNumberShort,
   getCorrectRate,
@@ -28,6 +29,7 @@ interface QuestionTableProps {
 
 export default function QuestionTable({ questions }: QuestionTableProps) {
   const navigate = useNavigate();
+  const { currentLanguage } = useLanguage();
 
   const renderCorrectRate = (question: Question) => {
     const rate = getCorrectRate(question);
@@ -134,7 +136,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {question.question_text}
+                  {question.question_text[currentLanguage]}
                 </Typography>
               </TableCell>
               <TableCell align="right">{renderCorrectRate(question)}</TableCell>
@@ -143,7 +145,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                   {getDifficultyLabel(question.difficulty)}
                 </Typography>
               </TableCell>
-              <TableCell align="right">{renderSolvedNumber(question.answer_count ?? 0)}</TableCell>
+              <TableCell align="right">{renderSolvedNumber(question.answers_count)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

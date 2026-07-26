@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import type { Exam, Question } from '@/api/dto';
+import { useLanguage } from '@/context/LanguageContext';
 import { mockQuestionData } from '@/util/mock';
 
 interface Props {
@@ -23,6 +24,7 @@ interface AnswerRecord {
 }
 
 export default function ExamPlayPage({ exam }: Props) {
+  const { currentLanguage } = useLanguage();
   const questionIds = exam.questions.map((q) => q.question_id);
   const questions: Question[] = mockQuestionData.filter((q) => questionIds.includes(q.id));
 
@@ -57,7 +59,7 @@ export default function ExamPlayPage({ exam }: Props) {
                 return (
                   <Box key={q.id} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Box sx={{ width: '10%' }}>{idx + 1}</Box>
-                    <Box sx={{ width: '60%' }}>{q.question_text || '-'}</Box>
+                    <Box sx={{ width: '60%' }}>{q.question_text[currentLanguage] || '-'}</Box>
                     <Box sx={{ width: '30%' }}>
                       {record ? (
                         record.answer
@@ -91,7 +93,7 @@ export default function ExamPlayPage({ exam }: Props) {
     <Box sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" gutterBottom>
-          {exam.title}
+          {exam.title[currentLanguage]}
         </Typography>
         <LinearProgress
           variant="determinate"
@@ -110,7 +112,7 @@ export default function ExamPlayPage({ exam }: Props) {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            {currentQuestion.question_text}
+            {currentQuestion.question_text[currentLanguage]}
           </Typography>
         </CardContent>
       </Card>

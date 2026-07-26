@@ -18,7 +18,7 @@ import PageContainer from '@/components/PageContainer';
 import QuestionPreviewCard from '@/components/Question/QuestionPreviewCard';
 import ChangePasswordForm from '@/components/User/ChangePasswordForm';
 import EditProfileForm from '@/components/User/EditProfileForm';
-import VotePreviewCard from '@/components/Vote/VotePreviewCard';
+import VotePreviewCard from '@/components/Vote/PollPreviewCard';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
 import { formatNumberShort } from '@/util/utils';

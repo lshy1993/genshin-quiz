@@ -27,7 +27,7 @@ export default function MultipleChoice({
   disabled,
 }: Props) {
   const { currentLanguage } = useLanguage();
-  const maxCount = Math.max(...options.map((opt) => opt.count ?? 0), 1);
+  const maxCount = Math.max(...options.map((opt) => opt.selected_count), 1);
 
   const handleCheckBoxChange =
     (opt: QuestionOption) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +37,7 @@ export default function MultipleChoice({
 
   const renderOption = (opt: QuestionOption) => {
     if (!opt.id) return null;
-    const percent = maxCount > 0 ? Math.round(((opt.count ?? 0) / maxCount) * 100) : 0;
+    const percent = maxCount > 0 ? Math.round((opt.selected_count / maxCount) * 100) : 0;
     return (
       <Box key={opt.id}>
         <FormControlLabel
@@ -57,7 +57,7 @@ export default function MultipleChoice({
               value={percent}
               sx={{ height: 16, flex: 1, transition: '0.5s' }}
             />
-            <Tooltip title={opt.count ?? 0} placement="bottom" arrow>
+            <Tooltip title={opt.selected_count} placement="bottom" arrow>
               <Typography
                 variant="caption"
                 sx={{
@@ -66,7 +66,7 @@ export default function MultipleChoice({
                   minWidth: 40,
                 }}
               >
-                {`${formatNumberShort(opt.count ?? 0)}`}
+                {`${formatNumberShort(opt.selected_count)}`}
               </Typography>
             </Tooltip>
           </Box>

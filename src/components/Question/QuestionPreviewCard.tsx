@@ -2,6 +2,7 @@ import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/ma
 import { Link } from 'react-router-dom';
 import type { Question } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
+import { useLanguage } from '@/context/LanguageContext';
 import { getDifficultyColor, getDifficultyLabel } from '@/util/utils';
 import CorrectChip from '../Chip/CorrectChip';
 import LikesChip from '../Chip/LikesChip';
@@ -18,6 +19,7 @@ export default function QuestionPreviewCard({
   linkTo,
   actionLabel,
 }: QuestionPreviewCardProps) {
+  const { currentLanguage } = useLanguage();
   const targetTo = linkTo ?? `/questions/${question.id}`;
 
   return (
@@ -34,7 +36,7 @@ export default function QuestionPreviewCard({
     >
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <Box>
-          <Typography component="h3">{question.question_text}</Typography>
+          <Typography component="h3">{question.question_text[currentLanguage]}</Typography>
           <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
             <CategoryChip category={question.category} />
             <Chip
@@ -45,9 +47,9 @@ export default function QuestionPreviewCard({
           </Stack>
         </Box>
         <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-          <CorrectChip correctCount={question.correct_count ?? 0} />
-          <UsersChip participants={question.answer_count ?? 0} />
-          <LikesChip likes={question.likes ?? 0} />
+          <CorrectChip correctCount={question.correct_answers_count} />
+          <UsersChip participants={question.answers_count} />
+          <LikesChip likes={question.likes_count} />
         </Stack>
         {actionLabel && (
           <Button component={Link} to={targetTo} variant="contained" size="small" fullWidth>
