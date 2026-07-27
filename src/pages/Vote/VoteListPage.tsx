@@ -57,7 +57,7 @@ export default function VoteListPage() {
         }
       />
       <VoteTable votes={votesRes.polls} />
-      {user && <FloatingAddButton to="/votes/create" label="创建投票" />}
+      {user && <FloatingAddButton to="/polls/create" label="创建投票" />}
     </PageContainer>
   );
 }

@@ -19,6 +19,7 @@ import { useState } from 'react';
 import type { PollOption, PollVote } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
+import { getLocalizedText } from '@/util/utils';
 
 interface Props {
   options: PollOption[];
@@ -272,8 +273,8 @@ export default function VoteChoices({
                 selected={item.id ? selected[item.id] > 0 : false}
               >
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.text?.[currentLanguage] || ''}</TableCell>
-                <TableCell>{item.description?.[currentLanguage] || ''}</TableCell>
+                <TableCell>{getLocalizedText(item.text, currentLanguage)}</TableCell>
+                <TableCell>{getLocalizedText(item.description, currentLanguage)}</TableCell>
                 <TableCell align="right">
                   {submitted ? renderResult(item) : renderAction(item)}
                 </TableCell>

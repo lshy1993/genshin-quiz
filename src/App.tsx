@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
+import { SnackbarProvider } from 'notistack';
 import { useEffect } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
-
 import AdminRouteComponent from './admin/AdminRouteComponent';
 import { RequireAuth } from './components/RequiredAuth';
 import TopBarComponent from './components/TopBarComponent';
@@ -102,9 +102,11 @@ function App() {
   }
 
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+      <Router>
+        <AppContent />
+      </Router>
+    </SnackbarProvider>
   );
 }
 

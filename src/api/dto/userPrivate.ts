@@ -10,4 +10,4 @@ import type { UserPrivacy } from './userPrivacy';
 import type { UserPublic } from './userPublic';
 import type { UserSecurity } from './userSecurity';
 
-export type UserPrivate = UserPublic & UserPrivacy & UserSecurity;
+export type UserPrivate = UserPublic & UserPrivacy & UserSecurity & unknown;

@@ -22,6 +22,7 @@ import VoteMetaFooter from '@/components/Vote/VoteMetaFooter';
 import VoteMetaHeader from '@/components/Vote/VoteMetaHeader';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
+import { getLocalizedText } from '@/util/utils';
 
 export default function VoteDetailPage() {
   const { currentLanguage } = useLanguage();
@@ -69,7 +70,7 @@ export default function VoteDetailPage() {
   return (
     <PageContainer>
       <Box>
-        <Button size="small" component={Link} to="/votes">
+        <Button size="small" component={Link} to="/polls">
           ← 返回投票列表
         </Button>
         <RandomButton tooltip="随机查看投票" onClick={() => {}} />
@@ -102,7 +103,7 @@ export default function VoteDetailPage() {
                   {voteInfo.options.map((option) => (
                     <Box key={option.id} sx={{ mb: 1 }}>
                       <Typography variant="body2">
-                        {option.text?.[currentLanguage]}:{option.votes_count} 票
+                        {getLocalizedText(option.text, currentLanguage)}:{option.votes_count} 票
                         <Box
                           component="span"
                           sx={{

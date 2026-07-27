@@ -10,17 +10,12 @@ import UsersChip from '../Chip/UsersChip';
 
 interface QuestionPreviewCardProps {
   question: Question;
-  linkTo?: string;
   actionLabel?: string;
 }
 
-export default function QuestionPreviewCard({
-  question,
-  linkTo,
-  actionLabel,
-}: QuestionPreviewCardProps) {
+export default function QuestionPreviewCard({ question, actionLabel }: QuestionPreviewCardProps) {
   const { currentLanguage } = useLanguage();
-  const targetTo = linkTo ?? `/questions/${question.id}`;
+  const targetTo = `/questions/${question.id}`;
 
   return (
     <Card

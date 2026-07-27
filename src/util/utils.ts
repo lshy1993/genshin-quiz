@@ -212,3 +212,12 @@ export function createEmptyVoteForm(languageCode: string): CreatePollRequest {
     options: [],
   };
 }
+
+export function getLocalizedText(
+  text: Record<string, string> | undefined,
+  language: string,
+  defaultLanguage = 'en-US',
+): string {
+  if (!text) return '';
+  return text[language] ?? text[defaultLanguage] ?? Object.values(text)[0] ?? '';
+}

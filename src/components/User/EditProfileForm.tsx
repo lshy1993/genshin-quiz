@@ -1,7 +1,8 @@
 import { Alert, Button, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 import type { Gender, UserPrivate, Visibility } from '@/api/dto';
-import { updateUser } from '@/api/genshinQuizAPI';
+import { postSendVerificationEmail, updateUser } from '@/api/genshinQuizAPI';
 import CountrySelect from '../Select/CountrySelect';
 
 interface Props {
@@ -32,14 +33,37 @@ export default function EditProfileForm({ user, initialNickname, mutate }: Props
       email_visibility: emailPublicity,
     })
       .then(() => {
-        mutate();
+        enqueueSnackbar('已更新', {
+          variant: 'success',
+        });
       })
       .catch((error) => {
         console.error('Error updating user:', error);
+        enqueueSnackbar('更新失败', {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setSaving(false);
       });
+  };
+
+  const handleSendVerifyEmail = () => {
+    if (user.email) {
+      postSendVerificationEmail({ email: user.email })
+        .then(() => {
+          // toast
+          enqueueSnackbar('已发送至邮箱', {
+            variant: 'success',
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          enqueueSnackbar('发送失败', {
+            variant: 'error',
+          });
+        });
+    }
   };
 
   return (
@@ -100,17 +124,19 @@ export default function EditProfileForm({ user, initialNickname, mutate }: Props
         <Typography>电子邮箱</Typography>
       </Grid>
       <Grid size={10}>
-        <Typography>{user.email}</Typography>
-        {user.email_verified ? (
-          <Alert severity="success">已验证</Alert>
-        ) : (
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Alert severity="warning">邮箱未验证绑定</Alert>
-            <Button variant="contained" size="small" onClick={() => {}}>
-              验证邮箱
-            </Button>
-          </Stack>
-        )}
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Typography>{user.email}</Typography>
+          {user.email_verified ? (
+            <Alert severity="success">已验证</Alert>
+          ) : (
+            <>
+              <Alert severity="warning">邮箱未验证绑定</Alert>
+              <Button variant="contained" size="small" onClick={handleSendVerifyEmail}>
+                验证邮箱
+              </Button>
+            </>
+          )}
+        </Stack>
       </Grid>
       <Grid size={2}>
         <Typography>是否开放</Typography>

@@ -70,7 +70,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
         const isOwner = !!user && vote.created_by === user.uuid;
         return (
           <Card key={vote.id}>
-            <CardActionArea onClick={() => navigate(`/votes/${vote.id}`)}>
+            <CardActionArea onClick={() => navigate(`/polls/${vote.id}`)}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                   {vote.category && <CategoryChip category={vote.category} />}

@@ -24,6 +24,10 @@ import type {
   GetPollsParams,
   GetQuestions200,
   GetQuestionsParams,
+  GetUserPolls200,
+  GetUserPollsParams,
+  GetUserQuestions200,
+  GetUserQuestionsParams,
   GetUsers200,
   GetUsersParams,
   HomePageData,
@@ -665,6 +669,87 @@ export const useGetUser = <TError = NotFoundResponse | InternalServerErrorRespon
   const isEnabled = swrOptions?.enabled !== false && !!id;
   const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUserKey(id) : null));
   const swrFn = () => getUser(id);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Get user's created polls
+ */
+export const getUserPolls = (id: string, params?: GetUserPollsParams) => {
+  return Fetcher<GetUserPolls200>({ url: `/users/${id}/polls`, method: 'GET', params });
+};
+
+export const getGetUserPollsKey = (id: string, params?: GetUserPollsParams) =>
+  [`/users/${id}/polls`, ...(params ? [params] : [])] as const;
+
+export type GetUserPollsQueryResult = NonNullable<Awaited<ReturnType<typeof getUserPolls>>>;
+export type GetUserPollsQueryError = NotFoundResponse | InternalServerErrorResponse;
+
+/**
+ * @summary Get user's created polls
+ */
+export const useGetUserPolls = <TError = NotFoundResponse | InternalServerErrorResponse>(
+  id: string,
+  params?: GetUserPollsParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUserPolls>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!id;
+  const swrKey = swrOptions?.swrKey ?? (() => (isEnabled ? getGetUserPollsKey(id, params) : null));
+  const swrFn = () => getUserPolls(id, params);
+
+  const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
+
+  return {
+    swrKey,
+    ...query,
+  };
+};
+
+/**
+ * @summary Get user's created question
+ */
+export const getUserQuestions = (id: string, params?: GetUserQuestionsParams) => {
+  return Fetcher<GetUserQuestions200>({ url: `/users/${id}/questions`, method: 'GET', params });
+};
+
+export const getGetUserQuestionsKey = (id: string, params?: GetUserQuestionsParams) =>
+  [`/users/${id}/questions`, ...(params ? [params] : [])] as const;
+
+export type GetUserQuestionsQueryResult = NonNullable<Awaited<ReturnType<typeof getUserQuestions>>>;
+export type GetUserQuestionsQueryError = NotFoundResponse | InternalServerErrorResponse;
+
+/**
+ * @summary Get user's created question
+ */
+export const useGetUserQuestions = <TError = NotFoundResponse | InternalServerErrorResponse>(
+  id: string,
+  params?: GetUserQuestionsParams,
+  options?: {
+    swr?: SWRConfiguration<Awaited<ReturnType<typeof getUserQuestions>>, TError> & {
+      swrKey?: Key;
+      enabled?: boolean;
+    };
+  },
+) => {
+  const { swr: swrOptions } = options ?? {};
+
+  const isEnabled = swrOptions?.enabled !== false && !!id;
+  const swrKey =
+    swrOptions?.swrKey ?? (() => (isEnabled ? getGetUserQuestionsKey(id, params) : null));
+  const swrFn = () => getUserQuestions(id, params);
 
   const query = useSwr<Awaited<ReturnType<typeof swrFn>>, TError>(swrKey, swrFn, swrOptions);
 

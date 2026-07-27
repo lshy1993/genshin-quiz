@@ -1,7 +1,7 @@
 import { Add as AddIcon } from '@mui/icons-material';
 import { Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import type { CreatePollOptionRequest, CreatePollRequest } from '@/api/dto';
+import { type CreatePollOptionRequest, type CreatePollRequest, OptionType } from '@/api/dto';
 import LanguageTabs from '@/components/LanguageTabs';
 import { useStableKey } from '@/hooks/useStableKey';
 import CreateVoteOption from './CreateVoteOption';
@@ -23,7 +23,7 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
 
   const addOption = () => {
     const newOption: CreatePollOptionRequest = {
-      option_type: 'text',
+      option_type: OptionType.text,
       text: { [selectedLang]: '' },
     };
     setForm({ ...form, options: [...form.options, newOption] });
@@ -140,6 +140,7 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
               optionText={option.text?.[selectedLang] ?? ''}
               updateOption={(i, str) => {
                 const newOptions = [...form.options];
+                newOptions[i].option_type = OptionType.text;
                 newOptions[i].text = { ...newOptions[i].text, [selectedLang]: str };
                 setForm({ ...form, options: newOptions });
               }}

@@ -1,5 +1,12 @@
 import z from 'zod';
-import { Category, Difficulty, QuestionType } from '@/api/dto';
+import {
+  Category,
+  type CreatePollOptionRequest,
+  type CreatePollRequest,
+  Difficulty,
+  OptionType,
+  QuestionType,
+} from '@/api/dto';
 
 export const loginSchema = z.object({
   email: z.string().email({ message: '邮箱格式不正确' }).min(1, { message: '请输入邮箱' }),
@@ -44,22 +51,25 @@ export const createQuestionSchema = z.object({
   explanation: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
 });
 
-export const createVoteOptionSchema = z.object({
-  type: z.enum(['text', 'image', 'url'], { message: '请选择选项类型' }),
+export const createVoteOptionSchema: z.ZodType<CreatePollOptionRequest> = z.object({
+  option_type: z.enum(OptionType, { message: '请选择选项类型' }),
   text: z
     .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '选项内容不能为空'))
     .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
+  description: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
+  media_url: z.string().optional(),
 });
 
 // Zod 验证 schema
-export const createVoteSchema = z.object({
+export const createVoteSchema: z.ZodType<CreatePollRequest> = z.object({
   public: z.boolean(),
   password: z.string().optional(),
+  category: z.enum(Category, { message: '请选择投票类别' }),
   title: z.record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '投票标题不能为空')),
-  description: z.record(z.string().min(1, '语言代码不能为空'), z.string().optional()),
+  description: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
   options: z.array(createVoteOptionSchema).min(1, '至少需要1个投票项'),
   tags: z.array(z.string().min(1, '标签不能为空')).optional(),
-  start_at: z.date().optional(),
+  start_at: z.date(),
   expire_at: z.date().min(new Date(), '截止时间必须在当前时间之后').optional(),
   /** 每个用户最多可投票数 */
   votes_per_user: z.number().int().min(1, '每个用户最多可投票数必须至少为1'),

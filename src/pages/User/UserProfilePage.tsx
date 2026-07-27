@@ -11,8 +11,9 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { DateTime } from 'luxon';
 import { useParams } from 'react-router-dom';
-import { useGetPolls, useGetQuestions, useGetUser } from '@/api/genshinQuizAPI';
+import { useGetUser, useGetUserPolls, useGetUserQuestions } from '@/api/genshinQuizAPI';
 import ContentCardGridSection from '@/components/ContentCardGridSection';
 import PageContainer from '@/components/PageContainer';
 import QuestionPreviewCard from '@/components/Question/QuestionPreviewCard';
@@ -44,37 +45,38 @@ export default function UserProfilePage() {
   const { user: me } = useUser();
   const { currentLanguage } = useLanguage();
 
-  const isMe = me?.uuid === id;
-  // fetch target user info
-  const { data: user, isLoading: isUserLoading, error: userError, mutate } = useGetUser(id ?? '');
-  const { data: questionRes } = useGetQuestions({
-    created_by: id,
-    limit: LIST_LIMIT,
-    language: [currentLanguage],
-    sortBy: 'created_at',
-    sortDesc: true,
-  });
-  const { data: voteRes } = useGetPolls({
-    created_by: id,
-    limit: LIST_LIMIT,
-    language: [currentLanguage],
-    sortBy: 'created_at',
-    sortDesc: true,
-  });
+  if (!id) {
+    throw new Error('Missing route parameter: id');
+  }
 
-  if (isUserLoading) {
+  const isMe = me?.uuid === id;
+  const userQuery = useGetUser(id, {
+    swr: {
+      enabled: !isMe,
+    },
+  });
+  const questionQuery = useGetUserQuestions(id);
+  const pollQuery = useGetUserPolls(id);
+
+  const isLoading =
+    (!isMe && userQuery.isLoading) || questionQuery.isLoading || pollQuery.isLoading;
+  const error = userQuery.error ?? questionQuery.error ?? pollQuery.error;
+
+  const user = isMe ? me : userQuery.data;
+
+  if (isLoading) {
     return <CircularProgress />;
   }
 
-  if (userError || !user) {
-    console.error('Failed to load user:', userError);
+  if (error || !user) {
+    // console.error('Failed to load user:', error);
     return <Alert severity="error">加载用户信息失败</Alert>;
   }
 
   const accuracy =
     user.total_answers > 0 ? ((user.correct_answers / user.total_answers) * 100).toFixed(1) : '-';
-  const createdQuestions = questionRes?.questions ?? [];
-  const createdVotes = voteRes?.polls ?? [];
+  const createdQuestions = questionQuery.data?.questions ?? [];
+  const createdVotes = pollQuery.data?.polls ?? [];
 
   return (
     <PageContainer>
@@ -92,24 +94,32 @@ export default function UserProfilePage() {
               <Typography sx={{ color: 'text.secondary' }}>
                 {user.bio || '这个人很懒，什么都没有留下'}
               </Typography>
-              <Stack direction="row" spacing={1}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <Typography sx={{ color: 'text.secondary' }}>{'注册于'}</Typography>
-                <Typography>{user.registered_at.toLocaleDateString()}</Typography>
+                <Typography sx={{ px: 0.5, bgcolor: 'action.hover' }}>
+                  {DateTime.fromJSDate(user.registered_at).toFormat('yyyy-MM-dd HH:mm')}
+                </Typography>
                 {isMe && me && (
                   <>
                     <Typography sx={{ color: 'text.secondary' }}>IP</Typography>
-                    <Typography>{me.registered_ip}</Typography>
+                    <Typography sx={{ px: 0.5, bgcolor: 'action.hover' }}>
+                      {me.registered_ip}
+                    </Typography>
                   </>
                 )}
               </Stack>
               {isMe && me && (
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <Typography sx={{ color: 'text.secondary' }}>{'上次登录'}</Typography>
-                  <Typography>
-                    {me.last_login_at ? new Date(me.last_login_at).toLocaleDateString() : '未知'}
+                  <Typography sx={{ px: 0.5, bgcolor: 'action.hover' }}>
+                    {me.last_login_at
+                      ? DateTime.fromJSDate(me.last_login_at).toFormat('yyyy-MM-dd HH:mm')
+                      : '未知'}
                   </Typography>
                   <Typography sx={{ color: 'text.secondary' }}>IP</Typography>
-                  <Typography>{me.last_login_ip}</Typography>
+                  <Typography sx={{ px: 0.5, bgcolor: 'action.hover' }}>
+                    {me.last_login_ip}
+                  </Typography>
                 </Stack>
               )}
             </Stack>
@@ -117,7 +127,7 @@ export default function UserProfilePage() {
           {isMe && me && (
             <>
               <Divider />
-              <EditProfileForm user={me} initialNickname={me.nickname} mutate={mutate} />
+              <EditProfileForm user={me} initialNickname={me.nickname} mutate={userQuery.mutate} />
               <Divider />
               <ChangePasswordForm />
             </>
@@ -150,7 +160,7 @@ export default function UserProfilePage() {
         getKey={(poll) => poll.id}
         gridSize={{ xs: 12, md: 6 }}
         spacing={2}
-        renderCard={(poll) => <VotePreviewCard poll={poll} language={currentLanguage} />}
+        renderCard={(poll) => <VotePreviewCard poll={poll} />}
       />
       {/* 创建的题目 */}
       <ContentCardGridSection

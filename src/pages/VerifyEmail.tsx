@@ -1,7 +1,7 @@
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
 import { Box, LinearProgress, Paper, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { postVerifyEmail } from '@/api/genshinQuizAPI';
@@ -13,32 +13,31 @@ export default function VerifyEmail() {
 
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
-
+  const called = useRef(false);
   const [state, setState] = useState<VerifyState>('loading');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
     if (!token) {
       setState('error');
-      setErrorMessage(t('verifyEmail.invalidToken', '无效或缺失的验证令牌'));
+      setErrorMessage('verifyEmail.invalidToken');
       return;
     }
 
-    // 调用后端 API 核销 Token
-    const verifyToken = () => {
-      postVerifyEmail({ token })
-        .then(() => {
-          setState('success');
-        })
-        .catch((err) => {
-          console.log(err);
-          setState('error');
-          setErrorMessage(err.message);
-        });
-    };
+    if (called.current) return;
+    called.current = true;
 
-    verifyToken();
-  }, [token, t]);
+    // 调用后端 API 核销 Token
+    postVerifyEmail({ token })
+      .then(() => {
+        setState('success');
+      })
+      .catch((err) => {
+        console.log(err);
+        setState('error');
+        setErrorMessage('verifyEmail.invalidToken');
+      });
+  }, [token]);
 
   return (
     <Box
@@ -94,7 +93,7 @@ export default function VerifyEmail() {
               {t('verifyEmail.errorTitle', '验证失败')}
             </Typography>
             <Typography variant="body2" color="error.main" sx={{ mb: 3 }}>
-              {errorMessage}
+              {t(errorMessage, '无效或缺失的验证令牌')}
             </Typography>
           </>
         )}

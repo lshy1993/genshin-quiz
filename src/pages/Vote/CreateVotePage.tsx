@@ -41,7 +41,7 @@ export default function CreateVotePage() {
     postCreatePoll(form)
       .then(() => {
         // 创建成功，跳转到投票列表
-        navigate('/votes');
+        navigate('/polls');
       })
       .catch((err) => {
         console.error(err);
@@ -59,7 +59,7 @@ export default function CreateVotePage() {
   return (
     <PageContainer>
       <Box>
-        <Button size="small" component={Link} to="/votes">
+        <Button size="small" component={Link} to="/polls">
           ← 返回投票列表
         </Button>
       </Box>
@@ -84,9 +84,10 @@ export default function CreateVotePage() {
               setTouchedField={(field) => setTouchedFields((prev) => new Set(prev).add(field))}
             />
             {/* 显示验证错误 */}
-            {Object.keys(visibleErrors).length > 0 && (
+            {!isValid && (
               <Alert severity="error">
                 <Typography variant="subtitle2">请修正以下错误：</Typography>
+                <pre>{JSON.stringify(errors, null, 2)}</pre>
                 <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
                   {Object.entries(visibleErrors).map(([field, message]) => (
                     <li key={field}>{message}</li>
@@ -102,7 +103,7 @@ export default function CreateVotePage() {
                 justifyContent: 'flex-end',
               }}
             >
-              <Button variant="outlined" onClick={() => navigate('/votes')}>
+              <Button variant="outlined" onClick={() => navigate('/polls')}>
                 取消
               </Button>
               <Button type="submit" variant="contained" disabled={!isValid || loading}>

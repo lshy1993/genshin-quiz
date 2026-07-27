@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { t } from 'i18next';
 import { Link } from 'react-router-dom';
+import ExamPreviewCard from '@/components/Exam/ExamPreviewCard';
 import HomeBanner from '@/components/Home/HomeBanner';
 import { HomeLinks } from '@/components/Home/HomeLinks';
 import type { Exam } from '../api/dto';
@@ -23,7 +24,7 @@ import ContentCardGridSection from '../components/ContentCardGridSection';
 import QuestionPreviewCard from '../components/Question/QuestionPreviewCard';
 import PollPreviewCard from '../components/Vote/PollPreviewCard';
 import { useLanguage } from '../context/LanguageContext';
-import { getDifficultyColor, getDifficultyLabel } from '../util/utils';
+import { getDifficultyColor, getDifficultyLabel, getLocalizedText } from '../util/utils';
 
 export default function HomePage() {
   const { currentLanguage } = useLanguage();
@@ -73,9 +74,7 @@ export default function HomePage() {
             }
             items={popularPolls}
             getKey={(poll) => poll.id}
-            renderCard={(poll) => (
-              <PollPreviewCard poll={poll} language={currentLanguage} actionLabel="参与投票" />
-            )}
+            renderCard={(poll) => <PollPreviewCard poll={poll} actionLabel="参与投票" />}
           />
         )}
         {/* 热门测验 */}
@@ -90,44 +89,7 @@ export default function HomePage() {
             }
             items={popularExams}
             getKey={(exam) => exam.id}
-            renderCard={(exam) => (
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" component="h3" gutterBottom>
-                    {exam.title[currentLanguage]}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {exam.description?.[currentLanguage]}
-                  </Typography>
-                  <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
-                    {exam.categories?.map((cat) => (
-                      <CategoryChip key={cat} category={cat} />
-                    ))}
-                    <Chip
-                      label={getDifficultyLabel(exam.difficulty)}
-                      size="small"
-                      color={getDifficultyColor(exam.difficulty)}
-                    />
-                  </Stack>
-                </CardContent>
-                <Box sx={{ p: 2, pt: 0 }}>
-                  <Button
-                    component={Link}
-                    to={`/exams/${exam.id}`}
-                    variant="contained"
-                    size="small"
-                    fullWidth
-                  >
-                    开始答题
-                  </Button>
-                </Box>
-              </Card>
-            )}
+            renderCard={(exam) => <ExamPreviewCard exam={exam} actionLabel="参与投票" />}
           />
         )}
         {/* 最新题目 */}
@@ -159,9 +121,7 @@ export default function HomePage() {
             }
             items={latestPolls}
             getKey={(poll) => poll.id}
-            renderCard={(poll) => (
-              <PollPreviewCard poll={poll} language={currentLanguage} actionLabel="参与投票" />
-            )}
+            renderCard={(poll) => <PollPreviewCard poll={poll} actionLabel="参与投票" />}
           />
         )}
       </Stack>

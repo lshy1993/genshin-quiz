@@ -4,6 +4,7 @@ import { Box, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import type { Poll, UserPublic } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedText } from '@/util/utils';
 import ExpiredTimeChip from '../Chip/ExpiredTimeChip';
 import UsersChip from '../Chip/UsersChip';
 import VotesChip from '../Chip/VotesChip';
@@ -27,7 +28,7 @@ export default function VoteMetaHeader({ voteInfo, user }: Props) {
             fontWeight: 'bold',
           }}
         >
-          {voteInfo.title[currentLanguage]}
+          {getLocalizedText(voteInfo.title, currentLanguage)}
         </Typography>
         {hasVoted && (
           <Tooltip title="你已参与此投票">
@@ -52,7 +53,7 @@ export default function VoteMetaHeader({ voteInfo, user }: Props) {
           color: 'text.secondary',
         }}
       >
-        {voteInfo.description?.[currentLanguage]}
+        {getLocalizedText(voteInfo.description, currentLanguage)}
       </Typography>
       <Box sx={{ display: 'flex', gap: 1, justifyContent: 'space-between' }}>
         <Stack direction="row" spacing={1}>

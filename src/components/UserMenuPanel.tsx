@@ -41,7 +41,7 @@ export default function UserMenuPanel({ setOpen }: Props) {
   };
 
   const handleCreateVote = () => {
-    navigate('/votes/create');
+    navigate('/polls/create');
     setOpen(false);
   };
 
@@ -53,6 +53,7 @@ export default function UserMenuPanel({ setOpen }: Props) {
   const handleGoToProfile = () => {
     if (!user?.uuid) return;
     navigate(`/users/${user.uuid}`);
+    setOpen(false);
   };
 
   const handleLanguageChange = (event: SelectChangeEvent<string>) => {
