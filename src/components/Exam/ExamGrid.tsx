@@ -2,6 +2,8 @@ import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/ma
 import { useNavigate } from 'react-router-dom';
 import type { Exam } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
+import { routes } from '@/route/route';
+import { getLocalizedText } from '@/util/utils';
 
 interface Props {
   exams: Exam[];
@@ -39,7 +41,7 @@ export default function ExamGrid({ exams }: Props) {
           <Card key={exam.id}>
             <CardContent>
               <Typography variant="h6" component="h3" gutterBottom>
-                {exam.title[currentLanguage]}
+                {getLocalizedText(exam.title, currentLanguage)}
               </Typography>
               <Typography
                 variant="body2"
@@ -48,7 +50,7 @@ export default function ExamGrid({ exams }: Props) {
                   mb: 2,
                 }}
               >
-                {exam.description?.[currentLanguage]}
+                {getLocalizedText(exam.description, currentLanguage)}
               </Typography>
               <Box>
                 {exam.categories?.map((cat) => (
@@ -71,7 +73,7 @@ export default function ExamGrid({ exams }: Props) {
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <Button
                   onClick={() => {
-                    navigate(`/exams/${exam.id}`);
+                    navigate(routes.exam(exam.id));
                   }}
                   variant="contained"
                   size="small"
@@ -80,7 +82,7 @@ export default function ExamGrid({ exams }: Props) {
                 </Button>
                 <Button
                   onClick={() => {
-                    navigate(`/exams/${exam.id}/play`);
+                    navigate(routes.startExam(exam.id));
                   }}
                   variant="outlined"
                   size="small"

@@ -12,6 +12,7 @@ import {
 import type { QuestionOption } from '@/api/dto';
 import { useGetQuestionMySubmissions } from '@/api/genshinQuizAPI';
 import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedText } from '@/util/utils';
 
 interface Props {
   questionId: string;
@@ -37,7 +38,7 @@ export default function QuestionMySubmission({ questionId, options }: Props) {
   const optionMap = new Map<string, string>();
   options.forEach((opt) => {
     if (opt.id) {
-      optionMap.set(opt.id, opt.text?.[currentLanguage] ?? '');
+      optionMap.set(opt.id, getLocalizedText(opt.text, currentLanguage));
     }
   });
 

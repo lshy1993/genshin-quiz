@@ -16,11 +16,13 @@ import { useNavigate } from 'react-router-dom';
 import type { Question } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
+import { routes } from '@/route/route';
 import {
   formatNumberShort,
   getCorrectRate,
   getDifficultyColor,
   getDifficultyLabel,
+  getLocalizedText,
 } from '@/util/utils';
 
 interface QuestionTableProps {
@@ -112,7 +114,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                 },
               }}
               onClick={() => {
-                navigate(`/questions/${question.id}`);
+                navigate(routes.question(question.id));
               }}
             >
               <TableCell align="center" sx={{ verticalAlign: 'middle' }}>
@@ -136,7 +138,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {question.question_text[currentLanguage]}
+                  {getLocalizedText(question.question_text, currentLanguage)}
                 </Typography>
               </TableCell>
               <TableCell align="right">{renderCorrectRate(question)}</TableCell>

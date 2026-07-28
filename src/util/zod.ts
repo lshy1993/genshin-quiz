@@ -3,18 +3,40 @@ import {
   Category,
   type CreatePollOptionRequest,
   type CreatePollRequest,
+  type CreateQuestionOptionRequest,
+  type CreateQuestionRequest,
   Difficulty,
+  type LocalizedText,
   OptionType,
+  type PostForgotPasswordBody,
+  type PostLoginUserBody,
+  type PostRegisterUserBody,
+  type PostResetPasswordBody,
   QuestionType,
 } from '@/api/dto';
 
-export const loginSchema = z.object({
-  email: z.string().email({ message: '邮箱格式不正确' }).min(1, { message: '请输入邮箱' }),
+export function createLocalizedTextSchema(emptyMessage = '内容不能为空') {
+  return z
+    .record(z.string().trim().min(1, '语言代码不能为空'), z.string().trim().min(1, emptyMessage))
+    .refine((value) => Object.keys(value).length > 0, {
+      message: '至少需要一种语言',
+    }) as z.ZodType<LocalizedText>;
+}
+
+export const localizedOptionalTextSchema: z.ZodType<LocalizedText> = z.record(
+  z.string(),
+  z.string().trim(),
+);
+
+export const loginSchema: z.ZodType<PostLoginUserBody> = z.object({
+  email: z.email({ message: '邮箱格式不正确' }).min(1, { message: '请输入邮箱' }),
   password: z.string().min(6, { message: '密码至少6位' }),
 });
 
-export const registerSchema = loginSchema
-  .extend({
+export const registerSchema: z.ZodType<PostRegisterUserBody> = z
+  .object({
+    email: z.email({ message: '邮箱格式不正确' }).min(1, { message: '请输入邮箱' }),
+    password: z.string().min(6, { message: '密码至少6位' }),
     confirmPassword: z.string().min(1, { message: '请确认密码' }),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -22,16 +44,14 @@ export const registerSchema = loginSchema
     path: ['confirmPassword'],
   });
 
-export const createQuestionOptionSchema = z.object({
-  type: z.enum(['text', 'image'], { message: '请选择选项类型' }),
-  text: z
-    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '选项内容不能为空'))
-    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
+export const createQuestionOptionSchema: z.ZodType<CreateQuestionOptionRequest> = z.object({
+  option_type: z.enum(OptionType, { message: '请选择选项类型' }),
+  text: createLocalizedTextSchema('问题选项不能为空'),
+  media_url: z.string().optional(),
   is_answer: z.boolean(),
 });
 
-// Zod 验证 schema
-export const createQuestionSchema = z.object({
+export const createQuestionSchema: z.ZodType<CreateQuestionRequest> = z.object({
   public: z.boolean(),
   question_type: z.enum(QuestionType, { message: '请选择题目类型' }),
   category: z.enum(Category, { message: '请选择题目分类' }),
@@ -44,29 +64,24 @@ export const createQuestionSchema = z.object({
       path: ['options'],
     }),
   /** 多语言题干 */
-  question_text: z
-    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '题干内容不能为空'))
-    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
+  question_text: createLocalizedTextSchema('题干内容不能为空'),
   /** 多语言解释 */
-  explanation: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
+  explanation: localizedOptionalTextSchema.optional(),
 });
 
 export const createVoteOptionSchema: z.ZodType<CreatePollOptionRequest> = z.object({
   option_type: z.enum(OptionType, { message: '请选择选项类型' }),
-  text: z
-    .record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '选项内容不能为空'))
-    .refine((val) => Object.keys(val).length > 0, { message: '至少需要一个语言选项' }),
-  description: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
+  text: createLocalizedTextSchema('投票选项不能为空'),
+  description: localizedOptionalTextSchema.optional(),
   media_url: z.string().optional(),
 });
 
-// Zod 验证 schema
 export const createVoteSchema: z.ZodType<CreatePollRequest> = z.object({
   public: z.boolean(),
   password: z.string().optional(),
   category: z.enum(Category, { message: '请选择投票类别' }),
-  title: z.record(z.string().min(1, '语言代码不能为空'), z.string().min(1, '投票标题不能为空')),
-  description: z.record(z.string().min(1, '语言代码不能为空'), z.string()).optional(),
+  title: createLocalizedTextSchema('投票标题不能为空'),
+  description: localizedOptionalTextSchema.optional(),
   options: z.array(createVoteOptionSchema).min(1, '至少需要1个投票项'),
   tags: z.array(z.string().min(1, '标签不能为空')).optional(),
   start_at: z.date(),
@@ -76,14 +91,13 @@ export const createVoteSchema: z.ZodType<CreatePollRequest> = z.object({
   votes_per_option: z.number().int().min(0, '每个选项的最大可投票数不能为负数'),
 });
 
-// 1. 定义 Zod 校验 Schema
-export const forgotPasswordSchema = z.object({
+export const forgotPasswordSchema: z.ZodType<PostForgotPasswordBody> = z.object({
   email: z.email({ message: '请输入有效的电子邮箱地址' }).min(1, { message: '邮箱不能为空' }),
 });
 
-// 1. 定义 Zod 校验 Schema
-export const resetPasswordSchema = z
+export const resetPasswordSchema: z.ZodType<PostResetPasswordBody> = z
   .object({
+    token: z.string(),
     password: z
       .string()
       .min(6, { message: '密码长度不能少于 6 个字符' })

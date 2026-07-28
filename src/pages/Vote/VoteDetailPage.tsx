@@ -11,6 +11,7 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import type { LikeStatus, PollVote } from '@/api/dto';
@@ -52,7 +53,10 @@ export default function VoteDetailPage() {
         mutate();
       })
       .catch((err) => {
-        console.error('投票失败:', err);
+        console.error(err);
+        enqueueSnackbar('投票失败，请稍后重试', {
+          variant: 'error',
+        });
       });
   };
 
@@ -63,7 +67,10 @@ export default function VoteDetailPage() {
         mutate();
       })
       .catch((err) => {
-        console.error('点赞失败:', err);
+        console.error(err);
+        enqueueSnackbar('点赞失败，请稍后重试', {
+          variant: 'error',
+        });
       });
   };
 

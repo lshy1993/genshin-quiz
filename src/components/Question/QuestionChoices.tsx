@@ -1,11 +1,13 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import { Alert, Box, Button, Stack, Typography } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 import type { Question } from '@/api/dto';
 import { postSubmitAnswer } from '@/api/genshinQuizAPI';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
+import { getLocalizedText } from '@/util/utils';
 import MultipleChoice from '../Choice/MultipleChoice';
 import SingleChoice from '../Choice/SingleChoice';
 import TrueFalseChoice from '../Choice/TrueFalseChoice';
@@ -36,11 +38,14 @@ export default function QuestionChoices({ question, mutate }: Props) {
       .then((res) => {
         // 提交后可以刷新提交记录等
         setIsCorrect(res.correct);
-        mutate();
+        mutate(); // 按理说mutate会更新？
         setSubmitted(true);
       })
       .catch((err) => {
         console.error('Failed to submit answer:', err);
+        enqueueSnackbar('提交答案失败', {
+          variant: 'error',
+        });
       });
   };
 
@@ -109,7 +114,7 @@ export default function QuestionChoices({ question, mutate }: Props) {
                 {'回答正确！答案：'}
                 {question.options
                   .filter((opt) => opt.is_answer)
-                  .map((opt) => opt.text?.[currentLanguage] ?? '')
+                  .map((opt) => getLocalizedText(opt.text, currentLanguage))
                   .join('，')}
               </Typography>
             </Alert>
@@ -121,7 +126,7 @@ export default function QuestionChoices({ question, mutate }: Props) {
                   mt: 1,
                 }}
               >
-                解析：{question.explanation?.[currentLanguage]}
+                解析：{getLocalizedText(question.explanation, currentLanguage)}
               </Typography>
             )}
             <Button
@@ -150,7 +155,9 @@ export default function QuestionChoices({ question, mutate }: Props) {
   return (
     <Stack spacing={3}>
       <Box sx={{ alignItems: 'center' }}>
-        <Typography variant="h4">{question.question_text[currentLanguage]}</Typography>
+        <Typography variant="h4">
+          {getLocalizedText(question.question_text, currentLanguage)}
+        </Typography>
       </Box>
       {renderChoices()}
       {!submitted ? (

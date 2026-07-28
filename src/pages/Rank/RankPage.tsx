@@ -19,6 +19,7 @@ import { useGetUsers } from '@/api/genshinQuizAPI';
 import BannerBox from '@/components/BannerBox';
 import PageContainer from '@/components/PageContainer';
 import { useUser } from '@/context/UserContext';
+import { routes } from '@/route/route';
 import { formatNumberShort, getWilsonScoreLowerBound } from '@/util/utils';
 
 // 每隔多久自动刷新一次排行榜
@@ -135,7 +136,7 @@ export default function RankPage() {
   );
 
   const handleEntryClick = (entry: RankEntry) => {
-    navigate(`/users/${entry.user.uuid}`);
+    navigate(routes.user(entry.user.uuid));
   };
 
   if (isLoading) {

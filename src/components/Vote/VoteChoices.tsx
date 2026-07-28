@@ -193,8 +193,8 @@ export default function VoteChoices({
   };
 
   const filteredItems = options.filter((option) => {
-    const text = option.text?.[currentLanguage] || '';
-    const desc = option.description?.[currentLanguage] || '';
+    const text = getLocalizedText(option.text, currentLanguage);
+    const desc = getLocalizedText(option.description, currentLanguage);
     return text.includes(filter) || desc.includes(filter);
   });
   if (sortByVotes !== '') {

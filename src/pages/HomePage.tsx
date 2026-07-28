@@ -1,17 +1,7 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import UpdateIcon from '@mui/icons-material/Update';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  CircularProgress,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { Link } from 'react-router-dom';
 import ExamPreviewCard from '@/components/Exam/ExamPreviewCard';
@@ -19,12 +9,10 @@ import HomeBanner from '@/components/Home/HomeBanner';
 import { HomeLinks } from '@/components/Home/HomeLinks';
 import type { Exam } from '../api/dto';
 import { useGetHome } from '../api/genshinQuizAPI';
-import CategoryChip from '../components/Chip/CategoryChip';
 import ContentCardGridSection from '../components/ContentCardGridSection';
 import QuestionPreviewCard from '../components/Question/QuestionPreviewCard';
 import PollPreviewCard from '../components/Vote/PollPreviewCard';
 import { useLanguage } from '../context/LanguageContext';
-import { getDifficultyColor, getDifficultyLabel, getLocalizedText } from '../util/utils';
 
 export default function HomePage() {
   const { currentLanguage } = useLanguage();

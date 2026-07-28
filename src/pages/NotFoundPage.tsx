@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
+import { routes } from '@/route/route';
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
@@ -32,10 +33,10 @@ export default function NotFoundPage() {
         {t('404.label_not_found')}
       </Typography>
       <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-        <Button variant="contained" size="large" onClick={() => navigate('/')}>
+        <Button variant="contained" size="large" onClick={() => navigate(routes.home())}>
           {t('404.btn_label.home')}
         </Button>
-        <Button variant="outlined" size="large" onClick={() => navigate('/questions')}>
+        <Button variant="outlined" size="large" onClick={() => navigate(routes.questions())}>
           {t('404.btn_label.questions')}
         </Button>
       </Box>

@@ -23,6 +23,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import CreateVotePage from './pages/Vote/CreateVotePage';
 import VoteDetailPage from './pages/Vote/VoteDetailPage';
 import VoteListPage from './pages/Vote/VoteListPage';
+import { PATHS } from './route/route';
 import { setGlobalNavigate } from './util/navigation';
 
 // 设置全局导航的组件
@@ -63,38 +64,38 @@ function App() {
         >
           <Routes>
             <Route path="/admin" element={<AdminRouteComponent />} />
-            <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/questions" element={<QuestionListPage />} />
+            <Route path={PATHS.ROOT} element={<Navigate to="/home" />} />
+            <Route path={PATHS.HOME} element={<HomePage />} />
+            <Route path={PATHS.LOGIN} element={<LoginPage />} />
+            <Route path={PATHS.QUESTIONS} element={<QuestionListPage />} />
             <Route
-              path="/questions/create"
+              path={PATHS.QUESTION_CREATE}
               element={
                 <RequireAuth>
                   <CreateQuestionPage />
                 </RequireAuth>
               }
             />
-            <Route path="/questions/:id" element={<QuestionDetailPage />} />
-            <Route path="/polls" element={<VoteListPage />} />
+            <Route path={PATHS.QUESTION_DETAIL} element={<QuestionDetailPage />} />
+            <Route path={PATHS.POLLS} element={<VoteListPage />} />
             <Route
-              path="/polls/create"
+              path={PATHS.POLL_CREATE}
               element={
                 <RequireAuth>
                   <CreateVotePage />
                 </RequireAuth>
               }
             />
-            <Route path="/polls/:id" element={<VoteDetailPage />} />
-            <Route path="/exams" element={<ExamListPage />} />
-            <Route path="/exams/:id" element={<ExamDetailPage />} />
-            <Route path="/rank" element={<RankPage />} />
-            <Route path="/users/:id" element={<UserProfilePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/forgot-password/" element={<ForgotPassword />} />
-            <Route path="/reset-password/" element={<ResetPassword />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="*" element={<NotFoundPage />} />
+            <Route path={PATHS.POLL_DETAIL} element={<VoteDetailPage />} />
+            <Route path={PATHS.EXAMS} element={<ExamListPage />} />
+            <Route path={PATHS.EXAM_DETAIL} element={<ExamDetailPage />} />
+            <Route path={PATHS.RANK} element={<RankPage />} />
+            <Route path={PATHS.USERS} element={<UserProfilePage />} />
+            <Route path={PATHS.ABOUT} element={<AboutPage />} />
+            <Route path={PATHS.FORGOT_PASSWORD} element={<ForgotPassword />} />
+            <Route path={PATHS.RESET_PASSWORD} element={<ResetPassword />} />
+            <Route path={PATHS.VERIFY_EMAIL} element={<VerifyEmail />} />
+            <Route path={PATHS.NOT_FOUND} element={<NotFoundPage />} />
           </Routes>
         </Box>
       </Box>

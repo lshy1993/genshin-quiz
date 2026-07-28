@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import type { QuestionOption } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
-import { formatNumberShort } from '@/util/utils';
+import { formatNumberShort, getLocalizedText } from '@/util/utils';
 
 interface Props {
   options: QuestionOption[];
@@ -32,7 +32,7 @@ export default function SingleChoice({ options, solved, selected, setSelected, d
           key={opt.id}
           value={opt.id}
           control={<Radio />}
-          label={opt.text?.[currentLanguage] ?? ''}
+          label={getLocalizedText(opt.text, currentLanguage)}
           disabled={disabled}
         />
         {solved && (
@@ -44,7 +44,7 @@ export default function SingleChoice({ options, solved, selected, setSelected, d
                 sx={{ height: 16, flex: 1, transition: '0.5s' }}
               />
             </Tooltip>
-            <Tooltip title={opt.selected_count ?? 0} placement="bottom" arrow>
+            <Tooltip title={opt.selected_count} placement="bottom" arrow>
               <Typography
                 variant="caption"
                 sx={{
@@ -53,7 +53,7 @@ export default function SingleChoice({ options, solved, selected, setSelected, d
                   minWidth: 80,
                 }}
               >
-                {`${formatNumberShort(opt.selected_count ?? 0)} (${percent}%)`}
+                {`${formatNumberShort(opt.selected_count)} (${percent}%)`}
               </Typography>
             </Tooltip>
           </Box>

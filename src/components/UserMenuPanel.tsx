@@ -21,6 +21,7 @@ import { useSWRConfig } from 'swr';
 import { getGetCurrentUserKey, useUpdateUser } from '@/api/genshinQuizAPI';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
+import { routes } from '@/route/route';
 import { allLanguages } from '@/util/enum';
 import { getLanguageLabel } from '@/util/utils';
 
@@ -36,23 +37,23 @@ export default function UserMenuPanel({ setOpen }: Props) {
   const { trigger: updateUser } = useUpdateUser();
 
   const handleCreateQuestion = () => {
-    navigate('/questions/create');
+    navigate(routes.createQuestion());
     setOpen(false);
   };
 
   const handleCreateVote = () => {
-    navigate('/polls/create');
+    navigate(routes.createPoll());
     setOpen(false);
   };
 
   const handleCreateExam = () => {
-    navigate('/exams/create');
+    navigate(routes.creatExam());
     setOpen(false);
   };
 
   const handleGoToProfile = () => {
     if (!user?.uuid) return;
-    navigate(`/users/${user.uuid}`);
+    navigate(routes.user(user.uuid));
     setOpen(false);
   };
 
@@ -83,7 +84,7 @@ export default function UserMenuPanel({ setOpen }: Props) {
   const handleLogout = () => {
     logout();
     setOpen(false);
-    navigate('/home'); // 登出后跳转到首页
+    navigate(routes.home()); // 登出后跳转到首页
   };
 
   if (!user) {

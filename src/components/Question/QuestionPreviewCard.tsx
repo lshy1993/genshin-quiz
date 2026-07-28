@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import type { Question } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
-import { getDifficultyColor, getDifficultyLabel } from '@/util/utils';
+import { getDifficultyColor, getDifficultyLabel, getLocalizedText } from '@/util/utils';
 import CorrectChip from '../Chip/CorrectChip';
 import LikesChip from '../Chip/LikesChip';
 import UsersChip from '../Chip/UsersChip';
@@ -31,7 +31,9 @@ export default function QuestionPreviewCard({ question, actionLabel }: QuestionP
     >
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <Box>
-          <Typography component="h3">{question.question_text[currentLanguage]}</Typography>
+          <Typography component="h3">
+            {getLocalizedText(question.question_text, currentLanguage)}
+          </Typography>
           <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
             <CategoryChip category={question.category} />
             <Chip

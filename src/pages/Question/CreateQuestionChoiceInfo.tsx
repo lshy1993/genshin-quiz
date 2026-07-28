@@ -274,9 +274,6 @@ export default function CreateQuestionChoiceInfo({
     );
   };
 
-  const questionTextError = errors?.[`question_text.${currentLang}`];
-  const explanationError = errors?.[`explanation.${currentLang}`];
-
   return (
     <Card variant="outlined">
       <LanguageTabs
@@ -294,9 +291,11 @@ export default function CreateQuestionChoiceInfo({
             minRows={3}
             value={form.question_text[currentLang]}
             onChange={(e) => handleQuestionTextChange(e.target.value)}
-            error={!!questionTextError}
-            helperText={questionTextError}
+            onBlur={() => setTouchedField(`question_text.${currentLang}`)}
+            error={!!errors[`question_text.${currentLang}`]}
+            helperText={errors[`question_text.${currentLang}`]}
             fullWidth
+            required
           />
           {form.question_type === QuestionType.true_false
             ? renderTrueFalseOptions()
@@ -307,8 +306,9 @@ export default function CreateQuestionChoiceInfo({
             minRows={3}
             value={form.explanation?.[currentLang] ?? ''}
             onChange={(e) => handleQuestionExplanationChange(e.target.value)}
-            error={!!explanationError}
-            helperText={explanationError}
+            onBlur={() => setTouchedField(`explanation.${currentLang}`)}
+            error={!!errors[`explanation.${currentLang}`]}
+            helperText={errors[`explanation.${currentLang}`]}
             fullWidth
           />
         </Stack>

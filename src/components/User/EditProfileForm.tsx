@@ -52,7 +52,6 @@ export default function EditProfileForm({ user, initialNickname, mutate }: Props
     if (user.email) {
       postSendVerificationEmail({ email: user.email })
         .then(() => {
-          // toast
           enqueueSnackbar('已发送至邮箱', {
             variant: 'success',
           });

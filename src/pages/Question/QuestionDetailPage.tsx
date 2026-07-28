@@ -11,6 +11,7 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { postLikeQuestion, useGetQuestion } from '@/api/genshinQuizAPI';
@@ -57,6 +58,9 @@ export default function QuestionDetailPage() {
       })
       .catch((err) => {
         console.error('Failed to update like status:', err);
+        enqueueSnackbar('点赞失败，请稍后重试', {
+          variant: 'error',
+        });
       });
   };
 

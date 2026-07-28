@@ -15,7 +15,8 @@ import type { Poll } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
-import { getCountdownText } from '@/util/utils';
+import { routes } from '@/route/route';
+import { getCountdownText, getLocalizedText } from '@/util/utils';
 
 interface VoteTableProps {
   votes: Poll[];
@@ -41,11 +42,6 @@ export default function VoteTable({ votes }: VoteTableProps) {
     );
   }
 
-  const getVoteTitle = (vote: Poll) => {
-    const defaultLang = Object.keys(vote.title)[0];
-    return vote.title[currentLanguage] || vote.title[defaultLang];
-  };
-
   const renderTime = (date: Date | undefined) => {
     if (!date) return '-';
     return date.toLocaleString();
@@ -70,7 +66,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
         const isOwner = !!user && vote.created_by === user.uuid;
         return (
           <Card key={vote.id}>
-            <CardActionArea onClick={() => navigate(`/polls/${vote.id}`)}>
+            <CardActionArea onClick={() => navigate(routes.poll(vote.id))}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                   {vote.category && <CategoryChip category={vote.category} />}
@@ -90,7 +86,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
                       gap: 0.5,
                     }}
                   >
-                    {getVoteTitle(vote)}
+                    {getLocalizedText(vote.title, currentLanguage)}
                   </Typography>
                   {hasVoted && (
                     <Tooltip title="你已参与此投票">

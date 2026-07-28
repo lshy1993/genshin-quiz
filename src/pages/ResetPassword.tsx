@@ -14,10 +14,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { postResetPassword } from '@/api/genshinQuizAPI';
+import { routes } from '@/route/route';
 import { getPasswordStrength } from '@/util/utils';
 import { resetPasswordSchema } from '@/util/zod';
 
@@ -39,7 +41,7 @@ export default function ResetPassword() {
   const [touched, setTouched] = useState({ password: false, confirmPassword: false });
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  // const [errorMessage, setErrorMessage] = useState('');
 
   // 密码强度计算
   const strength = useMemo(() => getPasswordStrength(password), [password]);
@@ -78,7 +80,7 @@ export default function ResetPassword() {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
             {t('resetPassword.invalidToken', '缺少必要的重置令牌，请重新申请重置密码链接。')}
           </Typography>
-          <Button variant="contained" fullWidth onClick={() => navigate('/forgot-password')}>
+          <Button variant="contained" fullWidth onClick={() => navigate(routes.forgotPassword())}>
             {t('resetPassword.requestNewLink', '重新申请')}
           </Button>
         </Paper>
@@ -94,7 +96,6 @@ export default function ResetPassword() {
     if (!isValid) return;
 
     setLoading(true);
-    setErrorMessage('');
 
     postResetPassword({ token, password })
       .then(() => {
@@ -105,7 +106,9 @@ export default function ResetPassword() {
           err?.response?.data?.message ||
           err?.message ||
           t('resetPassword.failed', '密码重置失败，链接可能已过期');
-        setErrorMessage(msg);
+        enqueueSnackbar(msg, {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -142,7 +145,7 @@ export default function ResetPassword() {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
               {t('resetPassword.successDesc', '您的新密码已生效，请使用新密码重新登录。')}
             </Typography>
-            <Button variant="contained" fullWidth onClick={() => navigate('/login')}>
+            <Button variant="contained" fullWidth onClick={() => navigate(routes.login())}>
               {t('resetPassword.goToLogin', '前往登录')}
             </Button>
           </>
@@ -155,10 +158,6 @@ export default function ResetPassword() {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
               {t('resetPassword.subtitle', '请输入您设置的新密码')}
             </Typography>
-
-            {/* 顶层 API 错误提示 */}
-            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-
             {/* 新密码输入框 */}
             <TextField
               margin="normal"

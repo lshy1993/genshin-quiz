@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedText } from '@/util/utils';
 import { useGetExam } from '../../api/genshinQuizAPI';
 
 export default function ExamDetailPage() {
@@ -48,7 +49,7 @@ export default function ExamDetailPage() {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom>
-            {exam.title[currentLanguage]}
+            {getLocalizedText(exam.title, currentLanguage)}
           </Typography>
           <Typography
             variant="body1"
@@ -57,7 +58,7 @@ export default function ExamDetailPage() {
               mb: 2,
             }}
           >
-            {exam.description?.[currentLanguage]}
+            {getLocalizedText(exam.description, currentLanguage)}
           </Typography>
           <Box>
             {exam.categories?.map((category) => (

@@ -15,12 +15,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postLoginUser, postRegisterUser } from '@/api/genshinQuizAPI';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
+import { routes } from '@/route/route';
 import { loginSchema, registerSchema } from '@/util/zod';
 
 export default function AuthForm() {
@@ -31,7 +33,7 @@ export default function AuthForm() {
   // 已登录自动跳转
   useEffect(() => {
     if (user) {
-      navigate('/home', { replace: true });
+      navigate(routes.home(), { replace: true });
     }
   }, [user, navigate]);
 
@@ -55,19 +57,6 @@ export default function AuthForm() {
   }, [currentLanguage]);
 
   const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'error' as 'error' | 'success',
-  });
-
-  const showSnackbar = (message: string, severity: 'error' | 'success' = 'error') => {
-    setSnackbar({ open: true, message, severity });
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
 
   // validation errors
   const { emailError, passwordError, confirmPasswordError, isValid } = useMemo(() => {
@@ -108,11 +97,13 @@ export default function AuthForm() {
       postLoginUser({ email: formData.email, password: formData.password })
         .then((res) => {
           login(res.token);
-          navigate('/home');
+          navigate(routes.home());
         })
         .catch((err) => {
           console.error('登录失败:', err);
-          showSnackbar('登录失败，请检查邮箱和密码');
+          enqueueSnackbar('登录失败，请检查邮箱和密码', {
+            variant: 'error',
+          });
         })
         .finally(() => {
           setLoading(false);
@@ -122,11 +113,13 @@ export default function AuthForm() {
       postRegisterUser(formData)
         .then((res) => {
           login(res.token);
-          navigate('/home');
+          navigate(routes.home());
         })
         .catch((err) => {
           console.error('注册失败:', err);
-          showSnackbar('注册失败，请检查输入信息');
+          enqueueSnackbar('注册失败，请检查输入信息', {
+            variant: 'error',
+          });
         })
         .finally(() => {
           setLoading(false);
@@ -135,119 +128,106 @@ export default function AuthForm() {
   };
 
   return (
-    <>
-      <Container maxWidth="xs">
-        <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
-          <Tabs value={tab} onChange={handleTabChange} variant="fullWidth">
-            <Tab label="登录" />
-            <Tab label="注册" />
-          </Tabs>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-            <Typography variant="h5" align="center" gutterBottom>
-              {tab === 0 ? '邮箱登录' : '邮箱注册'}
-            </Typography>
+    <Container maxWidth="xs">
+      <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
+        <Tabs value={tab} onChange={handleTabChange} variant="fullWidth">
+          <Tab label="登录" />
+          <Tab label="注册" />
+        </Tabs>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <Typography variant="h5" align="center" gutterBottom>
+            {tab === 0 ? '邮箱登录' : '邮箱注册'}
+          </Typography>
 
-            {/* 邮箱 */}
+          {/* 邮箱 */}
+          <TextField
+            margin="normal"
+            fullWidth
+            label="邮箱"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            autoFocus
+            required
+            error={touched.email && !!emailError}
+            helperText={touched.email && emailError}
+          />
+
+          {/* 密码（带显示/隐藏切换按钮） */}
+          <TextField
+            margin="normal"
+            fullWidth
+            label="密码"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            value={formData.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            required
+            error={touched.password && !!passwordError}
+            helperText={touched.password && passwordError}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                      aria-label="toggle password visibility"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+
+          {/* 确认密码（仅注册时显示） */}
+          {tab === 1 && (
             <TextField
               margin="normal"
               fullWidth
-              label="邮箱"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              autoFocus
-              required
-              error={touched.email && !!emailError}
-              helperText={touched.email && emailError}
-            />
-
-            {/* 密码（带显示/隐藏切换按钮） */}
-            <TextField
-              margin="normal"
-              fullWidth
-              label="密码"
-              name="password"
+              label="确认密码"
+              name="confirmPassword"
               type={showPassword ? 'text' : 'password'}
-              value={formData.password}
+              value={formData.confirmPassword}
               onChange={handleChange}
               onBlur={handleBlur}
               required
-              error={touched.password && !!passwordError}
-              helperText={touched.password && passwordError}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                        aria-label="toggle password visibility"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                },
-              }}
+              error={touched.confirmPassword && !!confirmPasswordError}
+              helperText={touched.confirmPassword && confirmPasswordError}
             />
+          )}
 
-            {/* 确认密码（仅注册时显示） */}
-            {tab === 1 && (
-              <TextField
-                margin="normal"
-                fullWidth
-                label="确认密码"
-                name="confirmPassword"
-                type={showPassword ? 'text' : 'password'}
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                required
-                error={touched.confirmPassword && !!confirmPasswordError}
-                helperText={touched.confirmPassword && confirmPasswordError}
-              />
-            )}
+          {/* 💡 登录状态下显示的“忘记密码”链接 */}
+          {tab === 0 && (
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+              <Link
+                component="button"
+                type="button"
+                variant="body2"
+                onClick={() => navigate(routes.forgotPassword())}
+                sx={{ textDecoration: 'none' }}
+              >
+                忘记密码？
+              </Link>
+            </Box>
+          )}
 
-            {/* 💡 登录状态下显示的“忘记密码”链接 */}
-            {tab === 0 && (
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                <Link
-                  component="button"
-                  type="button"
-                  variant="body2"
-                  onClick={() => navigate('/forgot-password')}
-                  sx={{ textDecoration: 'none' }}
-                >
-                  忘记密码？
-                </Link>
-              </Box>
-            )}
-
-            <Button
-              sx={{ mt: 2 }}
-              type="submit"
-              fullWidth
-              variant="contained"
-              disabled={!isValid || loading}
-            >
-              {loading ? '处理中...' : tab === 0 ? '登录' : '注册'}
-            </Button>
-          </Box>
-        </Paper>
-      </Container>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </>
+          <Button
+            sx={{ mt: 2 }}
+            type="submit"
+            fullWidth
+            variant="contained"
+            disabled={!isValid || loading}
+          >
+            {loading ? '处理中...' : tab === 0 ? '登录' : '注册'}
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 }

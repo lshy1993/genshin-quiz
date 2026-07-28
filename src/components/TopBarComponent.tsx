@@ -1,6 +1,7 @@
 import { AppBar, Box, Button, Tab, Tabs, Toolbar, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { PATHS, routes } from '@/route/route';
 import { LoginUserMenu } from './LoginUserMenu';
 
 export default function TopBarComponent() {
@@ -8,21 +9,25 @@ export default function TopBarComponent() {
   const location = useLocation();
 
   const navItems = [
-    { labelKey: 'home', path: '/home' },
-    { labelKey: 'polls', path: '/polls' },
-    { labelKey: 'questions', path: '/questions' },
-    { labelKey: 'exams', path: '/exams' },
-    { labelKey: 'rank', path: '/rank' },
-    { labelKey: 'about', path: '/about' },
+    { labelKey: 'home', path: PATHS.HOME },
+    { labelKey: 'polls', path: PATHS.POLLS },
+    { labelKey: 'questions', path: PATHS.QUESTIONS },
+    { labelKey: 'exams', path: PATHS.EXAMS },
+    { labelKey: 'rank', path: PATHS.RANK },
+    { labelKey: 'about', path: PATHS.ABOUT },
   ];
   const currentTab = navItems.findIndex((item) => {
-    if (item.path === '/rank' && location.pathname.startsWith('/user')) {
+    if (item.path === PATHS.RANK && location.pathname.startsWith('/user')) {
       return true;
     }
 
     return location.pathname.startsWith(item.path);
   });
   const tabValue = currentTab === -1 ? 0 : currentTab;
+
+  const handleClickHome = () => {
+    navigate(routes.home());
+  };
 
   return (
     <AppBar position="static">
@@ -35,7 +40,7 @@ export default function TopBarComponent() {
               fontSize: '1.25rem',
               fontWeight: 600,
             }}
-            onClick={() => navigate('/')}
+            onClick={handleClickHome}
           >
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               {t('topbar.title')}

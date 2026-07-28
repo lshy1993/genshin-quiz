@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import type { QuestionOption } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
-import { formatNumberShort } from '@/util/utils';
+import { formatNumberShort, getLocalizedText } from '@/util/utils';
 
 interface Props {
   options: QuestionOption[];
@@ -48,7 +48,7 @@ export default function MultipleChoice({
               disabled={disabled}
             />
           }
-          label={opt.text?.[currentLanguage] ?? ''}
+          label={getLocalizedText(opt.text, currentLanguage)}
         />
         {solved && (
           <Box sx={{ minWidth: 120, flex: 2, display: 'flex', alignItems: 'center', gap: 1 }}>

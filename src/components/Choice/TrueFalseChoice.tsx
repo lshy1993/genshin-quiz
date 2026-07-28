@@ -2,6 +2,7 @@ import { Alert, Button, Stack } from '@mui/material';
 import { t } from 'i18next';
 import type { QuestionOption } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedText } from '@/util/utils';
 import DualProgressBar from '../DualProgressBar';
 
 interface Props {
@@ -20,8 +21,8 @@ export default function TrueFalseChoice({
   disabled = false,
 }: Props) {
   const { currentLanguage } = useLanguage();
-  const yesOption = options.find((opt) => opt.text?.[currentLanguage] === 'yes');
-  const noOption = options.find((opt) => opt.text?.[currentLanguage] === 'no');
+  const yesOption = options.find((opt) => getLocalizedText(opt.text, currentLanguage) === 'yes');
+  const noOption = options.find((opt) => getLocalizedText(opt.text, currentLanguage) === 'no');
 
   if (!yesOption || !noOption) {
     return <Alert severity="error">{t('question.error.options_invalid')}</Alert>;

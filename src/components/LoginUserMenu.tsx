@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useUser } from '@/context/UserContext';
+import { routes } from '@/route/route';
 import UserMenuPanel from './UserMenuPanel';
 
 export const LoginUserMenu = () => {
@@ -16,6 +17,10 @@ export const LoginUserMenu = () => {
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleBackToLogin = () => {
+    navigate(routes.login());
   };
 
   return (
@@ -69,12 +74,7 @@ export const LoginUserMenu = () => {
           </Popper>
         </>
       ) : (
-        <Button
-          color="inherit"
-          onClick={() => {
-            navigate('/login');
-          }}
-        >
+        <Button color="inherit" onClick={handleBackToLogin}>
           {t('topbar.btn_label.login_signup')}
         </Button>
       )}

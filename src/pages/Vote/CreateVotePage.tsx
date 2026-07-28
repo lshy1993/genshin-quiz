@@ -1,10 +1,12 @@
 import { Alert, Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { CreatePollRequest } from '@/api/dto';
 import { postCreatePoll } from '@/api/genshinQuizAPI';
 import PageContainer from '@/components/PageContainer';
 import { useLanguage } from '@/context/LanguageContext';
+import { routes } from '@/route/route';
 import { createEmptyVoteForm } from '@/util/utils';
 import { createVoteSchema } from '@/util/zod';
 import CreateVoteBasicInfo from './CreateVoteBasicInfo';
@@ -41,10 +43,13 @@ export default function CreateVotePage() {
     postCreatePoll(form)
       .then(() => {
         // 创建成功，跳转到投票列表
-        navigate('/polls');
+        navigate(routes.polls());
       })
       .catch((err) => {
         console.error(err);
+        enqueueSnackbar('创建投票失败', {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -59,7 +64,7 @@ export default function CreateVotePage() {
   return (
     <PageContainer>
       <Box>
-        <Button size="small" component={Link} to="/polls">
+        <Button size="small" component={Link} to={routes.polls()}>
           ← 返回投票列表
         </Button>
       </Box>
@@ -103,7 +108,7 @@ export default function CreateVotePage() {
                 justifyContent: 'flex-end',
               }}
             >
-              <Button variant="outlined" onClick={() => navigate('/polls')}>
+              <Button variant="outlined" onClick={() => navigate(routes.polls())}>
                 取消
               </Button>
               <Button type="submit" variant="contained" disabled={!isValid || loading}>

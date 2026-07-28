@@ -1,9 +1,11 @@
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import { Alert, Box, Button, CircularProgress, Paper, TextField, Typography } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { postForgotPassword } from '@/api/genshinQuizAPI';
+import { routes } from '@/route/route';
 import { forgotPasswordSchema } from '@/util/zod';
 
 export default function ForgotPassword() {
@@ -17,7 +19,6 @@ export default function ForgotPassword() {
   // 请求交互状态
   const [loading, setLoading] = useState(false);
   const [isSentSuccess, setIsSentSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   // 2. 实时计算校验结果
   const { emailError, isValid } = useMemo(() => {
@@ -36,7 +37,6 @@ export default function ForgotPassword() {
     if (!isValid) return; // 校验不通过直接拦截
 
     setLoading(true);
-    setErrorMessage('');
 
     postForgotPassword({ email })
       .then(() => {
@@ -47,11 +47,17 @@ export default function ForgotPassword() {
           err?.response?.data?.message ||
           err?.message ||
           t('forgotPassword.failed', '发送失败，请稍后重试');
-        setErrorMessage(msg);
+        enqueueSnackbar(msg, {
+          variant: 'error',
+        });
       })
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const handleBackToLogin = () => {
+    navigate(routes.login());
   };
 
   return (
@@ -86,7 +92,7 @@ export default function ForgotPassword() {
                 '我们已向您的邮箱发送了重置密码的链接，请检查您的收件箱（包括垃圾邮件箱）。',
               )}
             </Typography>
-            <Button variant="outlined" fullWidth onClick={() => navigate('/login')}>
+            <Button variant="outlined" fullWidth onClick={handleBackToLogin}>
               {t('forgotPassword.backToLogin', '返回登录')}
             </Button>
           </>
@@ -101,9 +107,6 @@ export default function ForgotPassword() {
                 '请输入您注册时使用的邮箱地址，我们将向您发送重置密码的链接。',
               )}
             </Typography>
-
-            {/* 后端报错（例如：邮箱不存在、发送过于频繁等） */}
-            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
             {/* 邮箱输入框（带 Zod 格式错误提示） */}
             <TextField
@@ -142,7 +145,7 @@ export default function ForgotPassword() {
               )}
             </Button>
 
-            <Button fullWidth variant="text" onClick={() => navigate('/login')} sx={{ mt: 1 }}>
+            <Button fullWidth variant="text" onClick={handleBackToLogin} sx={{ mt: 1 }}>
               {t('forgotPassword.backToLogin', '返回登录')}
             </Button>
           </Box>
