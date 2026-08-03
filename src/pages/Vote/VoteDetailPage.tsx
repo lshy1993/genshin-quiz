@@ -85,7 +85,7 @@ export default function VoteDetailPage() {
       <Card>
         <Tabs value={currentTab} onChange={(_, v) => setCurrentTab(v)}>
           <Tab label="投票" />
-          <Tab label="统计结果" disabled={!isAuthenticated} />
+          <Tab label="统计结果" />
         </Tabs>
         <CardContent>
           <Stack spacing={2} divider={<Divider flexItem />}>

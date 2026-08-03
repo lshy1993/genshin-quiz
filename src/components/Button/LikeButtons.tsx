@@ -18,7 +18,7 @@ export default function LikeButtons({ likes, likeStatus, onLike }: LikeButtonsPr
         color="inherit"
         variant="text"
         startIcon={<ThumbUpAltOutlinedIcon fontSize="small" />}
-        onClick={() => onLike(likeStatus)}
+        onClick={() => onLike(likeStatus === 1 ? 0 : 1)}
         sx={{
           px: 1.5,
           bgcolor: likeStatus === 1 ? 'primary.main' : undefined,

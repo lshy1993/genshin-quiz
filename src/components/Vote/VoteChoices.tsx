@@ -16,9 +16,11 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { PollOption, PollVote } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
+import { routes } from '@/route/route';
 import { getLocalizedText } from '@/util/utils';
 
 interface Props {
@@ -40,6 +42,7 @@ export default function VoteChoices({
 }: Props) {
   const { currentLanguage } = useLanguage();
   const { isAuthenticated } = useUser();
+  const navigate = useNavigate();
 
   // 将数组格式转换为对象格式方便使用
   const votedMap = Object.fromEntries(voted.map((v) => [v.option_id, v.votes]));
@@ -87,6 +90,10 @@ export default function VoteChoices({
 
   const handleClickSubmit = () => {
     setConfirmOpen(true);
+  };
+
+  const handleLogin = () => {
+    navigate(routes.login());
   };
 
   const handleConfirm = () => {
@@ -296,8 +303,8 @@ export default function VoteChoices({
           <Button
             variant="contained"
             color="primary"
-            disabled={!isAuthenticated || selectedCount === 0}
-            onClick={handleClickSubmit}
+            disabled={isAuthenticated && selectedCount === 0}
+            onClick={isAuthenticated ? handleClickSubmit : handleLogin}
           >
             {!isAuthenticated ? '请先登录' : `提交投票 (${selectedCount}/${maxVotes})`}
           </Button>

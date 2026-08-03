@@ -11,7 +11,7 @@ interface Props {
   mutate: () => void;
 }
 
-export default function EditProfileForm({ user, initialNickname, mutate }: Props) {
+export default function EditProfileForm({ user, initialNickname }: Props) {
   const [nickname, setNickname] = useState<string>(initialNickname ?? '');
   const [bio, setBio] = useState<string>(user.bio ?? '');
   const [gender, setGender] = useState<Gender>(user.gender ?? 'other');

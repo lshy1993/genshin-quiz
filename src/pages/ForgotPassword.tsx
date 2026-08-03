@@ -1,5 +1,5 @@
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
-import { Alert, Box, Button, CircularProgress, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Paper, TextField, Typography } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -3,10 +3,12 @@ import ShuffleIcon from '@mui/icons-material/Shuffle';
 import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Question } from '@/api/dto';
 import { postSubmitAnswer } from '@/api/genshinQuizAPI';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
+import { routes } from '@/route/route';
 import { getLocalizedText } from '@/util/utils';
 import MultipleChoice from '../Choice/MultipleChoice';
 import SingleChoice from '../Choice/SingleChoice';
@@ -20,6 +22,7 @@ interface Props {
 export default function QuestionChoices({ question, mutate }: Props) {
   const { currentLanguage } = useLanguage();
   const { isAuthenticated } = useUser();
+  const navigate = useNavigate();
   // 记录用户选择的选项
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
     question.solved
@@ -47,6 +50,10 @@ export default function QuestionChoices({ question, mutate }: Props) {
           variant: 'error',
         });
       });
+  };
+
+  const handleLogin = () => {
+    navigate(routes.login());
   };
 
   const renderChoices = () => {
@@ -164,9 +171,9 @@ export default function QuestionChoices({ question, mutate }: Props) {
         <Button
           variant="contained"
           disabled={isAuthenticated && selectedOptions.length === 0}
-          onClick={handleSubmitClick}
+          onClick={isAuthenticated ? handleSubmitClick : handleLogin}
         >
-          {isAuthenticated ? '提交答案' : '登录后答题'}
+          {isAuthenticated ? '提交答案' : '请先登录'}
         </Button>
       ) : (
         renderSubmitContent()

@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
+import { Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import type { Exam } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
