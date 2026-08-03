@@ -30,4 +30,4 @@ RUN echo 'server { \
 # 3. 声明 8080 端口
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
