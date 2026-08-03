@@ -1,4 +1,13 @@
 steps:
+  # 0. 显式拉取 Git 子模块
+  - name: "gcr.io/cloud-builders/git"
+    id: "Fetch Submodules"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        git submodule init
+        git submodule update
   # 1. 构建镜像
   - name: "gcr.io/cloud-builders/docker"
     args:
