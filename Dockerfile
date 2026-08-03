@@ -1,5 +1,5 @@
 # --- 第一阶段：构建阶段 (Bun) ---
-FROM oven/bun:1.1-alpine AS builder
+FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
