@@ -16,16 +16,8 @@ FROM nginx:alpine
 # 1. 拷贝静态文件
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# 2. 【重点】修改 Nginx 配置，使其监听 8080
-# 并且处理 SPA 路由 (try_files)
-RUN echo 'server { \
-    listen 8080; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html index.htm; \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+# 2. 拷贝 Nginx 模板文件到官方指定的 templates 目录下
+COPY default.conf.template /etc/nginx/templates/default.conf.template
 
 # 3. 声明 8080 端口
 EXPOSE 8080
