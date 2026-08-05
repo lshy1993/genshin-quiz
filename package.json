@@ -52,7 +52,7 @@
     "@types/react-dom": "^18.3.7",
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react-swc": "^3.11.0",
-    "orval": "^8.23.0",
+    "orval": "^7.21.0",
     "typescript": "^7.0.2",
     "vite": "^6.4.3"
   }
