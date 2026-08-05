@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: genshinquiz-frontend
+    build: .
+    restart: unless-stopped
+    ports:
+      # 前面的 3000 是宿主机（群晖NAS）对外暴露的端口，你可以改成任何没被占用的端口
+      # 后面的 8080 是容器内部 Nginx 监听的端口，保持不变
+      - "3000:8080"
+    environment:
+      - VITE_API_URL=http://192.168.40.5:8080
+    networks:
+      - moelink-net
+
+networks:
+  moelink-net:
+    external: true
