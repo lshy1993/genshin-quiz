@@ -8,7 +8,9 @@ ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
 COPY . .
-RUN bun run build:api && bun run build
+# RUN bun run build:api && bun run build
+RUN sed "/return import/c\return import('../vite/dist/node/cli.js')" -i node_modules/.bin/vite && \
+    bun run build
 
 # --- 第二阶段：运行阶段 (Nginx) ---
 FROM nginx:alpine
