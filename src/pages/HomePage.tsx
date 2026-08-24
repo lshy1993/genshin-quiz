@@ -62,7 +62,9 @@ export default function HomePage() {
             }
             items={popularPolls}
             getKey={(poll) => poll.id}
-            renderCard={(poll) => <PollPreviewCard poll={poll} actionLabel={t('home.participate_poll')} />}
+            renderCard={(poll) => (
+              <PollPreviewCard poll={poll} actionLabel={t('home.participate_poll')} />
+            )}
           />
         )}
         {/* 热门测验 */}
@@ -77,7 +79,9 @@ export default function HomePage() {
             }
             items={popularExams}
             getKey={(exam) => exam.id}
-            renderCard={(exam) => <ExamPreviewCard exam={exam} actionLabel={t('home.participate_poll')} />}
+            renderCard={(exam) => (
+              <ExamPreviewCard exam={exam} actionLabel={t('home.participate_poll')} />
+            )}
           />
         )}
         {/* 最新题目 */}
@@ -109,7 +113,9 @@ export default function HomePage() {
             }
             items={latestPolls}
             getKey={(poll) => poll.id}
-            renderCard={(poll) => <PollPreviewCard poll={poll} actionLabel={t('home.participate_poll')} />}
+            renderCard={(poll) => (
+              <PollPreviewCard poll={poll} actionLabel={t('home.participate_poll')} />
+            )}
           />
         )}
       </Stack>

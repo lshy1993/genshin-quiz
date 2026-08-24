@@ -78,7 +78,8 @@ export const getPasswordStrength = (pass: string) => {
   if (/[^a-zA-Z0-9]/.test(pass)) score += 25;
 
   if (score <= 25) return { score, label: t('password_strength.weak'), color: 'error' as const };
-  if (score <= 50) return { score, label: t('password_strength.medium'), color: 'warning' as const };
+  if (score <= 50)
+    return { score, label: t('password_strength.medium'), color: 'warning' as const };
   if (score <= 75) return { score, label: t('password_strength.good'), color: 'info' as const };
   return { score, label: t('password_strength.strong'), color: 'success' as const };
 };

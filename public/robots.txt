@@ -1,0 +1,12 @@
+# Public pages may be crawled. Keep private API and development routes out of search indexes.
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /questions/create
+Disallow: /polls/create
+Sitemap: https://luckymiao.site/sitemap.xml

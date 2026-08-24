@@ -1,6 +1,6 @@
 import { Alert, CircularProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { t } from 'i18next';
+import { useEffect, useState } from 'react';
 import type { GetQuestionsParams } from '@/api/dto';
 import { useGetQuestions } from '@/api/genshinQuizAPI';
 import BannerBox from '@/components/BannerBox';
@@ -44,7 +44,9 @@ export default function QuestionListPage() {
 
   if (error) {
     console.error(error);
-    return <Alert severity="error">{t('question_list.load_failed', { message: error.message })}</Alert>;
+    return (
+      <Alert severity="error">{t('question_list.load_failed', { message: error.message })}</Alert>
+    );
   }
 
   return (
@@ -52,7 +54,9 @@ export default function QuestionListPage() {
       <BannerBox title={t('question_list.title')} subtitle={t('question_list.subtitle')} />
       <QuestionFilter params={searchParams} setSearchParams={setSearchParams} />
       <QuestionTable questions={questionList} />
-      {user && <FloatingAddButton to="/questions/create" label={t('common.btn_label.create_question')} />}
+      {user && (
+        <FloatingAddButton to="/questions/create" label={t('common.btn_label.create_question')} />
+      )}
     </PageContainer>
   );
 }

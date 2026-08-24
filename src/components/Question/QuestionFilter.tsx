@@ -10,8 +10,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
 import { t } from 'i18next';
+import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
 import type { Category, Difficulty, GetQuestionsParams } from '@/api/dto';
 import { allCategories, allDifficulties, allLanguages, allQuestionTypes } from '@/util/enum';
 import {
@@ -180,7 +180,9 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
               sx={{ minWidth: 250 }}
               multiple
               filterSelectedOptions
-              renderInput={(params) => <TextField {...params} placeholder={t('filters.select_language')} />}
+              renderInput={(params) => (
+                <TextField {...params} placeholder={t('filters.select_language')} />
+              )}
               options={allLanguages}
               renderOption={renderLanguageOption}
               value={selectedValues}

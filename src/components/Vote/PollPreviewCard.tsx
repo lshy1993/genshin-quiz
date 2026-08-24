@@ -30,7 +30,7 @@ export default function PollPreviewCard({ poll, actionLabel }: PollPreviewCardPr
       }}
     >
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexGrow: 1 }}>
-        <Box>
+        <Box sx={{ flexGrow: 1 }}>
           <Typography>{getLocalizedText(poll.title, currentLanguage)}</Typography>
           <Typography
             variant="body2"
