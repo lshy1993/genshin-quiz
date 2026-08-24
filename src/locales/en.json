@@ -4,7 +4,7 @@
       "submit": "Submit",
       "cancel": "Cancel",
       "back": "Back",
-      "retry": "Retry",
+      "retry": "Try again",
       "ok": "OK",
       "close": "Close",
       "delete": "Delete",
@@ -14,34 +14,164 @@
       "yes": "Yes",
       "no": "No",
       "next": "Next",
-      "previous": "Previous"
+      "previous": "Previous",
+      "view_more": "View more",
+      "create_question": "Create question",
+      "create_poll": "Create poll"
     },
     "label": {
       "loading": "Loading...",
       "loading_failed": "Loading failed",
       "submit_success": "Submission succeeded",
-      "submit_failed": "Submission failed"
+      "submit_failed": "Submission failed",
+      "no_data": "No data available",
+      "all": "All",
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "search": "Search",
+      "unknown_region": "Unknown region"
     }
   },
   "topbar": {
     "title": "Genshin Quiz",
-    "label": {},
     "btn_label": {
       "home": "Home",
       "questions": "Questions",
-      "votes": "Votes",
+      "votes": "Polls",
       "exams": "Exams",
       "rank": "Rank",
       "about": "About",
-      "login_signup": "Login/Sign Up",
-      "logout": "Logout"
+      "login_signup": "Log in / Sign up",
+      "logout": "Log out"
     }
   },
-  "home": {},
+  "languages": {
+    "zh": "Chinese",
+    "en": "English",
+    "ja": "Japanese",
+    "ko": "Korean"
+  },
+  "question": {
+    "type": {
+      "single_choice": "Single choice",
+      "multiple_choice": "Multiple choice",
+      "true_false": "True or false"
+    },
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "category": {
+      "lore": "Lore",
+      "character": "Character",
+      "weapon": "Weapon",
+      "artifact": "Artifact",
+      "world": "Open world",
+      "gameplay": "Gameplay",
+      "combat": "Combat",
+      "music": "Music",
+      "statistics": "Statistics",
+      "fun": "Fun",
+      "other": "Other"
+    }
+  },
+  "home": {
+    "banner_title": "Genshin Knowledge Quiz",
+    "banner_subtitle": "Test your knowledge of Teyvat, vote, and take timed challenges.",
+    "polls": "Popular polls",
+    "exams": "Popular exams",
+    "latest_questions": "Latest questions",
+    "latest_polls": "Latest polls",
+    "vote": "Vote",
+    "question_bank": "Question bank",
+    "quiz": "Quiz",
+    "vote_description": "Vote and share your opinion",
+    "question_description": "A huge collection of questions to challenge yourself",
+    "quiz_description": "Timed challenges that put your knowledge to the test",
+    "participate_poll": "Vote now",
+    "view_question": "View question"
+  },
+  "auth": {
+    "login": "Log in",
+    "register": "Sign up",
+    "email_login": "Email login",
+    "email_register": "Email registration",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm password",
+    "forgot_password": "Forgot password?",
+    "processing": "Processing...",
+    "login_failed": "Login failed. Check your email and password.",
+    "register_failed": "Registration failed. Check your details."
+  },
+  "filters": {
+    "search_questions": "Search questions",
+    "search_questions_placeholder": "Search question text...",
+    "advanced": "Advanced filters",
+    "select_language": "Select languages",
+    "question_type": "Question type",
+    "difficulty": "Difficulty"
+  },
+  "question_list": {
+    "title": "Questions",
+    "subtitle": "Browse all questions, open one and start answering.",
+    "load_failed": "Could not load questions: {{message}}"
+  },
+  "time": {
+    "unlimited": "No expiry",
+    "not_started": "Not started",
+    "ended": "Ended",
+    "days_hours": "{{days}}d {{hours}}h",
+    "hours_minutes": "{{hours}}h {{minutes}}m",
+    "minutes_seconds": "{{minutes}}m {{seconds}}s",
+    "seconds": "{{seconds}}s"
+  },
+  "password_strength": {
+    "weak": "Weak",
+    "medium": "Medium",
+    "good": "Good",
+    "strong": "Strong"
+  },
+  "forgotPassword": {
+    "failed": "Could not send the email. Please try again later.",
+    "successTitle": "Email sent",
+    "successDesc": "We sent a password-reset link to your email address. Please check your inbox, including spam.",
+    "backToLogin": "Back to login",
+    "title": "Forgot your password?",
+    "subtitle": "Enter the email address you used to register and we will send you a password-reset link.",
+    "email": "Email address",
+    "submit": "Send reset link"
+  },
+  "resetPassword": {
+    "invalidTitle": "Invalid link",
+    "invalidToken": "The reset token is missing. Please request another password-reset link.",
+    "requestNewLink": "Request a new link",
+    "failed": "Password reset failed. The link may have expired.",
+    "successTitle": "Password reset successful!",
+    "successDesc": "Your new password is now active. Please sign in with it.",
+    "goToLogin": "Go to login",
+    "title": "Reset your password",
+    "subtitle": "Enter your new password.",
+    "newPassword": "New password",
+    "strength": "Password strength",
+    "confirmPassword": "Confirm new password",
+    "submit": "Reset password"
+  },
+  "verifyEmail": {
+    "verifying": "Verifying your email...",
+    "pleaseWait": "Please wait a moment",
+    "successTitle": "Email verified!",
+    "successDesc": "Your email has been activated and all features are now available.",
+    "errorTitle": "Verification failed",
+    "invalidToken": "The verification token is invalid or missing."
+  },
   "404": {
-    "title_not_found": "Page Not Found",
+    "title_not_found": "Page not found",
     "label_not_found": "The page you are looking for does not exist.",
-    "btn_label.home": "Go to Home",
-    "btn_label.questions": "Browse Questions"
+    "btn_label": {
+      "home": "Go to Home",
+      "questions": "Browse Questions"
+    }
   }
 }

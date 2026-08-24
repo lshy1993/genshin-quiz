@@ -54,46 +54,46 @@ export default function HomePage() {
         {popularPolls.length > 0 && (
           <ContentCardGridSection
             icon={<WhatshotIcon color="error" />}
-            title="热门投票"
+            title={t('home.polls')}
             action={
               <Button component={Link} to="/polls" size="small" endIcon={<ArrowForwardIcon />}>
-                查看更多
+                {t('common.btn_label.view_more')}
               </Button>
             }
             items={popularPolls}
             getKey={(poll) => poll.id}
-            renderCard={(poll) => <PollPreviewCard poll={poll} actionLabel="参与投票" />}
+            renderCard={(poll) => <PollPreviewCard poll={poll} actionLabel={t('home.participate_poll')} />}
           />
         )}
         {/* 热门测验 */}
         {popularExams.length > 0 && (
           <ContentCardGridSection
             icon={<WhatshotIcon color="error" />}
-            title="热门测验"
+            title={t('home.exams')}
             action={
               <Button component={Link} to="/exams" size="small" endIcon={<ArrowForwardIcon />}>
-                查看更多
+                {t('common.btn_label.view_more')}
               </Button>
             }
             items={popularExams}
             getKey={(exam) => exam.id}
-            renderCard={(exam) => <ExamPreviewCard exam={exam} actionLabel="参与投票" />}
+            renderCard={(exam) => <ExamPreviewCard exam={exam} actionLabel={t('home.participate_poll')} />}
           />
         )}
         {/* 最新题目 */}
         {latestQuestions.length > 0 && (
           <ContentCardGridSection
             icon={<UpdateIcon color="info" />}
-            title="最新题目"
+            title={t('home.latest_questions')}
             action={
               <Button component={Link} to="/questions" size="small" endIcon={<ArrowForwardIcon />}>
-                查看更多
+                {t('common.btn_label.view_more')}
               </Button>
             }
             items={latestQuestions}
             getKey={(question) => question.id}
             renderCard={(question) => (
-              <QuestionPreviewCard question={question} actionLabel="查看题目" />
+              <QuestionPreviewCard question={question} actionLabel={t('home.view_question')} />
             )}
           />
         )}
@@ -101,15 +101,15 @@ export default function HomePage() {
         {latestPolls.length > 0 && (
           <ContentCardGridSection
             icon={<UpdateIcon color="info" />}
-            title="最新投票"
+            title={t('home.latest_polls')}
             action={
               <Button component={Link} to="/polls" size="small" endIcon={<ArrowForwardIcon />}>
-                查看更多
+                {t('common.btn_label.view_more')}
               </Button>
             }
             items={latestPolls}
             getKey={(poll) => poll.id}
-            renderCard={(poll) => <PollPreviewCard poll={poll} actionLabel="参与投票" />}
+            renderCard={(poll) => <PollPreviewCard poll={poll} actionLabel={t('home.participate_poll')} />}
           />
         )}
       </Stack>

@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
+import { t } from 'i18next';
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -99,7 +100,7 @@ export default function AuthForm() {
         })
         .catch((err) => {
           console.error('登录失败:', err);
-          enqueueSnackbar('登录失败，请检查邮箱和密码', {
+          enqueueSnackbar(t('auth.login_failed'), {
             variant: 'error',
           });
         })
@@ -115,7 +116,7 @@ export default function AuthForm() {
         })
         .catch((err) => {
           console.error('注册失败:', err);
-          enqueueSnackbar('注册失败，请检查输入信息', {
+          enqueueSnackbar(t('auth.register_failed'), {
             variant: 'error',
           });
         })
@@ -129,19 +130,19 @@ export default function AuthForm() {
     <Container maxWidth="xs">
       <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
         <Tabs value={tab} onChange={handleTabChange} variant="fullWidth">
-          <Tab label="登录" />
-          <Tab label="注册" />
+          <Tab label={t('auth.login')} />
+          <Tab label={t('auth.register')} />
         </Tabs>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <Typography variant="h5" align="center" gutterBottom>
-            {tab === 0 ? '邮箱登录' : '邮箱注册'}
+            {tab === 0 ? t('auth.email_login') : t('auth.email_register')}
           </Typography>
 
           {/* 邮箱 */}
           <TextField
             margin="normal"
             fullWidth
-            label="邮箱"
+            label={t('auth.email')}
             name="email"
             type="email"
             value={formData.email}
@@ -157,7 +158,7 @@ export default function AuthForm() {
           <TextField
             margin="normal"
             fullWidth
-            label="密码"
+            label={t('auth.password')}
             name="password"
             type={showPassword ? 'text' : 'password'}
             value={formData.password}
@@ -188,7 +189,7 @@ export default function AuthForm() {
             <TextField
               margin="normal"
               fullWidth
-              label="确认密码"
+              label={t('auth.confirm_password')}
               name="confirmPassword"
               type={showPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
@@ -210,7 +211,7 @@ export default function AuthForm() {
                 onClick={() => navigate(routes.forgotPassword())}
                 sx={{ textDecoration: 'none' }}
               >
-                忘记密码？
+                {t('auth.forgot_password')}
               </Link>
             </Box>
           )}
@@ -222,7 +223,7 @@ export default function AuthForm() {
             variant="contained"
             disabled={!isValid || loading}
           >
-            {loading ? '处理中...' : tab === 0 ? '登录' : '注册'}
+            {loading ? t('auth.processing') : tab === 0 ? t('auth.login') : t('auth.register')}
           </Button>
         </Box>
       </Paper>

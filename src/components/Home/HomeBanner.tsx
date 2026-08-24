@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import { t } from 'i18next';
 
 export default function HomeBanner() {
   return (
@@ -14,10 +15,10 @@ export default function HomeBanner() {
       }}
     >
       <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-        原神知识测验
+        {t('home.banner_title')}
       </Typography>
       <Typography variant="h6" sx={{ opacity: 0.9 }}>
-        测试你对原神世界的了解程度，参与投票，挑战限时测验
+        {t('home.banner_subtitle')}
       </Typography>
     </Box>
   );

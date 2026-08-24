@@ -2,6 +2,7 @@ import PollIcon from '@mui/icons-material/Poll';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import QuizIcon from '@mui/icons-material/Quiz';
 import { Card, CardActionArea, Grid, Typography } from '@mui/material';
+import { t } from 'i18next';
 import { Link } from 'react-router-dom';
 
 export function HomeLinks() {
@@ -9,20 +10,20 @@ export function HomeLinks() {
   const quickLinks = [
     {
       to: '/polls',
-      label: '投票',
-      description: '参与投票，表达你的看法',
+      label: t('home.vote'),
+      description: t('home.vote_description'),
       icon: <PollIcon fontSize="large" color="primary" />,
     },
     {
       to: '/questions',
-      label: '题目库',
-      description: '海量题目，随时挑战',
+      label: t('home.question_bank'),
+      description: t('home.question_description'),
       icon: <QuestionAnswerIcon fontSize="large" color="primary" />,
     },
     {
       to: '/exams',
-      label: '测验',
-      description: '限时挑战，检验实力',
+      label: t('home.quiz'),
+      description: t('home.quiz_description'),
       icon: <QuizIcon fontSize="large" color="primary" />,
     },
   ];

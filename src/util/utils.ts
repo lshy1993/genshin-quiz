@@ -27,11 +27,11 @@ export function getCorrectRate(q: Question, fixed: number = 1): number {
 }
 
 export function getTimeStatusText(start: Date, end?: Date) {
-  if (!end) return '无限期';
+  if (!end) return t('time.unlimited');
   const now = DateTime.now();
   const startDt = DateTime.fromJSDate(start);
 
-  if (now < startDt) return '未开始';
+  if (now < startDt) return t('time.not_started');
   return getCountdownText(end);
 }
 
@@ -43,7 +43,7 @@ export function getCountdownText(expireAt: Date | undefined): string {
   const now = Date.now();
   const diffMs = expireAt.getTime() - now;
   if (diffMs <= 0) {
-    return '已结束';
+    return t('time.ended');
   }
 
   const totalSeconds = Math.floor(diffMs / 1000);
@@ -53,18 +53,18 @@ export function getCountdownText(expireAt: Date | undefined): string {
   const seconds = totalSeconds % 60;
 
   if (days > 0) {
-    return `${days}天${hours}小时`;
+    return t('time.days_hours', { days, hours });
   }
 
   if (hours > 0) {
-    return `${hours}小时${minutes}分钟`;
+    return t('time.hours_minutes', { hours, minutes });
   }
 
   if (minutes > 0) {
-    return `${minutes}分钟${seconds}秒`;
+    return t('time.minutes_seconds', { minutes, seconds });
   }
 
-  return `${seconds}秒`;
+  return t('time.seconds', { seconds });
 }
 
 // 密码强度计算辅助函数
@@ -77,10 +77,10 @@ export const getPasswordStrength = (pass: string) => {
   if (/[0-9]/.test(pass) && /[a-zA-Z]/.test(pass)) score += 25;
   if (/[^a-zA-Z0-9]/.test(pass)) score += 25;
 
-  if (score <= 25) return { score, label: '弱', color: 'error' as const };
-  if (score <= 50) return { score, label: '中等', color: 'warning' as const };
-  if (score <= 75) return { score, label: '良好', color: 'info' as const };
-  return { score, label: '强', color: 'success' as const };
+  if (score <= 25) return { score, label: t('password_strength.weak'), color: 'error' as const };
+  if (score <= 50) return { score, label: t('password_strength.medium'), color: 'warning' as const };
+  if (score <= 75) return { score, label: t('password_strength.good'), color: 'info' as const };
+  return { score, label: t('password_strength.strong'), color: 'success' as const };
 };
 
 /**
@@ -113,18 +113,7 @@ export function getCategoryLabel(category: string): string {
 }
 
 export function getLanguageLabel(lang: string): string {
-  switch (lang) {
-    case 'zh':
-      return '中文';
-    case 'en':
-      return 'English';
-    case 'ja':
-      return '日本語';
-    case 'ko':
-      return '한국어';
-    default:
-      return lang;
-  }
+  return t(`languages.${lang}`, { defaultValue: lang });
 }
 
 export function getCategoryColor(

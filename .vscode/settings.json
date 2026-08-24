@@ -23,5 +23,8 @@
   },
   "prettier.enable": false,
   "eslint.enable": false,
-  "eslint.format.enable": false
+  "eslint.format.enable": false,
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }

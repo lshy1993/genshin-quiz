@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { type Dispatch, type SetStateAction, useMemo, useState } from 'react';
+import { t } from 'i18next';
 import type { Category, Difficulty, GetQuestionsParams } from '@/api/dto';
 import { allCategories, allDifficulties, allLanguages, allQuestionTypes } from '@/util/enum';
 import {
@@ -107,7 +108,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
       >
         <Chip
           sx={{ height: '40px', borderRadius: '9999px', fontSize: '16px' }}
-          label="全部"
+          label={t('common.label.all')}
           variant={params.category ? 'filled' : 'outlined'}
           onClick={() => handleCategoryChange('all')}
           clickable
@@ -140,11 +141,11 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
         >
           <TextField
             fullWidth
-            label="搜索题目"
+            label={t('filters.search_questions')}
             variant="outlined"
             value={params.query || ''}
             onChange={(e) => setSearchParams((prev) => ({ ...prev, query: e.target.value }))}
-            placeholder="输入题目内容进行搜索..."
+            placeholder={t('filters.search_questions_placeholder')}
             size="small"
           />
           <Button
@@ -153,7 +154,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
             sx={{ minWidth: 120 }}
             onClick={() => setSearchParams((prev) => ({ ...prev, sortDesc: !prev.sortDesc }))}
           >
-            {params.sortDesc ? '降序' : '升序'}
+            {params.sortDesc ? t('common.label.descending') : t('common.label.ascending')}
           </Button>
           <Button
             variant="outlined"
@@ -163,7 +164,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
               setFilterOpen((open) => !open);
             }}
           >
-            详细过滤
+            {t('filters.advanced')}
           </Button>
         </Stack>
         <Collapse in={filterOpen} unmountOnExit>
@@ -179,7 +180,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
               sx={{ minWidth: 250 }}
               multiple
               filterSelectedOptions
-              renderInput={(params) => <TextField {...params} placeholder="选择语言" />}
+              renderInput={(params) => <TextField {...params} placeholder={t('filters.select_language')} />}
               options={allLanguages}
               renderOption={renderLanguageOption}
               value={selectedValues}
@@ -187,7 +188,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
               onChange={(_, newValue) => handleLanguageToggle(newValue)}
             />
             <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
-              题目类型
+              {t('filters.question_type')}
             </Typography>
             <Stack
               direction="row"
@@ -207,7 +208,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
               ))}
             </Stack>
             <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
-              难度等级
+              {t('filters.difficulty')}
             </Typography>
             <Stack
               direction="row"

@@ -87,10 +87,7 @@ export default function ForgotPassword() {
               {t('forgotPassword.successTitle', '邮件已发送')}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              {t(
-                'forgotPassword.successDesc',
-                '我们已向您的邮箱发送了重置密码的链接，请检查您的收件箱（包括垃圾邮件箱）。',
-              )}
+              {t('forgotPassword.successDesc')}
             </Typography>
             <Button variant="outlined" fullWidth onClick={handleBackToLogin}>
               {t('forgotPassword.backToLogin', '返回登录')}
@@ -102,10 +99,7 @@ export default function ForgotPassword() {
               {t('forgotPassword.title', '忘记密码？')}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              {t(
-                'forgotPassword.subtitle',
-                '请输入您注册时使用的邮箱地址，我们将向您发送重置密码的链接。',
-              )}
+              {t('forgotPassword.subtitle')}
             </Typography>
 
             {/* 邮箱输入框（带 Zod 格式错误提示） */}

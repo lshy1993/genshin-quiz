@@ -93,7 +93,7 @@ export default function VerifyEmail() {
               {t('verifyEmail.errorTitle', '验证失败')}
             </Typography>
             <Typography variant="body2" color="error.main" sx={{ mb: 3 }}>
-              {t(errorMessage, '无效或缺失的验证令牌')}
+              {t('verifyEmail.invalidToken')}
             </Typography>
           </>
         )}

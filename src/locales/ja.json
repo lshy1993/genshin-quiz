@@ -1,7 +1,177 @@
 {
-  "title": "Welcome to react using react-i18next",
-  "description": {
-    "part1": "To get started, edit <1>src/App.js</1> and save to reload.",
-    "part2": "Switch language between english and german using buttons above."
+  "common": {
+    "btn_label": {
+      "submit": "送信",
+      "cancel": "キャンセル",
+      "back": "戻る",
+      "retry": "再試行",
+      "ok": "OK",
+      "close": "閉じる",
+      "delete": "削除",
+      "edit": "編集",
+      "save": "保存",
+      "confirm": "確認",
+      "yes": "はい",
+      "no": "いいえ",
+      "next": "次へ",
+      "previous": "前へ",
+      "view_more": "もっと見る",
+      "create_question": "問題を作成",
+      "create_poll": "投票を作成"
+    },
+    "label": {
+      "loading": "読み込み中...",
+      "loading_failed": "読み込みに失敗しました",
+      "submit_success": "送信しました",
+      "submit_failed": "送信に失敗しました",
+      "no_data": "データがありません",
+      "all": "すべて",
+      "ascending": "昇順",
+      "descending": "降順",
+      "search": "検索",
+      "unknown_region": "不明な地域"
+    }
+  },
+  "topbar": {
+    "title": "原神クイズ",
+    "btn_label": {
+      "home": "ホーム",
+      "questions": "問題",
+      "votes": "投票",
+      "exams": "テスト",
+      "rank": "ランキング",
+      "about": "概要",
+      "login_signup": "ログイン / 登録",
+      "logout": "ログアウト"
+    }
+  },
+  "languages": {
+    "zh": "中国語",
+    "en": "英語",
+    "ja": "日本語",
+    "ko": "韓国語"
+  },
+  "question": {
+    "type": {
+      "single_choice": "単一選択",
+      "multiple_choice": "複数選択",
+      "true_false": "正誤問題"
+    },
+    "difficulty": {
+      "easy": "簡単",
+      "medium": "普通",
+      "hard": "難しい"
+    },
+    "category": {
+      "lore": "ストーリー",
+      "character": "キャラクター",
+      "weapon": "武器",
+      "artifact": "聖遺物",
+      "world": "オープンワールド",
+      "gameplay": "ゲームプレイ",
+      "combat": "戦闘",
+      "music": "音楽",
+      "statistics": "統計",
+      "fun": "お楽しみ",
+      "other": "その他"
+    }
+  },
+  "home": {
+    "banner_title": "原神知識クイズ",
+    "banner_subtitle": "テイワットの知識を試し、投票や時間制限付きチャレンジに参加しましょう。",
+    "polls": "人気の投票",
+    "exams": "人気のテスト",
+    "latest_questions": "新着問題",
+    "latest_polls": "新着投票",
+    "vote": "投票",
+    "question_bank": "問題集",
+    "quiz": "テスト",
+    "vote_description": "投票して意見を共有",
+    "question_description": "豊富な問題でいつでも挑戦",
+    "quiz_description": "制限時間付きの挑戦で実力を試す",
+    "participate_poll": "投票する",
+    "view_question": "問題を見る"
+  },
+  "auth": {
+    "login": "ログイン",
+    "register": "登録",
+    "email_login": "メールでログイン",
+    "email_register": "メールで登録",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "confirm_password": "パスワードを確認",
+    "forgot_password": "パスワードをお忘れですか？",
+    "processing": "処理中...",
+    "login_failed": "ログインに失敗しました。メールアドレスとパスワードを確認してください。",
+    "register_failed": "登録に失敗しました。入力内容を確認してください。"
+  },
+  "filters": {
+    "search_questions": "問題を検索",
+    "search_questions_placeholder": "問題文を検索...",
+    "advanced": "詳細フィルター",
+    "select_language": "言語を選択",
+    "question_type": "問題タイプ",
+    "difficulty": "難易度"
+  },
+  "question_list": {
+    "title": "問題一覧",
+    "subtitle": "すべての問題を確認して、回答を始めましょう。",
+    "load_failed": "問題の読み込みエラー：{{message}}"
+  },
+  "time": {
+    "unlimited": "無期限",
+    "not_started": "未開始",
+    "ended": "終了",
+    "days_hours": "{{days}}日{{hours}}時間",
+    "hours_minutes": "{{hours}}時間{{minutes}}分",
+    "minutes_seconds": "{{minutes}}分{{seconds}}秒",
+    "seconds": "{{seconds}}秒"
+  },
+  "password_strength": {
+    "weak": "弱い",
+    "medium": "普通",
+    "good": "良い",
+    "strong": "強い"
+  },
+  "forgotPassword": {
+    "failed": "メールを送信できませんでした。後でもう一度お試しください。",
+    "successTitle": "メールを送信しました",
+    "successDesc": "パスワード再設定用のリンクをメールで送信しました。迷惑メールフォルダーもご確認ください。",
+    "backToLogin": "ログインに戻る",
+    "title": "パスワードをお忘れですか？",
+    "subtitle": "登録時に使用したメールアドレスを入力してください。再設定リンクを送信します。",
+    "email": "メールアドレス",
+    "submit": "再設定リンクを送信"
+  },
+  "resetPassword": {
+    "invalidTitle": "無効なリンク",
+    "invalidToken": "再設定トークンがありません。新しい再設定リンクを申請してください。",
+    "requestNewLink": "新しいリンクを申請",
+    "failed": "パスワードの再設定に失敗しました。リンクの有効期限が切れている可能性があります。",
+    "successTitle": "パスワードを再設定しました！",
+    "successDesc": "新しいパスワードが有効になりました。新しいパスワードでログインしてください。",
+    "goToLogin": "ログインへ",
+    "title": "パスワードを再設定",
+    "subtitle": "新しいパスワードを入力してください。",
+    "newPassword": "新しいパスワード",
+    "strength": "パスワード強度",
+    "confirmPassword": "新しいパスワードを確認",
+    "submit": "パスワードを再設定"
+  },
+  "verifyEmail": {
+    "verifying": "メールアドレスを確認しています...",
+    "pleaseWait": "しばらくお待ちください",
+    "successTitle": "メールアドレスを確認しました！",
+    "successDesc": "メールアドレスが有効化され、すべての機能を利用できます。",
+    "errorTitle": "確認に失敗しました",
+    "invalidToken": "確認トークンが無効または見つかりません。"
+  },
+  "404": {
+    "title_not_found": "ページが見つかりません",
+    "label_not_found": "お探しのページは存在しません。",
+    "btn_label": {
+      "home": "ホームへ",
+      "questions": "問題を見る"
+    }
   }
 }
