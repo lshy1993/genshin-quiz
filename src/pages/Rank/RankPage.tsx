@@ -12,6 +12,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { t } from 'i18next';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { UserPublic } from '@/api/dto';
@@ -66,7 +67,7 @@ function RankColumn({
         )}
         {entries.length === 0 ? (
           <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', py: 4 }}>
-            暂无数据
+            {t('common.label.no_data')}
           </Typography>
         ) : (
           <Stack spacing={0.5} sx={{ mt: 2 }}>
@@ -145,7 +146,7 @@ export default function RankPage() {
 
   if (error) {
     console.error('Failed to load rank:', error);
-    return <Alert severity="error">加载排行榜失败</Alert>;
+    return <Alert severity="error">{t('rank.load_failed')}</Alert>;
   }
 
   const users = data?.users ?? [];
@@ -159,7 +160,10 @@ export default function RankPage() {
     .map(({ user, score }) => ({
       user,
       primaryText: `${(score * 100).toFixed(1)}%`,
-      secondaryText: `答题 ${formatNumberShort(user.total_answers)} 次，正确 ${formatNumberShort(user.correct_answers)} 次`,
+      secondaryText: t('rank.accuracy_stats', {
+        total: formatNumberShort(user.total_answers),
+        correct: formatNumberShort(user.correct_answers),
+      }),
     }));
 
   // 投票达人榜：按参与投票数排序
@@ -167,24 +171,33 @@ export default function RankPage() {
     .filter((u) => u.polls_created > 0)
     .sort((a, b) => b.polls_created - a.polls_created)
     .slice(0, TOP_N)
-    .map((user) => ({ user, primaryText: `${formatNumberShort(user.polls_created)} 票` }));
+    .map((user) => ({
+      user,
+      primaryText: t('rank.poll_count', { count: formatNumberShort(user.polls_created) }),
+    }));
 
   // 创作达人榜：按创建题目数排序
   const creatorEntries: RankEntry[] = users
     .filter((u) => u.questions_created > 0)
     .sort((a, b) => b.questions_created - a.questions_created)
     .slice(0, TOP_N)
-    .map((user) => ({ user, primaryText: `${formatNumberShort(user.questions_created)} 题` }));
+    .map((user) => ({
+      user,
+      primaryText: t('rank.question_count', { count: formatNumberShort(user.questions_created) }),
+    }));
 
   return (
     <PageContainer>
-      <BannerBox title="排行榜" subtitle={`每 ${REFRESH_INTERVAL_MS / 1000} 秒自动刷新一次`} />
+      <BannerBox
+        title={t('rank.title')}
+        subtitle={t('rank.refresh_interval', { seconds: REFRESH_INTERVAL_MS / 1000 })}
+      />
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
           <RankColumn
             icon={<EmojiEventsIcon color="warning" />}
-            title="答题正确率榜"
-            caption="按置信区间加权，答题数越多越可信"
+            title={t('rank.accuracy_title')}
+            caption={t('rank.accuracy_caption')}
             entries={accuracyEntries}
             currentUserId={currentUser?.uuid}
             onEntryClick={handleEntryClick}
@@ -193,7 +206,7 @@ export default function RankPage() {
         <Grid size={{ xs: 12, md: 4 }}>
           <RankColumn
             icon={<HowToVoteIcon color="primary" />}
-            title="投票达人榜"
+            title={t('rank.poll_title')}
             entries={voteEntries}
             currentUserId={currentUser?.uuid}
             onEntryClick={handleEntryClick}
@@ -202,8 +215,8 @@ export default function RankPage() {
         <Grid size={{ xs: 12, md: 4 }}>
           <RankColumn
             icon={<QuizIcon color="secondary" />}
-            title="创作达人榜"
-            caption="暂不支持按点赞率排序，当前按创建数量排序"
+            title={t('rank.creator_title')}
+            caption={t('rank.creator_caption')}
             entries={creatorEntries}
             currentUserId={currentUser?.uuid}
             onEntryClick={handleEntryClick}

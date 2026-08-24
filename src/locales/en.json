@@ -166,6 +166,37 @@
     "errorTitle": "Verification failed",
     "invalidToken": "The verification token is invalid or missing."
   },
+  "rank": {
+    "title": "Rankings",
+    "refresh_interval": "Refreshes every {{seconds}} seconds",
+    "load_failed": "Could not load rankings",
+    "accuracy_title": "Answer Accuracy",
+    "accuracy_caption": "Weighted by confidence interval; more answers means greater confidence",
+    "accuracy_stats": "{{total}} answers, {{correct}} correct",
+    "poll_title": "Poll Creators",
+    "poll_count": "{{count}} polls",
+    "creator_title": "Question Creators",
+    "question_count": "{{count}} questions",
+    "creator_caption": "Like-rate ranking is not available yet; currently sorted by number created"
+  },
+  "about": {
+    "title": "About Genshin Quiz",
+    "subtitle": "A community space for exploring, answering, and sharing Genshin Impact knowledge",
+    "introduction": "Genshin Quiz brings questions, polls, and challenges together in one place. Browse content in your preferred language, compare ideas with other Travelers, and turn your knowledge of Teyvat into a new challenge.",
+    "features_title": "What you can do",
+    "questions_title": "Explore questions and challenges",
+    "questions_desc": "Answer single-choice, multiple-choice, and true-or-false questions across lore, characters, combat, and more. Take part in curated quizzes when you want a focused challenge.",
+    "polls_title": "Join the conversation",
+    "polls_desc": "Vote on community polls, see how other players responded, and share your own point of view on the world of Genshin Impact.",
+    "community_title": "Create and track progress",
+    "community_desc": "Sign in to create questions and polls, then follow answer accuracy and creation activity on the rankings page.",
+    "get_started_title": "Get started",
+    "step_one": "Browse questions, polls, or quizzes that interest you.",
+    "step_two": "Sign in to submit answers, vote, or create your own community content.",
+    "step_three": "Check results, learn from explanations, and keep challenging yourself.",
+    "browse_questions": "Browse questions",
+    "browse_polls": "Browse polls"
+  },
   "404": {
     "title_not_found": "Page not found",
     "label_not_found": "The page you are looking for does not exist.",

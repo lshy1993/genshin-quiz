@@ -166,6 +166,37 @@
     "errorTitle": "验证失败",
     "invalidToken": "无效或缺失的验证令牌"
   },
+  "rank": {
+    "title": "排行榜",
+    "refresh_interval": "每 {{seconds}} 秒自动刷新一次",
+    "load_failed": "加载排行榜失败",
+    "accuracy_title": "答题正确率榜",
+    "accuracy_caption": "按置信区间加权，答题数越多越可信",
+    "accuracy_stats": "答题 {{total}} 次，正确 {{correct}} 次",
+    "poll_title": "投票达人榜",
+    "poll_count": "{{count}} 票",
+    "creator_title": "创作达人榜",
+    "question_count": "{{count}} 题",
+    "creator_caption": "暂不支持按点赞率排序，当前按创建数量排序"
+  },
+  "about": {
+    "title": "关于原神知识测验",
+    "subtitle": "探索、答题与分享原神知识的玩家社区",
+    "introduction": "原神知识测验将题目、投票与挑战汇集在一起。你可以用熟悉的语言浏览内容，与其他旅行者交流观点，并把对提瓦特的了解变成下一次挑战。",
+    "features_title": "你可以做什么",
+    "questions_title": "探索题目与挑战",
+    "questions_desc": "回答单选、多选和判断题，涵盖剧情、角色、战斗等主题；也可以参加精心编排的测验，进行一次更专注的挑战。",
+    "polls_title": "参与玩家讨论",
+    "polls_desc": "参与社区投票，查看其他玩家的选择，并分享你对原神世界的看法。",
+    "community_title": "创作并记录进步",
+    "community_desc": "登录后可创建题目和投票，并在排行榜中查看答题正确率与创作活跃度。",
+    "get_started_title": "开始使用",
+    "step_one": "浏览感兴趣的题目、投票或测验。",
+    "step_two": "登录后提交答案、参与投票，或创建自己的社区内容。",
+    "step_three": "查看结果与解析，并继续挑战自己。",
+    "browse_questions": "浏览题目",
+    "browse_polls": "浏览投票"
+  },
   "404": {
     "title_not_found": "页面未找到",
     "label_not_found": "抱歉，您访问的页面不存在。",

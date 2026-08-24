@@ -166,6 +166,37 @@
     "errorTitle": "確認に失敗しました",
     "invalidToken": "確認トークンが無効または見つかりません。"
   },
+  "rank": {
+    "title": "ランキング",
+    "refresh_interval": "{{seconds}}秒ごとに自動更新",
+    "load_failed": "ランキングを読み込めませんでした",
+    "accuracy_title": "正答率ランキング",
+    "accuracy_caption": "信頼区間で重み付け。回答数が多いほど信頼性が高まります",
+    "accuracy_stats": "回答 {{total}} 回、正解 {{correct}} 回",
+    "poll_title": "投票作成者ランキング",
+    "poll_count": "{{count}} 件",
+    "creator_title": "問題作成者ランキング",
+    "question_count": "{{count}} 問",
+    "creator_caption": "いいね率のランキングには未対応のため、現在は作成数で並べています"
+  },
+  "about": {
+    "title": "原神クイズについて",
+    "subtitle": "原神の知識を探し、答え、共有するためのコミュニティ",
+    "introduction": "原神クイズは、問題、投票、チャレンジを一か所に集めたサービスです。使いやすい言語でコンテンツを楽しみ、ほかの旅人と意見を比べ、テイワットの知識を次の挑戦につなげましょう。",
+    "features_title": "できること",
+    "questions_title": "問題とチャレンジを楽しむ",
+    "questions_desc": "ストーリー、キャラクター、戦闘などをテーマにした単一選択、複数選択、正誤問題に答えられます。まとまった挑戦にはテストも利用できます。",
+    "polls_title": "プレイヤーの会話に参加",
+    "polls_desc": "コミュニティ投票に参加し、ほかのプレイヤーの回答を見ながら、原神の世界について自分の意見を共有できます。",
+    "community_title": "作成して進歩を確認",
+    "community_desc": "ログインすると問題や投票を作成でき、ランキングで正答率や作成活動を確認できます。",
+    "get_started_title": "はじめるには",
+    "step_one": "興味のある問題、投票、またはテストを探します。",
+    "step_two": "ログインして回答・投票を送信するか、コミュニティコンテンツを作成します。",
+    "step_three": "結果と解説を確認して、さらに挑戦しましょう。",
+    "browse_questions": "問題を見る",
+    "browse_polls": "投票を見る"
+  },
   "404": {
     "title_not_found": "ページが見つかりません",
     "label_not_found": "お探しのページは存在しません。",
