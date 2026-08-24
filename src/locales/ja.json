@@ -51,6 +51,11 @@
     "ja": "日本語",
     "ko": "韓国語"
   },
+  "language": {
+    "delete_title": "言語を削除しますか？",
+    "delete_description": "{{language}} を削除すると、タイトル、説明、すべての選択肢の内容が完全に削除され、元に戻せません。",
+    "delete_confirm": "言語を削除"
+  },
   "question": {
     "type": {
       "single_choice": "単一選択",
@@ -196,6 +201,10 @@
     "step_three": "結果と解説を確認して、さらに挑戦しましょう。",
     "browse_questions": "問題を見る",
     "browse_polls": "投票を見る"
+  },
+  "vote": {
+    "confirm_submit_title": "{{count}} 票を送信しますか？",
+    "confirm_remaining_votes": "あと {{count}} 票を選択できます。"
   },
   "404": {
     "title_not_found": "ページが見つかりません",

@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Chip,
-  Modal,
   Stack,
   Table,
   TableBody,
@@ -15,9 +14,11 @@ import {
   ToggleButton,
   Typography,
 } from '@mui/material';
+import { t } from 'i18next';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { PollOption, PollVote } from '@/api/dto';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
 import { routes } from '@/route/route';
@@ -310,47 +311,20 @@ export default function VoteChoices({
           </Button>
         </Box>
       )}
-      <Modal open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-        <Stack
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            // width: 400,
-            bgcolor: 'background.paper',
-            // border: '2px solid #000',
-            boxShadow: 24,
-            p: 3,
-          }}
-          spacing={2}
-        >
-          <Typography variant="h6">你确定要提交这 {selectedCount} 票吗？</Typography>
-          {selectedCount < maxVotes && (
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'text.secondary',
-              }}
-            >
-              你还可以选择 {maxVotes - selectedCount} 票
-            </Typography>
-          )}
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-between' }}>
-            <Button
-              size="small"
-              variant="outlined"
-              color="error"
-              onClick={() => setConfirmOpen(false)}
-            >
-              取消
-            </Button>
-            <Button size="small" variant="outlined" color="primary" onClick={handleConfirm}>
-              确认
-            </Button>
-          </Box>
-        </Stack>
-      </Modal>
+      <ConfirmDialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title={t('vote.confirm_submit_title', { count: selectedCount })}
+        cancelLabel={t('common.btn_label.cancel')}
+        confirmLabel={t('common.btn_label.confirm')}
+        onConfirm={handleConfirm}
+      >
+        {selectedCount < maxVotes && (
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {t('vote.confirm_remaining_votes', { count: maxVotes - selectedCount })}
+          </Typography>
+        )}
+      </ConfirmDialog>
     </>
   );
 }

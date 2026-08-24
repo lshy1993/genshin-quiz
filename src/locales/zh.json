@@ -51,6 +51,11 @@
     "ja": "日语",
     "ko": "韩语"
   },
+  "language": {
+    "delete_title": "删除语言？",
+    "delete_description": "删除 {{language}} 后，其标题、描述和所有选项内容将被永久移除，且无法恢复。",
+    "delete_confirm": "删除语言"
+  },
   "question": {
     "type": {
       "single_choice": "单选题",
@@ -196,6 +201,10 @@
     "step_three": "查看结果与解析，并继续挑战自己。",
     "browse_questions": "浏览题目",
     "browse_polls": "浏览投票"
+  },
+  "vote": {
+    "confirm_submit_title": "确定提交这 {{count}} 票吗？",
+    "confirm_remaining_votes": "你还可以选择 {{count}} 票"
   },
   "404": {
     "title_not_found": "页面未找到",

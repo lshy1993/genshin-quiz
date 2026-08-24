@@ -1,7 +1,9 @@
 import { Add as AddIcon } from '@mui/icons-material';
 import { Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material';
+import { t } from 'i18next';
 import { useState } from 'react';
 import { type CreatePollOptionRequest, type CreatePollRequest, OptionType } from '@/api/dto';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import LanguageTabs from '@/components/LanguageTabs';
 import { useStableKey } from '@/hooks/useStableKey';
 import CreateVoteOption from './CreateVoteOption';
@@ -17,6 +19,7 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
   // 表单里实际存在的语言列表
   const availableLanguages = Object.keys(form.title);
   const [selectedLang, setSelectedLang] = useState<string>(availableLanguages[0]);
+  const [languagePendingDeletion, setLanguagePendingDeletion] = useState<string | null>(null);
 
   // 未保存的选项没有 id，且 text 是对象无法直接拼接成唯一 key，用共享的 useStableKey 生成稳定 key。
   const getOptionKey = useStableKey<CreatePollOptionRequest>();
@@ -53,9 +56,16 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
     setSelectedLang(lang);
   };
 
-  const handleDeleteLanguage = (lang: string) => {
+  const requestDeleteLanguage = (lang: string) => {
     // 至少保留一个语言
     if (Object.keys(form.title).length <= 1) return;
+    setLanguagePendingDeletion(lang);
+  };
+
+  const handleDeleteLanguage = () => {
+    const lang = languagePendingDeletion;
+    if (!lang) return;
+    setLanguagePendingDeletion(null);
 
     // 如果删除的是当前语言，则切换到下一个
     if (selectedLang === lang) {
@@ -89,7 +99,7 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
         currentLang={selectedLang}
         handleLanguageChange={handleLanguageChange}
         selectedLanguages={availableLanguages}
-        handleDeleteLanguage={handleDeleteLanguage}
+        handleDeleteLanguage={requestDeleteLanguage}
         handleAddLanguage={handleAddLanguage}
       />
       <CardContent>
@@ -157,6 +167,18 @@ export default function CreateVoteOptionInfo({ errors, form, setForm, setTouched
           </Button>
         </Stack>
       </CardContent>
+      <ConfirmDialog
+        open={languagePendingDeletion !== null}
+        onClose={() => setLanguagePendingDeletion(null)}
+        title={t('language.delete_title')}
+        description={t('language.delete_description', {
+          language: languagePendingDeletion ? t(`languages.${languagePendingDeletion}`) : '',
+        })}
+        cancelLabel={t('common.btn_label.cancel')}
+        confirmLabel={t('language.delete_confirm')}
+        confirmColor="error"
+        onConfirm={handleDeleteLanguage}
+      />
     </Card>
   );
 }

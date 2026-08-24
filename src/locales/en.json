@@ -51,6 +51,11 @@
     "ja": "Japanese",
     "ko": "Korean"
   },
+  "language": {
+    "delete_title": "Remove language?",
+    "delete_description": "Removing {{language}} permanently deletes its title, description, and option text. This cannot be undone.",
+    "delete_confirm": "Remove language"
+  },
   "question": {
     "type": {
       "single_choice": "Single choice",
@@ -196,6 +201,10 @@
     "step_three": "Check results, learn from explanations, and keep challenging yourself.",
     "browse_questions": "Browse questions",
     "browse_polls": "Browse polls"
+  },
+  "vote": {
+    "confirm_submit_title": "Submit {{count}} vote(s)?",
+    "confirm_remaining_votes": "You can still select {{count}} vote(s)."
   },
   "404": {
     "title_not_found": "Page not found",
