@@ -3,7 +3,11 @@ version: '3.8'
 services:
   frontend:
     container_name: genshinquiz-frontend
-    build: .
+    build:
+      context: .
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://genshinquiz-backend:8080}
+        VITE_BUILD_VERSION: ${VITE_BUILD_VERSION:-development}
     restart: unless-stopped
     ports:
       # 前面的 3000 是宿主机（群晖NAS）对外暴露的端口，你可以改成任何没被占用的端口
