@@ -29,7 +29,7 @@ const features = [
 export default function AboutPage() {
   return (
     <PageContainer>
-      <Stack spacing={4} sx={{ maxWidth: 960, mx: 'auto', py: 2 }}>
+      <Stack spacing={4}>
         <BannerBox title={t('about.title')} subtitle={t('about.subtitle')} />
 
         <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>

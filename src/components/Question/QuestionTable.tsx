@@ -12,6 +12,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import type { Question } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
@@ -75,7 +76,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
             color: 'text.secondary',
           }}
         >
-          暂无符合条件的题目
+          {t('question_table.empty')}
         </Typography>
       </Box>
     );
@@ -87,16 +88,16 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
         <TableHead>
           <TableRow>
             <TableCell align="center" sx={{ width: 10 }}></TableCell>
-            <TableCell sx={{ width: 80 }}>分类</TableCell>
-            <TableCell sx={{ minWidth: 200 }}>题目内容</TableCell>
+            <TableCell sx={{ width: 80 }}>{t('common.label.category')}</TableCell>
+            <TableCell sx={{ minWidth: 200 }}>{t('question_table.content')}</TableCell>
             <TableCell align="right" sx={{ width: 60 }}>
-              正确率
+              {t('question_table.correct_rate')}
             </TableCell>
             <TableCell align="right" sx={{ width: 60 }}>
-              难度
+              {t('common.label.difficulty')}
             </TableCell>
             <TableCell align="right" sx={{ width: 60 }}>
-              回答人次
+              {t('question_table.answers_count')}
             </TableCell>
           </TableRow>
         </TableHead>
@@ -119,7 +120,7 @@ export default function QuestionTable({ questions }: QuestionTableProps) {
             >
               <TableCell align="center" sx={{ verticalAlign: 'middle' }}>
                 {question.solved && (
-                  <Tooltip title="你已答对此题">
+                  <Tooltip title={t('question_table.solved')}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <CheckCircleIcon fontSize="small" color="success" />
                     </Box>

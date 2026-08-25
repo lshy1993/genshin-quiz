@@ -10,6 +10,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import type { Poll } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
@@ -36,7 +37,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
             color: 'text.secondary',
           }}
         >
-          暂无正在进行中的投票
+          {t('poll_list.empty')}
         </Typography>
       </Box>
     );
@@ -44,12 +45,12 @@ export default function VoteTable({ votes }: VoteTableProps) {
 
   const renderTime = (date: Date | undefined) => {
     if (!date) return '-';
-    return date.toLocaleString();
+    return date.toLocaleString(currentLanguage);
   };
 
   const getRemainingTime = (expireDate: Date | undefined) => {
-    if (!expireDate) return '永久有效';
-    return `剩余${getCountdownText(expireDate)}`;
+    if (!expireDate) return t('poll_list.permanent');
+    return t('poll_list.remaining', { time: getCountdownText(expireDate) });
   };
 
   const getStatusColor = (vote: Poll) => {
@@ -71,7 +72,11 @@ export default function VoteTable({ votes }: VoteTableProps) {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                   {vote.category && <CategoryChip category={vote.category} />}
                   <Chip
-                    label={vote.votes_per_user === 1 ? '单选' : `多选(${vote.votes_per_user}票)`}
+                    label={
+                      vote.votes_per_user === 1
+                        ? t('poll_list.single_choice')
+                        : t('poll_list.multiple_choice', { count: vote.votes_per_user })
+                    }
                     size="small"
                     variant="outlined"
                     color="default"
@@ -89,12 +94,12 @@ export default function VoteTable({ votes }: VoteTableProps) {
                     {getLocalizedText(vote.title, currentLanguage)}
                   </Typography>
                   {hasVoted && (
-                    <Tooltip title="你已参与此投票">
+                    <Tooltip title={t('poll_list.already_voted')}>
                       <CheckCircleIcon fontSize="small" color="success" />
                     </Tooltip>
                   )}
                   {isOwner && (
-                    <Tooltip title="我创建的投票">
+                    <Tooltip title={t('poll_list.created_by_me')}>
                       <EditIcon fontSize="small" color="action" />
                     </Tooltip>
                   )}
@@ -109,7 +114,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
                         color: 'text.secondary',
                       }}
                     >
-                      截止：{renderTime(vote.expire_at)}
+                      {t('poll_list.deadline', { time: renderTime(vote.expire_at) })}
                     </Typography>
                   )}
                   <Typography
@@ -131,7 +136,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
                         gap: 0.5,
                       }}
                     >
-                      参与：{vote.participants_count}人
+                      {t('poll_list.participants', { count: vote.participants_count })}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -139,7 +144,7 @@ export default function VoteTable({ votes }: VoteTableProps) {
                         color: 'text.secondary',
                       }}
                     >
-                      总票：{vote.total_votes_count}票
+                      {t('poll_list.total_votes', { count: vote.total_votes_count })}
                     </Typography>
                   </Box>
                 </Box>

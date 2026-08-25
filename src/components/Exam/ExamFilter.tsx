@@ -10,11 +10,12 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
+import { t } from 'i18next';
 import type { Dispatch, SetStateAction } from 'react';
 import type { Exam, GetExamsParams } from '@/api/dto';
 import { Category } from '@/api/dto';
 import { ExamSortType } from '@/util/enum';
-import { getCategoryLabel } from '@/util/utils';
+import { getCategoryLabel, getDifficultyLabel } from '@/util/utils';
 
 interface ExamFilterProps {
   examList: Exam[]; // 使用Exam类型
@@ -67,7 +68,7 @@ export default function ExamFilter({ examList, searchParams, setSearchParams }: 
       </Stack>
       <TextField
         fullWidth
-        label="搜索测验"
+        label={t('exam_list.search')}
         variant="outlined"
         value={searchParams.query}
         onChange={(e) => setSearchParams((prev) => ({ ...prev, query: e.target.value }))}
@@ -94,40 +95,40 @@ export default function ExamFilter({ examList, searchParams, setSearchParams }: 
         }}
       >
         <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>难度</InputLabel>
+          <InputLabel>{t('common.label.difficulty')}</InputLabel>
           <Select
             value={searchParams.difficulty ?? ''}
-            label="难度"
+            label={t('common.label.difficulty')}
             onChange={(e) => setSearchParams((prev) => ({ ...prev, difficulty: e.target.value }))}
           >
-            <MenuItem value="">全部</MenuItem>
+            <MenuItem value="">{t('common.label.all')}</MenuItem>
             {allDifficulties.map((diff) => (
               <MenuItem key={diff} value={diff}>
-                {diff}
+                {getDifficultyLabel(diff)}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
 
         <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>排序</InputLabel>
+          <InputLabel>{t('common.label.sort')}</InputLabel>
           <Select
             value={searchParams.sortBy ?? ExamSortType.DEFAULT}
-            label="排序"
+            label={t('common.label.sort')}
             onChange={(e) =>
               setSearchParams((prev) => ({ ...prev, sortBy: e.target.value as ExamSortType }))
             }
           >
-            <MenuItem value={ExamSortType.DEFAULT}>默认</MenuItem>
-            <MenuItem value={ExamSortType.TITLE}>标题</MenuItem>
-            <MenuItem value={ExamSortType.DIFFICULTY}>难度</MenuItem>
+            <MenuItem value={ExamSortType.DEFAULT}>{t('common.label.default')}</MenuItem>
+            <MenuItem value={ExamSortType.TITLE}>{t('common.label.title')}</MenuItem>
+            <MenuItem value={ExamSortType.DIFFICULTY}>{t('common.label.difficulty')}</MenuItem>
           </Select>
         </FormControl>
 
         <IconButton
           onClick={() => setSearchParams((prev) => ({ ...prev, sortDesc: !prev.sortDesc }))}
           color={searchParams.sortDesc ? 'primary' : 'default'}
-          title={searchParams.sortDesc ? '升序' : '降序'}
+          title={searchParams.sortDesc ? t('common.label.ascending') : t('common.label.descending')}
         >
           <SortIcon sx={{ transform: searchParams.sortDesc ? 'rotate(180deg)' : 'rotate(0deg)' }} />
         </IconButton>

@@ -1,7 +1,7 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import UpdateIcon from '@mui/icons-material/Update';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
-import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { Alert, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { Link } from 'react-router-dom';
 import ExamPreviewCard from '@/components/Exam/ExamPreviewCard';
@@ -10,6 +10,7 @@ import { HomeLinks } from '@/components/Home/HomeLinks';
 import type { Exam } from '../api/dto';
 import { useGetHome } from '../api/genshinQuizAPI';
 import ContentCardGridSection from '../components/ContentCardGridSection';
+import PageContainer from '../components/PageContainer';
 import QuestionPreviewCard from '../components/Question/QuestionPreviewCard';
 import PollPreviewCard from '../components/Vote/PollPreviewCard';
 import { useLanguage } from '../context/LanguageContext';
@@ -42,9 +43,7 @@ export default function HomePage() {
   const popularPolls = homeData?.popularPolls ?? [];
 
   return (
-    <Box
-      sx={{ width: '100%', maxWidth: 1280, mx: 'auto', px: { xs: 2, md: 4 }, py: { xs: 2, md: 3 } }}
-    >
+    <PageContainer maxWidth={1280}>
       <Stack spacing={3}>
         {/* 欢迎区域 */}
         <HomeBanner />
@@ -119,6 +118,6 @@ export default function HomePage() {
           />
         )}
       </Stack>
-    </Box>
+    </PageContainer>
   );
 }

@@ -6,6 +6,8 @@ RUN bun install
 
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
+ARG VITE_BUILD_VERSION=development
+ENV VITE_BUILD_VERSION=$VITE_BUILD_VERSION
 
 COPY . .
 # RUN bun run build:api && bun run build
@@ -17,6 +19,8 @@ FROM nginx:alpine
 
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
+ARG VITE_BUILD_VERSION=development
+ENV VITE_BUILD_VERSION=$VITE_BUILD_VERSION
 
 # 1. 拷贝静态文件
 COPY --from=builder /app/dist /usr/share/nginx/html

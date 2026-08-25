@@ -11,6 +11,7 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
+import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -27,7 +28,7 @@ import { getLocalizedText } from '@/util/utils';
 
 export default function VoteDetailPage() {
   const { currentLanguage } = useLanguage();
-  const { isAuthenticated, user } = useUser();
+  const { user } = useUser();
   const { id } = useParams<{ id: string }>();
   const { data: voteInfo, isLoading, error, mutate } = useGetPoll(id ?? '');
 
@@ -39,7 +40,7 @@ export default function VoteDetailPage() {
 
   if (error || !voteInfo) {
     console.error('Failed to load vote:', error);
-    return <Alert severity="error">加载题目失败</Alert>;
+    return <Alert severity="error">{t('vote.load_failed')}</Alert>;
   }
 
   // 提交投票结果
@@ -54,7 +55,7 @@ export default function VoteDetailPage() {
       })
       .catch((err) => {
         console.error(err);
-        enqueueSnackbar('投票失败，请稍后重试', {
+        enqueueSnackbar(t('vote.submit_failed'), {
           variant: 'error',
         });
       });
@@ -68,7 +69,7 @@ export default function VoteDetailPage() {
       })
       .catch((err) => {
         console.error(err);
-        enqueueSnackbar('点赞失败，请稍后重试', {
+        enqueueSnackbar(t('vote.like_failed'), {
           variant: 'error',
         });
       });
@@ -78,14 +79,14 @@ export default function VoteDetailPage() {
     <PageContainer>
       <Box>
         <Button size="small" component={Link} to="/polls">
-          ← 返回投票列表
+          ← {t('vote.back_to_list')}
         </Button>
-        <RandomButton tooltip="随机查看投票" onClick={() => {}} />
+        <RandomButton tooltip={t('vote.random_poll')} onClick={() => {}} />
       </Box>
       <Card>
         <Tabs value={currentTab} onChange={(_, v) => setCurrentTab(v)}>
-          <Tab label="投票" />
-          <Tab label="统计结果" />
+          <Tab label={t('vote.tab_vote')} />
+          <Tab label={t('vote.tab_results')} />
         </Tabs>
         <CardContent>
           <Stack spacing={2} divider={<Divider flexItem />}>
@@ -103,14 +104,17 @@ export default function VoteDetailPage() {
             {currentTab === 1 && (
               <Box>
                 <Typography variant="h6" gutterBottom>
-                  投票结果分析
+                  {t('vote.results_title')}
                 </Typography>
                 {/* 这里可以放图表或统计信息 */}
                 <Box>
                   {voteInfo.options.map((option) => (
                     <Box key={option.id} sx={{ mb: 1 }}>
                       <Typography variant="body2">
-                        {getLocalizedText(option.text, currentLanguage)}:{option.votes_count} 票
+                        {t('vote.option_votes', {
+                          text: getLocalizedText(option.text, currentLanguage),
+                          count: option.votes_count,
+                        })}
                         <Box
                           component="span"
                           sx={{

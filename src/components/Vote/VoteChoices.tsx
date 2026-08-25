@@ -117,16 +117,16 @@ export default function VoteChoices({
         }}
       >
         <Typography>
-          {submitted ? '已投' : '已选'}
+          {submitted ? t('vote.voted') : t('vote.selected')}
           {` ${selectedCount}/${maxVotes}`}
         </Typography>
         <Chip
           label={
             votesPerOption === 0
-              ? `每项限${votesPerUser}票` // 每项无限制，但每个用户总票数有限制
+              ? t('vote.per_item_limit', { count: votesPerUser })
               : votesPerOption === 1
-                ? '每项限1票'
-                : `每项限${votesPerOption}票`
+                ? t('vote.per_item_limit', { count: 1 })
+                : t('vote.per_item_limit', { count: votesPerOption })
           }
           color="info"
           variant="outlined"
@@ -140,7 +140,13 @@ export default function VoteChoices({
     if (!option.id) return null;
     const votesForThisOption = selected[option.id] || 0;
     if (votesForThisOption > 0) {
-      return <Chip label={`已投${votesForThisOption}票`} color="success" size="small" />;
+      return (
+        <Chip
+          label={t('vote.voted_count', { count: votesForThisOption })}
+          color="success"
+          size="small"
+        />
+      );
     }
     return null;
   };
@@ -157,7 +163,7 @@ export default function VoteChoices({
           disabled={!isAuthenticated || (!isVoted && selectedCount >= maxVotes)}
           onClick={() => handleSelect(option.id)}
         >
-          {isVoted ? '取消' : '选择'}
+          {isVoted ? t('common.btn_label.cancel') : t('vote.select')}
         </ToggleButton>
       );
     } else {
@@ -233,7 +239,7 @@ export default function VoteChoices({
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Chip
-            label={'仅看已选'}
+            label={t('vote.show_selected_only')}
             color={showSelectedOnly ? 'primary' : 'default'}
             variant={showSelectedOnly ? 'filled' : 'outlined'}
             clickable
@@ -247,7 +253,7 @@ export default function VoteChoices({
             size="small"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            placeholder="搜索选项，简介"
+            placeholder={t('vote.search_options')}
           />
         </Box>
         {renderVoting()}
@@ -257,9 +263,9 @@ export default function VoteChoices({
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
-              <TableCell>选项</TableCell>
-              <TableCell>简介</TableCell>
-              <TableCell align="right">投票</TableCell>
+              <TableCell>{t('common.label.option')}</TableCell>
+              <TableCell>{t('common.label.description')}</TableCell>
+              <TableCell align="right">{t('common.label.votes')}</TableCell>
               {submitted && isAuthenticated && (
                 <TableCell align="right" sortDirection={sortByVotes === '' ? false : sortByVotes}>
                   <TableSortLabel
@@ -267,7 +273,7 @@ export default function VoteChoices({
                     direction={sortByVotes === '' ? 'asc' : sortByVotes}
                     onClick={() => setSortByVotes((v) => (v === 'asc' ? 'desc' : 'asc'))}
                   >
-                    总票数
+                    {t('vote.total_votes')}
                   </TableSortLabel>
                 </TableCell>
               )}
@@ -307,7 +313,9 @@ export default function VoteChoices({
             disabled={isAuthenticated && selectedCount === 0}
             onClick={isAuthenticated ? handleClickSubmit : handleLogin}
           >
-            {!isAuthenticated ? '请先登录' : `提交投票 (${selectedCount}/${maxVotes})`}
+            {!isAuthenticated
+              ? t('vote.login_required')
+              : t('vote.submit', { selected: selectedCount, max: maxVotes })}
           </Button>
         </Box>
       )}

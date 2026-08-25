@@ -1,4 +1,5 @@
 import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
+import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import type { Exam } from '@/api/dto';
 import { useLanguage } from '@/context/LanguageContext';
@@ -27,7 +28,7 @@ export default function ExamGrid({ exams }: Props) {
             color: 'text.secondary',
           }}
         >
-          暂无符合条件的考试
+          {t('exam_list.empty')}
         </Typography>
       </Box>
     );
@@ -67,8 +68,8 @@ export default function ExamGrid({ exams }: Props) {
                   mb: 2,
                 }}
               >
-                题目数量: {exam.questions.length}
-                {exam.time_limit && ` | 时间限制: ${exam.time_limit}秒`}
+                {t('exam_list.question_count', { count: exam.questions.length })}
+                {exam.time_limit && ` | ${t('exam_list.time_limit', { seconds: exam.time_limit })}`}
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <Button
@@ -78,7 +79,7 @@ export default function ExamGrid({ exams }: Props) {
                   variant="contained"
                   size="small"
                 >
-                  查看详情
+                  {t('exam_list.view_details')}
                 </Button>
                 <Button
                   onClick={() => {
@@ -87,7 +88,7 @@ export default function ExamGrid({ exams }: Props) {
                   variant="outlined"
                   size="small"
                 >
-                  开始考试
+                  {t('exam_list.start_exam')}
                 </Button>
               </Box>
             </CardContent>

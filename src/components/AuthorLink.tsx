@@ -1,5 +1,6 @@
 import PersonIcon from '@mui/icons-material/Person';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
+import { t } from 'i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { useGetUser } from '@/api/genshinQuizAPI';
 
@@ -27,7 +28,7 @@ export default function AuthorLink({ userId, showAvatar = false }: Props) {
           color: 'text.secondary',
         }}
       >
-        作者:
+        {t('common.label.author')}:
       </Typography>
       <Link
         component={RouterLink}

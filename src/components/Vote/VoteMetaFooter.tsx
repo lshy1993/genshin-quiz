@@ -1,4 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
+import { t } from 'i18next';
 import type { LikeStatus, Poll } from '@/api/dto';
 import AuthorLink from '@/components/AuthorLink';
 import LikeButtons from '@/components/Button/LikeButtons';
@@ -24,7 +25,7 @@ export default function VoteMetaFooter({ voteInfo, handleLike }: Props) {
             color: 'text.secondary',
           }}
         >
-          创建日期: {voteInfo.created_at.toLocaleString()}
+          {t('vote.created_at', { time: voteInfo.created_at.toLocaleString() })}
         </Typography>
       </Stack>
     </Box>

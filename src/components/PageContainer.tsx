@@ -1,13 +1,19 @@
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
-const PageContainer = styled(Box)(({ theme }) => ({
+type PageContainerProps = {
+  maxWidth?: number | string;
+};
+
+const PageContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'maxWidth',
+})<PageContainerProps>(({ theme, maxWidth = 900 }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(3),
   width: '100%',
-  maxWidth: 900,
-  minWidth: 480,
+  maxWidth,
+  minWidth: 0,
   marginLeft: 'auto',
   marginRight: 'auto',
 }));

@@ -1,4 +1,5 @@
 import { Alert, CircularProgress } from '@mui/material';
+import { t } from 'i18next';
 import { useState } from 'react';
 import { type GetPollsParams, GetPollsType } from '@/api/dto';
 import { useGetPolls } from '@/api/genshinQuizAPI';
@@ -9,6 +10,7 @@ import VoteFilter from '@/components/Vote/VoteFilter';
 import VoteTable from '@/components/Vote/VoteTable';
 import { useLanguage } from '@/context/LanguageContext';
 import { useUser } from '@/context/UserContext';
+import { PATHS } from '@/route/route';
 
 export default function VoteListPage() {
   const { user } = useUser();
@@ -32,12 +34,16 @@ export default function VoteListPage() {
 
   if (error || !votesRes) {
     console.error(error);
-    return <Alert severity="error">加载投票出错</Alert>;
+    return (
+      <Alert severity="error">
+        {t('poll_list.load_failed', { message: error?.message ?? '' })}
+      </Alert>
+    );
   }
 
   return (
     <PageContainer>
-      <BannerBox title={'投票列表'} subtitle={'参与投票吧！谁是真正的人气王！'} />
+      <BannerBox title={t('poll_list.title')} subtitle={t('poll_list.subtitle')} />
       <VoteFilter
         search={searchParams.query || ''}
         setSearch={(value) =>
@@ -57,7 +63,9 @@ export default function VoteListPage() {
         }
       />
       <VoteTable votes={votesRes.polls} />
-      {user && <FloatingAddButton to="/polls/create" label="创建投票" />}
+      {user && (
+        <FloatingAddButton to={PATHS.POLL_CREATE} label={t('common.btn_label.create_poll')} />
+      )}
     </PageContainer>
   );
 }

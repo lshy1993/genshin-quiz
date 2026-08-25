@@ -29,6 +29,19 @@
       "ascending": "Ascending",
       "descending": "Descending",
       "search": "Search",
+      "difficulty": "Difficulty",
+      "category": "Category",
+      "title": "Title",
+      "description": "Description",
+      "option": "Option",
+      "votes": "Votes",
+      "sort": "Sort by",
+      "default": "Default",
+      "search_polls": "Search polls",
+      "poll_type": "Type",
+      "poll_expired": "Ended",
+      "poll_available": "Ongoing",
+      "author": "Author",
       "unknown_region": "Unknown region"
     }
   },
@@ -116,12 +129,48 @@
     "advanced": "Advanced filters",
     "select_language": "Select languages",
     "question_type": "Question type",
-    "difficulty": "Difficulty"
+    "search_polls": "Search polls",
+    "poll_type": "Type",
+    "poll_expired": "Ended",
+    "poll_available": "Ongoing"
   },
   "question_list": {
     "title": "Questions",
     "subtitle": "Browse all questions, open one and start answering.",
     "load_failed": "Could not load questions: {{message}}"
+  },
+  "question_table": {
+    "empty": "No questions match the current filters",
+    "content": "Question",
+    "correct_rate": "Correct rate",
+    "answers_count": "Answers",
+    "solved": "You answered this question correctly"
+  },
+  "exam_list": {
+    "title": "Exams",
+    "subtitle": "Find a quiz that interests you and improve your knowledge.",
+    "load_failed": "Could not load exams: {{message}}",
+    "empty": "No exams match the current filters",
+    "search": "Search exams",
+    "question_count": "Questions: {{count}}",
+    "time_limit": "Time limit: {{seconds}} seconds",
+    "view_details": "View details",
+    "start_exam": "Start exam"
+  },
+  "poll_list": {
+    "title": "Polls",
+    "subtitle": "Cast your vote and see who is most popular.",
+    "load_failed": "Could not load polls: {{message}}",
+    "empty": "No ongoing polls",
+    "single_choice": "Single choice",
+    "multiple_choice": "Multiple choice ({{count}} votes)",
+    "already_voted": "You have voted in this poll",
+    "created_by_me": "Poll created by me",
+    "deadline": "Ends: {{time}}",
+    "permanent": "No expiration",
+    "remaining": "{{time}} remaining",
+    "participants": "Participants: {{count}}",
+    "total_votes": "Total votes: {{count}}"
   },
   "time": {
     "unlimited": "No expiry",
@@ -204,7 +253,27 @@
   },
   "vote": {
     "confirm_submit_title": "Submit {{count}} vote(s)?",
-    "confirm_remaining_votes": "You can still select {{count}} vote(s)."
+    "confirm_remaining_votes": "You can still select {{count}} vote(s).",
+    "load_failed": "Could not load the poll",
+    "submit_failed": "Voting failed. Please try again later.",
+    "like_failed": "Could not like the poll. Please try again later.",
+    "back_to_list": "Back to polls",
+    "random_poll": "View a random poll",
+    "tab_vote": "Vote",
+    "tab_results": "Results",
+    "results_title": "Poll results",
+    "option_votes": "{{text}}: {{count}} votes",
+    "created_at": "Created: {{time}}",
+    "voted": "Voted",
+    "selected": "Selected",
+    "per_item_limit": "Up to {{count}} vote(s) per option",
+    "voted_count": "{{count}} vote(s)",
+    "select": "Select",
+    "show_selected_only": "Show selected only",
+    "search_options": "Search options and descriptions",
+    "total_votes": "Total votes",
+    "login_required": "Please log in first",
+    "submit": "Submit votes ({{selected}}/{{max}})"
   },
   "404": {
     "title_not_found": "Page not found",

@@ -29,6 +29,19 @@
       "ascending": "升序",
       "descending": "降序",
       "search": "搜索",
+      "difficulty": "难度",
+      "category": "分类",
+      "title": "标题",
+      "description": "简介",
+      "option": "选项",
+      "votes": "投票",
+      "sort": "排序",
+      "default": "默认",
+      "search_polls": "搜索投票",
+      "poll_type": "类型",
+      "poll_expired": "已经结束",
+      "poll_available": "进行中",
+      "author": "作者",
       "unknown_region": "未知地区"
     }
   },
@@ -116,12 +129,48 @@
     "advanced": "详细过滤",
     "select_language": "选择语言",
     "question_type": "题目类型",
-    "difficulty": "难度等级"
+    "search_polls": "搜索投票",
+    "poll_type": "类型",
+    "poll_expired": "已经结束",
+    "poll_available": "进行中"
   },
   "question_list": {
     "title": "题目列表",
     "subtitle": "浏览所有题目，点击查看详情并开始答题！",
     "load_failed": "加载题目出错：{{message}}"
+  },
+  "question_table": {
+    "empty": "暂无符合条件的题目",
+    "content": "题目内容",
+    "correct_rate": "正确率",
+    "answers_count": "回答人次",
+    "solved": "你已答对此题"
+  },
+  "exam_list": {
+    "title": "测验列表",
+    "subtitle": "查找并参与你感兴趣的测验，提升你的知识水平！",
+    "load_failed": "加载测验出错：{{message}}",
+    "empty": "暂无符合条件的测验",
+    "search": "搜索测验",
+    "question_count": "题目数量：{{count}}",
+    "time_limit": "时间限制：{{seconds}}秒",
+    "view_details": "查看详情",
+    "start_exam": "开始考试"
+  },
+  "poll_list": {
+    "title": "投票列表",
+    "subtitle": "参与投票吧！谁是真正的人气王！",
+    "load_failed": "加载投票出错：{{message}}",
+    "empty": "暂无正在进行中的投票",
+    "single_choice": "单选",
+    "multiple_choice": "多选（{{count}}票）",
+    "already_voted": "你已参与此投票",
+    "created_by_me": "我创建的投票",
+    "deadline": "截止：{{time}}",
+    "permanent": "永久有效",
+    "remaining": "剩余{{time}}",
+    "participants": "参与：{{count}}人",
+    "total_votes": "总票：{{count}}票"
   },
   "time": {
     "unlimited": "无限期",
@@ -204,7 +253,27 @@
   },
   "vote": {
     "confirm_submit_title": "确定提交这 {{count}} 票吗？",
-    "confirm_remaining_votes": "你还可以选择 {{count}} 票"
+    "confirm_remaining_votes": "你还可以选择 {{count}} 票",
+    "load_failed": "加载投票失败",
+    "submit_failed": "投票失败，请稍后重试",
+    "like_failed": "点赞失败，请稍后重试",
+    "back_to_list": "返回投票列表",
+    "random_poll": "随机查看投票",
+    "tab_vote": "投票",
+    "tab_results": "统计结果",
+    "results_title": "投票结果分析",
+    "option_votes": "{{text}}：{{count}}票",
+    "created_at": "创建日期：{{time}}",
+    "voted": "已投",
+    "selected": "已选",
+    "per_item_limit": "每项限{{count}}票",
+    "voted_count": "已投{{count}}票",
+    "select": "选择",
+    "show_selected_only": "仅看已选",
+    "search_options": "搜索选项、简介",
+    "total_votes": "总票数",
+    "login_required": "请先登录",
+    "submit": "提交投票（{{selected}}/{{max}}）"
   },
   "404": {
     "title_not_found": "页面未找到",

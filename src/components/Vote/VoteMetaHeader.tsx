@@ -1,6 +1,7 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import { Box, Divider, Stack, Tooltip, Typography } from '@mui/material';
+import { t } from 'i18next';
 import type { Poll, UserPublic } from '@/api/dto';
 import CategoryChip from '@/components/Chip/CategoryChip';
 import { useLanguage } from '@/context/LanguageContext';
@@ -31,12 +32,12 @@ export default function VoteMetaHeader({ voteInfo, user }: Props) {
           {getLocalizedText(voteInfo.title, currentLanguage)}
         </Typography>
         {hasVoted && (
-          <Tooltip title="你已参与此投票">
+          <Tooltip title={t('poll_list.already_voted')}>
             <CheckCircleIcon color="success" />
           </Tooltip>
         )}
         {isOwner && (
-          <Tooltip title="我创建的投票">
+          <Tooltip title={t('poll_list.created_by_me')}>
             <EditIcon color="action" />
           </Tooltip>
         )}

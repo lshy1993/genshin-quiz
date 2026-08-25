@@ -210,7 +210,7 @@ export default function QuestionFilter({ params, setSearchParams }: QuestionFilt
               ))}
             </Stack>
             <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 'medium' }}>
-              {t('filters.difficulty')}
+              {t('common.label.difficulty')}
             </Typography>
             <Stack
               direction="row"

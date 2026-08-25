@@ -29,6 +29,19 @@
       "ascending": "昇順",
       "descending": "降順",
       "search": "検索",
+      "difficulty": "難易度",
+      "category": "カテゴリー",
+      "title": "タイトル",
+      "description": "説明",
+      "option": "選択肢",
+      "votes": "投票",
+      "sort": "並べ替え",
+      "default": "デフォルト",
+      "search_polls": "投票を検索",
+      "poll_type": "種類",
+      "poll_expired": "終了",
+      "poll_available": "開催中",
+      "author": "作成者",
       "unknown_region": "不明な地域"
     }
   },
@@ -116,12 +129,48 @@
     "advanced": "詳細フィルター",
     "select_language": "言語を選択",
     "question_type": "問題タイプ",
-    "difficulty": "難易度"
+    "search_polls": "投票を検索",
+    "poll_type": "種類",
+    "poll_expired": "終了",
+    "poll_available": "開催中"
   },
   "question_list": {
     "title": "問題一覧",
     "subtitle": "すべての問題を確認して、回答を始めましょう。",
     "load_failed": "問題の読み込みエラー：{{message}}"
+  },
+  "question_table": {
+    "empty": "条件に一致する問題はありません",
+    "content": "問題文",
+    "correct_rate": "正答率",
+    "answers_count": "回答数",
+    "solved": "この問題に正解しました"
+  },
+  "exam_list": {
+    "title": "テスト一覧",
+    "subtitle": "興味のあるテストを探して、知識を深めましょう。",
+    "load_failed": "テストの読み込みエラー：{{message}}",
+    "empty": "条件に一致するテストはありません",
+    "search": "テストを検索",
+    "question_count": "問題数：{{count}}",
+    "time_limit": "制限時間：{{seconds}}秒",
+    "view_details": "詳細を見る",
+    "start_exam": "テストを開始"
+  },
+  "poll_list": {
+    "title": "投票一覧",
+    "subtitle": "投票して、誰が一番人気か確かめましょう。",
+    "load_failed": "投票の読み込みエラー：{{message}}",
+    "empty": "開催中の投票はありません",
+    "single_choice": "単一選択",
+    "multiple_choice": "複数選択（{{count}}票）",
+    "already_voted": "この投票に参加済みです",
+    "created_by_me": "自分が作成した投票",
+    "deadline": "締切：{{time}}",
+    "permanent": "期限なし",
+    "remaining": "残り{{time}}",
+    "participants": "参加者：{{count}}人",
+    "total_votes": "合計票数：{{count}}票"
   },
   "time": {
     "unlimited": "無期限",
@@ -204,7 +253,27 @@
   },
   "vote": {
     "confirm_submit_title": "{{count}} 票を送信しますか？",
-    "confirm_remaining_votes": "あと {{count}} 票を選択できます。"
+    "confirm_remaining_votes": "あと {{count}} 票を選択できます。",
+    "load_failed": "投票を読み込めませんでした",
+    "submit_failed": "投票に失敗しました。後でもう一度お試しください。",
+    "like_failed": "投票にいいねできませんでした。後でもう一度お試しください。",
+    "back_to_list": "投票一覧に戻る",
+    "random_poll": "ランダムな投票を見る",
+    "tab_vote": "投票",
+    "tab_results": "結果",
+    "results_title": "投票結果",
+    "option_votes": "{{text}}：{{count}}票",
+    "created_at": "作成日：{{time}}",
+    "voted": "投票済み",
+    "selected": "選択済み",
+    "per_item_limit": "1項目につき{{count}}票まで",
+    "voted_count": "{{count}}票",
+    "select": "選択",
+    "show_selected_only": "選択済みのみ表示",
+    "search_options": "選択肢・説明を検索",
+    "total_votes": "合計票数",
+    "login_required": "先にログインしてください",
+    "submit": "投票を送信（{{selected}}/{{max}}）"
   },
   "404": {
     "title_not_found": "ページが見つかりません",

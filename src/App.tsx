@@ -3,6 +3,7 @@ import { SnackbarProvider } from 'notistack';
 import { useEffect } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom';
 import AdminRouteComponent from './admin/AdminRouteComponent';
+import BuildVersionFooter from './components/BuildVersionFooter';
 import { RequireAuth } from './components/RequiredAuth';
 import TopBarComponent from './components/TopBarComponent';
 import { useAuthManager } from './hooks/useAuthManager';
@@ -60,11 +61,12 @@ function App() {
             flexDirection: 'column',
             overflowY: 'auto',
             p: 3,
+            pb: 1,
           }}
         >
           <Routes>
-            <Route path="/admin" element={<AdminRouteComponent />} />
-            <Route path={PATHS.ROOT} element={<Navigate to="/home" />} />
+            <Route path={PATHS.ADMIN} element={<AdminRouteComponent />} />
+            <Route path={PATHS.ROOT} element={<Navigate to={PATHS.HOME} />} />
             <Route path={PATHS.HOME} element={<HomePage />} />
             <Route path={PATHS.LOGIN} element={<LoginPage />} />
             <Route path={PATHS.QUESTIONS} element={<QuestionListPage />} />
@@ -97,6 +99,7 @@ function App() {
             <Route path={PATHS.VERIFY_EMAIL} element={<VerifyEmail />} />
             <Route path={PATHS.NOT_FOUND} element={<NotFoundPage />} />
           </Routes>
+          <BuildVersionFooter />
         </Box>
       </Box>
     );

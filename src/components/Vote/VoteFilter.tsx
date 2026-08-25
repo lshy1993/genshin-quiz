@@ -1,4 +1,5 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { t } from 'i18next';
 import { GetPollsType } from '@/api/dto';
 
 interface VoteFilterProps {
@@ -17,7 +18,7 @@ export default function VoteFilter({
   return (
     <Box sx={{ display: 'flex', gap: 2 }}>
       <TextField
-        label="搜索投票"
+        label={t('filters.search_polls')}
         variant="outlined"
         size="small"
         value={search}
@@ -25,11 +26,15 @@ export default function VoteFilter({
         sx={{ flex: 2 }}
       />
       <FormControl size="small" sx={{ minWidth: 120 }}>
-        <InputLabel>类型</InputLabel>
-        <Select label="类型" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-          <MenuItem value={GetPollsType.all}>全部</MenuItem>
-          <MenuItem value={GetPollsType.expired}>已经结束</MenuItem>
-          <MenuItem value={GetPollsType.available}>进行中</MenuItem>
+        <InputLabel>{t('filters.poll_type')}</InputLabel>
+        <Select
+          label={t('filters.poll_type')}
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+        >
+          <MenuItem value={GetPollsType.all}>{t('common.label.all')}</MenuItem>
+          <MenuItem value={GetPollsType.expired}>{t('filters.poll_expired')}</MenuItem>
+          <MenuItem value={GetPollsType.available}>{t('filters.poll_available')}</MenuItem>
         </Select>
       </FormControl>
     </Box>

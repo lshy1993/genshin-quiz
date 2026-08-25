@@ -15,6 +15,8 @@ steps:
         "build",
         "--build-arg",
         "VITE_API_URL=https://genshinquiz-backend-594226160049.asia-northeast1.run.app", # 替换为你实际的后端 Cloud Run 地址
+        "--build-arg",
+        "VITE_BUILD_VERSION=$COMMIT_SHA",
         "-t",
         "asia-northeast1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/genshinquiz-frontend:$COMMIT_SHA",
         ".",
