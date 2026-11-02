@@ -15,6 +15,12 @@ export default defineConfig({
     port: 3000, // 可以设置为你需要的端口
     host: true, // 使服务器在所有网络接口上可用
     proxy: {
+      // auth-service 独立进程：/api/auth/* -> auth-service /auth/*
+      '/api/auth': {
+        target: process.env.AUTH_API_URL || 'http://localhost:8081',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
       '/api': {
         target: process.env.VITE_API_URL || 'http://localhost:8080',
         changeOrigin: true,

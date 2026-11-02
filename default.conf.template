@@ -7,6 +7,16 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
+    # 独立 auth-service：/api/auth/* -> /auth/*
+    location /api/auth/ {
+        proxy_pass ${AUTH_API_URL}/auth/;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
     location /api/ {
         proxy_pass ${VITE_API_URL}/;
         

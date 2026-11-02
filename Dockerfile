@@ -19,6 +19,8 @@ FROM nginx:alpine
 
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
+ARG AUTH_API_URL=http://auth-service:8081
+ENV AUTH_API_URL=$AUTH_API_URL
 ARG VITE_BUILD_VERSION=development
 ENV VITE_BUILD_VERSION=$VITE_BUILD_VERSION
 
@@ -26,10 +28,10 @@ ENV VITE_BUILD_VERSION=$VITE_BUILD_VERSION
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY default.conf.template /etc/nginx/conf.d/default.conf.template
 
-# 2. 安装 envsubst，用于在容器启动时替换 VITE_API_URL
+# 2. 安装 envsubst，用于在容器启动时替换 VITE_API_URL / AUTH_API_URL
 RUN apk add --no-cache gettext
 
 # 3. 声明与 Vite 开发服务器一致的端口
 EXPOSE 3000
 
-ENTRYPOINT ["sh", "-c", "envsubst '$VITE_API_URL' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'" ]
+ENTRYPOINT ["sh", "-c", "envsubst '$VITE_API_URL $AUTH_API_URL' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'" ]
