@@ -32,7 +32,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       const storedToken = callbackToken || localStorage.getItem(TOKEN_STORAGE_KEY);
       if (callbackToken) {
         localStorage.setItem(TOKEN_STORAGE_KEY, callbackToken);
-        window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+        window.history.replaceState(
+          null,
+          document.title,
+          window.location.pathname + window.location.search,
+        );
       }
       if (storedToken) {
         console.log('token found and fetching user info...');

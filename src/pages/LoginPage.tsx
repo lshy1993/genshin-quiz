@@ -34,7 +34,11 @@ export default function AuthForm() {
     const oauthError = callbackParams.get('oauth_error');
     if (!oauthError) return;
 
-    window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+    window.history.replaceState(
+      null,
+      document.title,
+      window.location.pathname + window.location.search,
+    );
     enqueueSnackbar(
       oauthError === 'authorization_denied'
         ? '已取消第三方登录'
@@ -142,9 +146,7 @@ export default function AuthForm() {
 
   const startOAuth = (provider: 'google' | 'github') => {
     const returnTo = window.location.origin + window.location.pathname;
-    window.location.assign(
-      `/api/auth/oauth/${provider}?return_to=${encodeURIComponent(returnTo)}`,
-    );
+    window.location.assign(`/api/auth/oauth/${provider}?return_to=${encodeURIComponent(returnTo)}`);
   };
 
   return (
