@@ -38,73 +38,73 @@ function NavigationSetup() {
   return null;
 }
 
-function App() {
-  function AppContent() {
-    // 自动管理 JWT token 和 API 认证头
-    useAuthManager();
+function AppContent() {
+  // 自动管理 JWT token 和 API 认证头
+  useAuthManager();
 
-    return (
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+      }}
+    >
+      <NavigationSetup />
+      <TopBarComponent />
       <Box
         sx={{
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100vh',
-          bgcolor: 'background.default',
+          overflowY: 'auto',
+          p: 3,
+          pb: 1,
         }}
       >
-        <NavigationSetup />
-        <TopBarComponent />
-        <Box
-          sx={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            overflowY: 'auto',
-            p: 3,
-            pb: 1,
-          }}
-        >
-          <Routes>
-            <Route path={PATHS.ADMIN} element={<AdminRouteComponent />} />
-            <Route path={PATHS.ROOT} element={<Navigate to={PATHS.HOME} />} />
-            <Route path={PATHS.HOME} element={<HomePage />} />
-            <Route path={PATHS.LOGIN} element={<LoginPage />} />
-            <Route path={PATHS.QUESTIONS} element={<QuestionListPage />} />
-            <Route
-              path={PATHS.QUESTION_CREATE}
-              element={
-                <RequireAuth>
-                  <CreateQuestionPage />
-                </RequireAuth>
-              }
-            />
-            <Route path={PATHS.QUESTION_DETAIL} element={<QuestionDetailPage />} />
-            <Route path={PATHS.POLLS} element={<VoteListPage />} />
-            <Route
-              path={PATHS.POLL_CREATE}
-              element={
-                <RequireAuth>
-                  <CreateVotePage />
-                </RequireAuth>
-              }
-            />
-            <Route path={PATHS.POLL_DETAIL} element={<VoteDetailPage />} />
-            <Route path={PATHS.EXAMS} element={<ExamListPage />} />
-            <Route path={PATHS.EXAM_DETAIL} element={<ExamDetailPage />} />
-            <Route path={PATHS.RANK} element={<RankPage />} />
-            <Route path={PATHS.USERS} element={<UserProfilePage />} />
-            <Route path={PATHS.ABOUT} element={<AboutPage />} />
-            <Route path={PATHS.FORGOT_PASSWORD} element={<ForgotPassword />} />
-            <Route path={PATHS.RESET_PASSWORD} element={<ResetPassword />} />
-            <Route path={PATHS.VERIFY_EMAIL} element={<VerifyEmail />} />
-            <Route path={PATHS.NOT_FOUND} element={<NotFoundPage />} />
-          </Routes>
-          <BuildVersionFooter />
-        </Box>
+        <Routes>
+          <Route path={PATHS.ADMIN} element={<AdminRouteComponent />} />
+          <Route path={PATHS.ROOT} element={<Navigate to={PATHS.HOME} />} />
+          <Route path={PATHS.HOME} element={<HomePage />} />
+          <Route path={PATHS.LOGIN} element={<LoginPage />} />
+          <Route path={PATHS.QUESTIONS} element={<QuestionListPage />} />
+          <Route
+            path={PATHS.QUESTION_CREATE}
+            element={
+              <RequireAuth>
+                <CreateQuestionPage />
+              </RequireAuth>
+            }
+          />
+          <Route path={PATHS.QUESTION_DETAIL} element={<QuestionDetailPage />} />
+          <Route path={PATHS.POLLS} element={<VoteListPage />} />
+          <Route
+            path={PATHS.POLL_CREATE}
+            element={
+              <RequireAuth>
+                <CreateVotePage />
+              </RequireAuth>
+            }
+          />
+          <Route path={PATHS.POLL_DETAIL} element={<VoteDetailPage />} />
+          <Route path={PATHS.EXAMS} element={<ExamListPage />} />
+          <Route path={PATHS.EXAM_DETAIL} element={<ExamDetailPage />} />
+          <Route path={PATHS.RANK} element={<RankPage />} />
+          <Route path={PATHS.USERS} element={<UserProfilePage />} />
+          <Route path={PATHS.ABOUT} element={<AboutPage />} />
+          <Route path={PATHS.FORGOT_PASSWORD} element={<ForgotPassword />} />
+          <Route path={PATHS.RESET_PASSWORD} element={<ResetPassword />} />
+          <Route path={PATHS.VERIFY_EMAIL} element={<VerifyEmail />} />
+          <Route path={PATHS.NOT_FOUND} element={<NotFoundPage />} />
+        </Routes>
+        <BuildVersionFooter />
       </Box>
-    );
-  }
+    </Box>
+  );
+}
 
+function App() {
   return (
     <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
       <Router>
