@@ -29,6 +29,20 @@ export default function AuthForm() {
   const { login, user } = useUser();
   const { currentLanguage } = useLanguage();
 
+  useEffect(() => {
+    const callbackParams = new URLSearchParams(window.location.hash.slice(1));
+    const oauthError = callbackParams.get('oauth_error');
+    if (!oauthError) return;
+
+    window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+    enqueueSnackbar(
+      oauthError === 'authorization_denied'
+        ? '已取消第三方登录'
+        : '第三方登录失败，请重试或使用邮箱登录',
+      { variant: 'error' },
+    );
+  }, []);
+
   // 已登录自动跳转
   useEffect(() => {
     if (user) {
@@ -124,6 +138,13 @@ export default function AuthForm() {
           setLoading(false);
         });
     }
+  };
+
+  const startOAuth = (provider: 'google' | 'github') => {
+    const returnTo = window.location.origin + window.location.pathname;
+    window.location.assign(
+      `/api/auth/oauth/${provider}?return_to=${encodeURIComponent(returnTo)}`,
+    );
   };
 
   return (
@@ -225,6 +246,16 @@ export default function AuthForm() {
           >
             {loading ? t('auth.processing') : tab === 0 ? t('auth.login') : t('auth.register')}
           </Button>
+          {tab === 0 && (
+            <Box sx={{ display: 'grid', gap: 1, mt: 2 }}>
+              <Button variant="outlined" fullWidth onClick={() => startOAuth('google')}>
+                使用 Google 登录
+              </Button>
+              <Button variant="outlined" fullWidth onClick={() => startOAuth('github')}>
+                使用 GitHub 登录
+              </Button>
+            </Box>
+          )}
         </Box>
       </Paper>
     </Container>

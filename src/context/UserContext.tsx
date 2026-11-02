@@ -27,7 +27,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   // 从 localStorage 恢复 token 并设置到 axios 请求头
   useEffect(() => {
     try {
-      const storedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
+      const callbackParams = new URLSearchParams(window.location.hash.slice(1));
+      const callbackToken = callbackParams.get('oauth_token');
+      const storedToken = callbackToken || localStorage.getItem(TOKEN_STORAGE_KEY);
+      if (callbackToken) {
+        localStorage.setItem(TOKEN_STORAGE_KEY, callbackToken);
+        window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+      }
       if (storedToken) {
         console.log('token found and fetching user info...');
         setToken(storedToken);

@@ -29,7 +29,7 @@ COPY default.conf.template /etc/nginx/conf.d/default.conf.template
 # 2. 安装 envsubst，用于在容器启动时替换 VITE_API_URL
 RUN apk add --no-cache gettext
 
-# 3. 声明 8080 端口
-EXPOSE 8080
+# 3. 声明与 Vite 开发服务器一致的端口
+EXPOSE 3000
 
 ENTRYPOINT ["sh", "-c", "envsubst '$VITE_API_URL' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'" ]
