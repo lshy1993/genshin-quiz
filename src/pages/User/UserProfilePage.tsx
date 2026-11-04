@@ -17,8 +17,7 @@ import { useGetUser, useGetUserPolls, useGetUserQuestions } from '@/api/genshinQ
 import ContentCardGridSection from '@/components/ContentCardGridSection';
 import PageContainer from '@/components/PageContainer';
 import QuestionPreviewCard from '@/components/Question/QuestionPreviewCard';
-import ChangePasswordForm from '@/components/User/ChangePasswordForm';
-import EditProfileForm from '@/components/User/EditProfileForm';
+import MoeLinkAccountCard from '@/components/User/MoeLinkAccountCard';
 import VotePreviewCard from '@/components/Vote/PollPreviewCard';
 import { useUser } from '@/context/UserContext';
 import { formatNumberShort } from '@/util/utils';
@@ -125,9 +124,7 @@ export default function UserProfilePage() {
           {isMe && me && (
             <>
               <Divider />
-              <EditProfileForm user={me} initialNickname={me.nickname} mutate={userQuery.mutate} />
-              <Divider />
-              <ChangePasswordForm />
+              <MoeLinkAccountCard />
             </>
           )}
         </CardContent>

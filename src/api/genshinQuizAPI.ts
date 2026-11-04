@@ -462,58 +462,6 @@ export const useGetCurrentUser = <
 };
 
 /**
- * @summary Update current user
- */
-export const updateUser = (userPrivate: UserPrivate) => {
-  return Fetcher<UserPrivate>({
-    url: `/auth/me`,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    data: userPrivate,
-  });
-};
-
-export const getUpdateUserMutationFetcher = () => {
-  return (_: Key, { arg }: { arg: UserPrivate }) => {
-    return updateUser(arg);
-  };
-};
-export const getUpdateUserMutationKey = () => [`/auth/me`] as const;
-
-export type UpdateUserMutationResult = NonNullable<Awaited<ReturnType<typeof updateUser>>>;
-export type UpdateUserMutationError =
-  | BadRequestResponse
-  | UnauthorizedResponse
-  | InternalServerErrorResponse;
-
-/**
- * @summary Update current user
- */
-export const useUpdateUser = <
-  TError = BadRequestResponse | UnauthorizedResponse | InternalServerErrorResponse,
->(options?: {
-  swr?: SWRMutationConfiguration<
-    Awaited<ReturnType<typeof updateUser>>,
-    TError,
-    Key,
-    UserPrivate,
-    Awaited<ReturnType<typeof updateUser>>
-  > & { swrKey?: string };
-}) => {
-  const { swr: swrOptions } = options ?? {};
-
-  const swrKey = swrOptions?.swrKey ?? getUpdateUserMutationKey();
-  const swrFn = getUpdateUserMutationFetcher();
-
-  const query = useSWRMutation(swrKey, swrFn, swrOptions);
-
-  return {
-    swrKey,
-    ...query,
-  };
-};
-
-/**
  * @summary Delete current user
  */
 export const deleteUser = () => {
