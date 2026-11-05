@@ -1,6 +1,7 @@
 import Axios, { type AxiosRequestConfig, type AxiosRequestHeaders } from 'axios';
 import { DateTime } from 'luxon';
 import qs from 'qs';
+import { getAccessToken, refreshAccessToken, setTokenSink } from '@/util/auth';
 
 const axiosClient = Axios.create({
   baseURL: '/api/',
@@ -61,14 +62,19 @@ axiosClient.interceptors.response.use(
   },
 );
 
-export const Fetcher = async <T>(config: AxiosRequestConfig): Promise<T> => {
+export const Fetcher = async <T>(config: AxiosRequestConfig, retried = false): Promise<T> => {
   const promise = await axiosClient
     .request<T>(config)
     .then((res) => res.data)
-    .catch((err) => {
+    .catch(async (err) => {
       if (err.response) {
         if (err.response.status === 401) {
-          // 401 Unauthorized
+          // access token 很短命：先用会话 Cookie 续期并重试一次，仍失败才视为登录失效
+          if (!retried && getAccessToken() && !err.response.data?.force_logout) {
+            if ((await refreshAccessToken()) === 'ok') {
+              return Fetcher<T>(config, true);
+            }
+          }
           setJWT(''); // 清空本地 JWT
         }
         return Promise.reject(err.response.data);
@@ -90,6 +96,9 @@ export const setJWT = (token: string) => {
     delete axiosClient.defaults.headers.common.Authorization;
   }
 };
+
+// access token 续期 / 登出后自动同步到请求头
+setTokenSink(setJWT);
 
 // Recursively transform date strings in objects
 function transformDatesWithZod(obj: unknown): unknown {

@@ -9,8 +9,7 @@ export function getMoeLinkOrigin(): string {
     : 'https://moelink.site';
 }
 
-// 同一套 JWT 在两个站点通用；通过 URL hash 传递，hash 不会发送给服务器，MoeLink 读取后立即清除。
-export function getMoeLinkAccountUrl(token: string | null): string {
-  const url = `${getMoeLinkOrigin()}/profile`;
-  return token ? `${url}#oauth_token=${encodeURIComponent(token)}` : url;
+// 两个站共用同一个 HttpOnly 会话 Cookie，打开 MoeLink 即处于登录状态，不需要在 URL 里传递 token。
+export function getMoeLinkAccountUrl(): string {
+  return `${getMoeLinkOrigin()}/profile`;
 }

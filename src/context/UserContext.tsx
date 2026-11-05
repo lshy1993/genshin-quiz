@@ -1,8 +1,15 @@
 import { Skeleton } from '@mui/material';
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { UserPrivate } from '@/api/dto';
-import { setGlobalLogoutCallback, setJWT } from '@/api/fetcher/fetcher';
+import { setGlobalLogoutCallback } from '@/api/fetcher/fetcher';
 import { useGetCurrentUser } from '@/api/genshinQuizAPI';
+import {
+  endSession,
+  initAuth,
+  setAccessToken,
+  subscribeAccessToken,
+  syncSession,
+} from '@/util/auth';
 import { navigateTo } from '@/util/navigation';
 import { LanguageProvider } from './LanguageContext';
 
@@ -18,41 +25,33 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-const TOKEN_STORAGE_KEY = 'genshin_quiz_token';
-
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // 从 localStorage 恢复 token 并设置到 axios 请求头
+  // 登录态由 HttpOnly 会话 Cookie 承载：启动时先换取短期 access token，之后在内存里自动续期
   useEffect(() => {
-    try {
-      const callbackParams = new URLSearchParams(window.location.hash.slice(1));
-      const callbackToken = callbackParams.get('oauth_token');
-      const storedToken = callbackToken || localStorage.getItem(TOKEN_STORAGE_KEY);
-      if (callbackToken) {
-        localStorage.setItem(TOKEN_STORAGE_KEY, callbackToken);
-        window.history.replaceState(
-          null,
-          document.title,
-          window.location.pathname + window.location.search,
-        );
-      }
-      if (storedToken) {
-        console.log('token found and fetching user info...');
-        setToken(storedToken);
-        setJWT(storedToken); // 设置到 axios 请求头
-        // ✅ 可选：延迟一帧确保 SWR 已经开始请求
-        requestAnimationFrame(() => {
-          refreshUser();
-        });
-      }
-    } catch (error) {
-      console.error('Failed to restore token:', error);
-      localStorage.removeItem(TOKEN_STORAGE_KEY);
-    } finally {
-      setIsInitialized(true);
-    }
+    const unsubscribe = subscribeAccessToken((next) => setToken(next || null));
+    let cancelled = false;
+    initAuth()
+      .catch((error) => console.error('Failed to restore session:', error))
+      .finally(() => {
+        if (cancelled) return;
+        // 第三方登录回跳时 hash 里只有成功标记，凭证已在 Cookie 中
+        const callbackParams = new URLSearchParams(window.location.hash.slice(1));
+        if (callbackParams.get('oauth_login')) {
+          window.history.replaceState(
+            null,
+            document.title,
+            window.location.pathname + window.location.search,
+          );
+        }
+        setIsInitialized(true);
+      });
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
   }, []);
 
   // 使用 API 获取用户信息
@@ -69,33 +68,36 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  // // 监听 token 变化，确保在 token 设置后立即获取用户信息
-  // useEffect(() => {
-  //   if (token && isInitialized) {
-  //     console.log('Token available, fetching user info...');
-  //     refreshUser();
-  //   }
-  // }, [token, isInitialized, refreshUser]);
-
-  // 如果token存在但获取用户信息失败，说明token可能过期
+  // 如果token存在但获取用户信息失败，说明会话可能已失效
   useEffect(() => {
     if (token && isInitialized && !isUserLoading && userError) {
-      console.warn('Token may be expired, logging out:', userError);
+      console.warn('Session may be invalid, logging out:', userError);
       logout();
     }
   }, [token, isInitialized, isUserLoading, userError]);
 
   const login = (newToken: string) => {
-    setToken(newToken);
-    setJWT(newToken); // 设置到 axios 请求头
-    localStorage.setItem(TOKEN_STORAGE_KEY, newToken);
+    // 登录接口已经下发会话 Cookie，这里只需要把 access token 放进内存
+    setAccessToken(newToken);
   };
 
   const logout = () => {
-    setToken(null);
-    setJWT(''); // 清除 axios 请求头
-    localStorage.removeItem(TOKEN_STORAGE_KEY);
+    void endSession();
   };
+
+  // 回到本页时与会话对账，使 MoeLink 的登录 / 登出 / 换账号及时生效
+  useEffect(() => {
+    const sync = async () => {
+      if (document.visibilityState === 'hidden') return;
+      if (await syncSession()) refreshUser();
+    };
+    window.addEventListener('focus', sync);
+    document.addEventListener('visibilitychange', sync);
+    return () => {
+      window.removeEventListener('focus', sync);
+      document.removeEventListener('visibilitychange', sync);
+    };
+  }, [refreshUser]);
 
   const forceLogout = () => {
     logout();
