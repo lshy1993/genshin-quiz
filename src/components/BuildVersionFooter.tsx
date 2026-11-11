@@ -1,6 +1,10 @@
 import { Box, Typography } from '@mui/material';
 
-const buildVersion = import.meta.env.VITE_BUILD_VERSION || 'development';
+const buildVersion = __BUILD_VERSION__;
+const buildTime = new Date(__BUILD_TIME__);
+const buildTimeLabel = Number.isNaN(buildTime.getTime())
+  ? ''
+  : `构建时间：${buildTime.toLocaleString('zh-CN', { hour12: false })}`;
 
 function BuildVersionFooter() {
   return (
@@ -18,8 +22,11 @@ function BuildVersionFooter() {
       </Typography>
       <Typography
         variant="caption"
+        title={buildTimeLabel}
         sx={{
-          color: 'rgba(0, 0, 0, 0.08)',
+          color: 'rgba(0, 0, 0, 0.3)',
+          letterSpacing: '0.04em',
+          cursor: 'default',
           '&::selection': {
             color: 'text.primary',
             backgroundColor: 'action.selected',
